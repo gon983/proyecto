@@ -2,6 +2,7 @@ plugins {
 	java
 	id("org.springframework.boot") version "3.4.2"
 	id("io.spring.dependency-management") version "1.1.7"
+	id("org.hibernate.orm") version "6.6.7.Final"
 }
 
 group = "com.proyect"
@@ -29,7 +30,10 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("io.github.cdimascio:dotenv-java:3.0.0")
-	implementation("com.mysql:mysql-connector-j:8.3.0") 
+	implementation("com.mysql:mysql-connector-j:8.3.0")
+	implementation("org.hibernate.orm:hibernate-core:6.6.7.Final")
+	
+	
 	compileOnly("org.projectlombok:lombok")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	annotationProcessor("org.projectlombok:lombok")
@@ -40,3 +44,8 @@ dependencies {
 tasks.withType<Test> {
 	enabled = false
 }
+
+
+
+
+
