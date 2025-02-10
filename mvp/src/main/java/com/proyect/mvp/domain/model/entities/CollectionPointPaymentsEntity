@@ -10,6 +10,8 @@ import java.time.LocalDateTime;
 public class CollectionPointPayments {
 
     @Id
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "id_collection_point_payments")
     private String idCollectionPointPayments;
 

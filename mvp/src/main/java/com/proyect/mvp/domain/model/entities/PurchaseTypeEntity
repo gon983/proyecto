@@ -9,6 +9,8 @@ import javax.persistence.*;
 public class PurchaseType {
 
     @Id
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "id_purchase_type")
     private String idPurchaseType;
 

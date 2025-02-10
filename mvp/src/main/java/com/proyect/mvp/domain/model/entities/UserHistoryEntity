@@ -10,6 +10,8 @@ import java.time.LocalDateTime;
 public class UserHistory {
 
     @Id
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "id_user_history")
     private String idUserHistory;
 

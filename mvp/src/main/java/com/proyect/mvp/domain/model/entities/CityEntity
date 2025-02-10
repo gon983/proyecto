@@ -9,6 +9,8 @@ import javax.persistence.*;
 public class City {
 
     @Id
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "id_city")
     private String idCity;
 

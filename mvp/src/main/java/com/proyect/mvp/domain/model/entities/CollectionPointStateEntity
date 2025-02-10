@@ -9,6 +9,8 @@ import javax.persistence.*;
 public class CollectionPointState {
 
     @Id
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "id_collection_point_state")
     private String idCollectionPointState;
 

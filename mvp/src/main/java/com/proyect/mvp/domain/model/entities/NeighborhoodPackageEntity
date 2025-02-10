@@ -10,6 +10,8 @@ import java.time.LocalDateTime;
 public class NeighborhoodPackage {
 
     @Id
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "id_neighborhood_package")
     private String idNeighborhoodPackage;
 

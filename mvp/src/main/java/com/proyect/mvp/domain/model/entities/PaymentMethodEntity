@@ -10,6 +10,8 @@ import javax.persistence.*;
 public class PaymentMethod {
 
     @Id
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "id_payment_method")
     private String idPaymentMethod;
 

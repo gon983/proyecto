@@ -10,6 +10,8 @@ import java.time.LocalDateTime; // Importa LocalDateTime para los tipos de datos
 public class CollectionPointHistory { // PascalCase
 
     @Id
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "id_collection_point_history")
     private String idCollectionPointHistory;
 
