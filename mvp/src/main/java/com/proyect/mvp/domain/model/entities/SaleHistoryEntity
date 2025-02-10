@@ -1,0 +1,32 @@
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import javax.persistence.*;
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "salehistory")
+@Getter
+@NoArgsConstructor
+public class SaleHistory {
+
+    @Id
+    @Column(name = "id_sale_history")
+    private String idSaleHistory;
+
+    @ManyToOne
+    @JoinColumn(name = "fk_sale")
+    private Sale sale;
+
+    @ManyToOne
+    @JoinColumn(name = "fk_sale_state")
+    private SaleState saleState;
+
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "init")
+    private LocalDateTime init;
+
+    @Column(name = "finish")
+    private LocalDateTime finish;
+}

@@ -1,0 +1,20 @@
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import javax.persistence.*;
+
+@Entity
+@Table(name = "productcategory")
+@Getter
+@NoArgsConstructor
+public class ProductCategory {
+
+    @Id
+    @Column(name = "id_product_category")
+    private String idProductCategory;
+
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "measurement_unity")
+    private String measurementUnity;
+}

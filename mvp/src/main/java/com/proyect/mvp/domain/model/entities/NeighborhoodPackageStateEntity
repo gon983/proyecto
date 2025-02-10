@@ -1,0 +1,17 @@
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import javax.persistence.*;
+
+@Entity
+@Table(name = "neighborhoodpackagestate")
+@Getter
+@NoArgsConstructor
+public class NeighborhoodPackageState {
+
+    @Id
+    @Column(name = "id_neighborhood_package_state")
+    private String idNeighborhoodPackageState;
+
+    @Column(name = "name")
+    private String name;
+}

@@ -1,0 +1,18 @@
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import javax.persistence.*;
+
+@Entity
+@Table(name = "country")
+@Getter
+@NoArgsConstructor
+public class Country {
+
+    @Id
+    @Column(name = "id_country")
+    private String idCountry;
+
+    @Column(name = "name")
+    private String name;
+
+}

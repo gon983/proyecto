@@ -1,0 +1,17 @@
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import javax.persistence.*;
+
+@Entity
+@Table(name = "purchasetype")
+@Getter
+@NoArgsConstructor
+public class PurchaseType {
+
+    @Id
+    @Column(name = "id_purchase_type")
+    private String idPurchaseType;
+
+    @Column(name = "name")
+    private String name;
+}

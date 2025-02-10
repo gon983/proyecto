@@ -1,0 +1,28 @@
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import javax.persistence.*;
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "collectionpointpayments")
+@Getter
+@NoArgsConstructor
+public class CollectionPointPayments {
+
+    @Id
+    @Column(name = "id_collection_point_payments")
+    private String idCollectionPointPayments;
+
+    @ManyToOne
+    @JoinColumn(name = "fk_collection_point")
+    private CollectionPoint collectionPoint;
+
+    @Column(name = "date")
+    private LocalDateTime date;
+
+    @Column(name = "note")
+    private String note;
+
+    @Column(name = "amount")
+    private double amount;
+}

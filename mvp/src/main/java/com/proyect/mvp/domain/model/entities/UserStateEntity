@@ -1,0 +1,17 @@
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import javax.persistence.*;
+
+@Entity
+@Table(name = "userstate")
+@Getter
+@NoArgsConstructor
+public class UserState {
+
+    @Id
+    @Column(name = "id_user_state")
+    private String idUserState;
+
+    @Column(name = "name")
+    private String name;
+}

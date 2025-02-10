@@ -1,0 +1,25 @@
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import javax.persistence.*;
+
+@Entity
+@Table(name = "purchasedetail")
+@Getter
+@NoArgsConstructor
+public class PurchaseDetail {
+
+    @Id
+    @Column(name = "id_purchase_detail")
+    private String idPurchaseDetail;
+
+    @ManyToOne
+    @JoinColumn(name = "fk_product")
+    private Product product;
+
+    @Column(name = "quantity")
+    private double quantity;
+
+    @ManyToOne
+    @JoinColumn(name = "fk_purchase")
+    private Purchase purchase;
+}

@@ -1,0 +1,39 @@
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import javax.persistence.*;
+import java.time.LocalDate;
+
+@Entity
+@Table(name = "stockmovement")
+@Getter
+@NoArgsConstructor
+public class StockMovement {
+
+    @Id
+    @Column(name = "id_stock_movement")
+    private String idStockMovement;
+
+    @ManyToOne
+    @JoinColumn(name = "fk_product")
+    private Product product;
+
+    @Column(name = "quantity")
+    private double quantity;
+
+    @Enumerated(EnumType.STRING) // For enum type
+    @Column(name = "type")
+    private StockMovementType type; // Create a StockMovementType enum (see below)
+
+    @Column(name = "date")
+    private LocalDate date; // Use LocalDate for DATE type
+
+    @Column(name = "coment")
+    private String comment; // Corrected typo "coment" to "comment"
+}
+
+// Create a separate enum class for the 'type' field
+public enum StockMovementType {
+    IN,
+    OUT,
+    EDITION
+}

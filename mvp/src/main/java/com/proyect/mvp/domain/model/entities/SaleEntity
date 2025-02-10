@@ -1,0 +1,32 @@
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import javax.persistence.*;
+
+@Entity
+@Table(name = "sale")
+@Getter
+@NoArgsConstructor
+public class Sale {
+
+    @Id
+    @Column(name = "id_sale")
+    private String idSale;
+
+    @Column(name = "amount")
+    private double amount;
+
+    @ManyToOne
+    @JoinColumn(name = "fk_productor")
+    private User productor; // Assuming "productor" refers to the User entity
+
+    @ManyToOne
+    @JoinColumn(name = "fk_deliver_guy")
+    private User deliverGuy;
+
+    @ManyToOne
+    @JoinColumn(name = "fk_payment_method")
+    private PaymentMethod paymentMethod;
+
+    @Column(name = "bill")
+    private String bill;
+}

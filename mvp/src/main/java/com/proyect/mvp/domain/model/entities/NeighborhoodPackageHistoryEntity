@@ -1,0 +1,32 @@
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import javax.persistence.*;
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "neighborhoodpackagehistory")
+@Getter
+@NoArgsConstructor
+public class NeighborhoodPackageHistory {
+
+    @Id
+    @Column(name = "id_neighborhood_package_history")
+    private String idNeighborhoodPackageHistory;
+
+    @ManyToOne
+    @JoinColumn(name = "fk_neighborhood_package")
+    private NeighborhoodPackage neighborhoodPackage;
+
+    @ManyToOne
+    @JoinColumn(name = "fk_neighborhood_package_state")
+    private NeighborhoodPackageState neighborhoodPackageState;
+
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "init")
+    private LocalDateTime init;
+
+    @Column(name = "finish")
+    private LocalDateTime finish;
+}

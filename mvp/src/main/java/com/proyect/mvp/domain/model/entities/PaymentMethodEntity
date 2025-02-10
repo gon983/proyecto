@@ -1,0 +1,18 @@
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import javax.persistence.*;
+
+@Entity
+@Table(name = "paymentmethod")
+@Getter
+@NoArgsConstructor
+public class PaymentMethod {
+
+    @Id
+    @Column(name = "id_payment_method")
+    private String idPaymentMethod;
+
+    @Column(name = "name")
+    private String name;
+}

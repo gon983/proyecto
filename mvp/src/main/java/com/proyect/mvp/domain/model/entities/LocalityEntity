@@ -1,0 +1,21 @@
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import javax.persistence.*;
+
+@Entity
+@Table(name = "locality")
+@Getter
+@NoArgsConstructor
+public class Locality {
+
+    @Id
+    @Column(name = "id_locality")
+    private String idLocality;
+
+    @Column(name = "name")
+    private String name;
+
+    @ManyToOne
+    @JoinColumn(name = "fk_city")
+    private City city; // Assuming you have a City entity
+}

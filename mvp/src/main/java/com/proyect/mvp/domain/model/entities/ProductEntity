@@ -1,0 +1,30 @@
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import javax.persistence.*;
+
+@Entity
+@Table(name = "product")
+@Getter
+@NoArgsConstructor
+public class Product {
+
+    @Id
+    @Column(name = "id_product")
+    private String idProduct;
+
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "stock")
+    private double stock;
+
+    @Column(name = "alert_stock")
+    private double alertStock;
+
+    @Column(name = "photo")
+    private String photo;
+
+    @ManyToOne
+    @JoinColumn(name = "fk_product_category")
+    private ProductCategory productCategory;
+}
