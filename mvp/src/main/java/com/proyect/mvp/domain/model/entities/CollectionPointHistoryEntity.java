@@ -1,37 +1,37 @@
 package com.proyect.mvp.domain.model.entities;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import jakarta.persistence.*;
+import lombok.NoArgsConstructor;import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
+import org.springframework.data.relational.core.mapping.Column;
 import org.hibernate.annotations.GenericGenerator;
 import java.time.LocalDateTime; // Importa LocalDateTime para los tipos de datos datetime
 
-@Entity
-@Table(name = "collectionpointhistory")
+
+@Table( "collectionpointhistory")
 @Getter
 @NoArgsConstructor
 public class CollectionPointHistoryEntity { // PascalCase
 
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "id_collection_point_history")
+    
+    @Column( "id_collection_point_history")
     private String idCollectionPointHistory;
 
-    @ManyToOne
-    @JoinColumn(name = "fk_collection_point")
+    
+    (name = "fk_collection_point")
     private CollectionPointEntity collectionPoint; // Relación con CollectionPoint
 
-    @ManyToOne
-    @JoinColumn(name = "fk_collection_point_state")
+    
+    (name = "fk_collection_point_state")
     private CollectionPointStateEntity  collectionPointState; // Relación con CollectionPointState
 
-    @Column(name = "description")
+    @Column( "description")
     private String description;
 
-    @Column(name = "init")
+    @Column( "init")
     private LocalDateTime init; // Usando LocalDateTime para datetime
 
-    @Column(name = "finish")
+    @Column( "finish")
     private LocalDateTime finish; // Usando LocalDateTime para datetime
 }
 

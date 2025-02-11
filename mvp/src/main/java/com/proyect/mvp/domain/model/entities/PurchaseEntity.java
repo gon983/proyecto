@@ -1,37 +1,37 @@
 package com.proyect.mvp.domain.model.entities;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import jakarta.persistence.*;
+import lombok.NoArgsConstructor;import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
+import org.springframework.data.relational.core.mapping.Column;
 import org.hibernate.annotations.GenericGenerator;
 
-@Entity
-@Table(name = "purchase")
+
+@Table( "purchase")
 @Getter
 @NoArgsConstructor
 public class PurchaseEntity {
 
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "id_purchase")
+    
+    @Column( "id_purchase")
     private String idPurchase;
 
-    @ManyToOne
-    @JoinColumn(name = "fk_user")
+    
+    (name = "fk_user")
     private UserEntity  user;
 
-    @ManyToOne
-    @JoinColumn(name = "fk_type_purchase")
+    
+    (name = "fk_type_purchase")
     private PurchaseTypeEntity  typePurchase;
 
-    @Column(name = "amount")
+    @Column( "amount")
     private double amount;
 
-    @ManyToOne
-    @JoinColumn(name = "fk_neighborhood_package")
+    
+    (name = "fk_neighborhood_package")
     private NeighborhoodPackageEntity  neighborhoodPackage;
 
-    @ManyToOne
-    @JoinColumn(name = "fk_payment_method")
+    
+    (name = "fk_payment_method")
     private PaymentMethodEntity  paymentMethod;
 }

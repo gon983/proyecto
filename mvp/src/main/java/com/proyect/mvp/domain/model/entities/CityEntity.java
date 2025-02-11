@@ -2,26 +2,19 @@ package com.proyect.mvp.domain.model.entities;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
-import jakarta.persistence.*;
+import org.hibernate.annotations.GenericGenerator;import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
+import org.springframework.data.relational.core.mapping.Column;
 
 
-@Entity
-@Table(name = "city")
+
+@Table("city")
 @Getter
 @NoArgsConstructor
 public class CityEntity {
-
-    @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "id_city")
+    @Id 
+    @Column( "id_city")
     private String idCity;
-
-    @Column(name = "name")
     private String name;
-
-    @ManyToOne
-    @JoinColumn(name = "fk_country")
     private CountryEntity country; 
 }

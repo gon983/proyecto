@@ -1,50 +1,50 @@
 package com.proyect.mvp.domain.model.entities;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import jakarta.persistence.*;
+import lombok.NoArgsConstructor;import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
+import org.springframework.data.relational.core.mapping.Column;
 import org.hibernate.annotations.GenericGenerator;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "user") 
+
+@Table( "user") 
 @Getter
 @NoArgsConstructor
 public class UserEntity {
 
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "id_user")
+    
+    @Column( "id_user")
     private String idUser;
 
-    @Column(name = "username")
+    @Column( "username")
     private String username;
 
-    @Column(name = "email")
+    @Column( "email")
     private String email;
 
-    @Column(name = "created_at")
+    @Column( "created_at")
     private LocalDateTime createdAt;
 
-    @Column(name = "first_name")
+    @Column( "first_name")
     private String firstName;
 
-    @Column(name = "last_name")
+    @Column( "last_name")
     private String lastName;
 
-    @Column(name = "document_type")
+    @Column( "document_type")
     private String documentType;
 
-    @Column(name = "document_number")
+    @Column( "document_number")
     private String documentNumber;
 
-    @ManyToOne
-    @JoinColumn(name = "fk_neighborhood")
+    
+    (name = "fk_neighborhood")
     private NeighborhoodEntity neighborhood;
 
-    @Column(name = "phone")
+    @Column( "phone")
     private String phone;
 
-    @Column(name = "photo")
+    @Column( "photo")
     private String photo;
 }

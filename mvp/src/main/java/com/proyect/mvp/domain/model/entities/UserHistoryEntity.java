@@ -1,36 +1,36 @@
 package com.proyect.mvp.domain.model.entities;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import jakarta.persistence.*;
+import lombok.NoArgsConstructor;import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
+import org.springframework.data.relational.core.mapping.Column;
 import org.hibernate.annotations.GenericGenerator;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "userhistory")
+
+@Table( "userhistory")
 @Getter
 @NoArgsConstructor
 public class UserHistoryEntity {
 
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "id_user_history")
+    
+    @Column( "id_user_history")
     private String idUserHistory;
 
-    @ManyToOne
-    @JoinColumn(name = "fk_user")
+    
+    (name = "fk_user")
     private UserEntity user;
 
-    @ManyToOne
-    @JoinColumn(name = "fk_user_state")
+    
+    (name = "fk_user_state")
     private UserStateEntity userState;
 
-    @Column(name = "description")
+    @Column( "description")
     private String description;
 
-    @Column(name = "init")
+    @Column( "init")
     private LocalDateTime init;
 
-    @Column(name = "finish")
+    @Column( "finish")
     private LocalDateTime finish;
 }

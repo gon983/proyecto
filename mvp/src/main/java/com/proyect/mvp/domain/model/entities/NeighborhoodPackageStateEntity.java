@@ -1,21 +1,21 @@
 package com.proyect.mvp.domain.model.entities;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import jakarta.persistence.*;
+import lombok.NoArgsConstructor;import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
+import org.springframework.data.relational.core.mapping.Column;
 import org.hibernate.annotations.GenericGenerator;
 
-@Entity
-@Table(name = "neighborhoodpackagestate")
+
+@Table( "neighborhoodpackagestate")
 @Getter
 @NoArgsConstructor
 public class NeighborhoodPackageStateEntity {
 
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "id_neighborhood_package_state")
+    
+    @Column( "id_neighborhood_package_state")
     private String idNeighborhoodPackageState;
 
-    @Column(name = "name")
+    @Column( "name")
     private String name;
 }

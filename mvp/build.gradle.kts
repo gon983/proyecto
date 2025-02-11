@@ -31,7 +31,8 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	implementation("io.github.cdimascio:dotenv-java:3.0.0")
 	implementation("com.mysql:mysql-connector-j:8.3.0")
-	implementation("org.hibernate.orm:hibernate-core:6.6.7.Final")
+	implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
+    implementation("org.mariadb:r2dbc-mariadb") 
 	
 	
 	compileOnly("org.projectlombok:lombok")

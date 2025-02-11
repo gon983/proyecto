@@ -1,37 +1,37 @@
 package com.proyect.mvp.domain.model.entities;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import jakarta.persistence.*;
+import lombok.NoArgsConstructor;import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
+import org.springframework.data.relational.core.mapping.Column;
 import org.hibernate.annotations.GenericGenerator;
 import java.time.LocalDate;
 
-@Entity
-@Table(name = "stockmovement")
+
+@Table( "stockmovement")
 @Getter
 @NoArgsConstructor
 public class StockMovementEntity {
 
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "id_stock_movement")
+    
+    @Column( "id_stock_movement")
     private String idStockMovement;
 
-    @ManyToOne
-    @JoinColumn(name = "fk_product")
+    
+    (name = "fk_product")
     private ProductEntity  product;
 
-    @Column(name = "quantity")
+    @Column( "quantity")
     private double quantity;
 
     @Enumerated(EnumType.STRING) 
-    @Column(name = "type")
+    @Column( "type")
     private StockMovementTypeEnum  type; 
 
-    @Column(name = "date")
+    @Column( "date")
     private LocalDate date; 
 
-    @Column(name = "coment")
+    @Column( "coment")
     private String comment; 
 }
 

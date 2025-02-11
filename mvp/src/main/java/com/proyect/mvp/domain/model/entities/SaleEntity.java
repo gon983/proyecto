@@ -1,36 +1,36 @@
 package com.proyect.mvp.domain.model.entities;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import jakarta.persistence.*;
+import lombok.NoArgsConstructor;import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
+import org.springframework.data.relational.core.mapping.Column;
 import org.hibernate.annotations.GenericGenerator;
 
-@Entity
-@Table(name = "sale")
+
+@Table( "sale")
 @Getter
 @NoArgsConstructor
 public class SaleEntity {
 
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "id_sale")
+    
+    @Column( "id_sale")
     private String idSale;
 
-    @Column(name = "amount")
+    @Column( "amount")
     private double amount;
 
-    @ManyToOne
-    @JoinColumn(name = "fk_productor")
+    
+    (name = "fk_productor")
     private UserEntity  productor; // Assuming "productor" refers to the User entity
 
-    @ManyToOne
-    @JoinColumn(name = "fk_deliver_guy")
+    
+    (name = "fk_deliver_guy")
     private UserEntity  deliverGuy;
 
-    @ManyToOne
-    @JoinColumn(name = "fk_payment_method")
+    
+    (name = "fk_payment_method")
     private PaymentMethodEntity  paymentMethod;
 
-    @Column(name = "bill")
+    @Column( "bill")
     private String bill;
 }

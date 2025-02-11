@@ -1,30 +1,30 @@
 package com.proyect.mvp.domain.model.entities;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import jakarta.persistence.*;
+import lombok.NoArgsConstructor;import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
+import org.springframework.data.relational.core.mapping.Column;
 import org.hibernate.annotations.GenericGenerator;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "neighborhoodpackage")
+
+@Table( "neighborhoodpackage")
 @Getter
 @NoArgsConstructor
 public class NeighborhoodPackageEntity {
 
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "id_neighborhood_package")
+    
+    @Column( "id_neighborhood_package")
     private String idNeighborhoodPackage;
 
-    @ManyToOne
-    @JoinColumn(name = "fk_in_charge")
+    
+    (name = "fk_in_charge")
     private UserEntity  inCharge;
 
-    @ManyToOne
-    @JoinColumn(name = "fk_collection_point")
+    
+    (name = "fk_collection_point")
     private CollectionPointEntity  collectionPoint;
 
-    @Column(name = "date")
+    @Column( "date")
     private LocalDateTime date;
 }

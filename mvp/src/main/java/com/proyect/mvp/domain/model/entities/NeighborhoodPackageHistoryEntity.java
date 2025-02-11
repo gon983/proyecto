@@ -1,36 +1,36 @@
 package com.proyect.mvp.domain.model.entities;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import jakarta.persistence.*;
+import lombok.NoArgsConstructor;import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
+import org.springframework.data.relational.core.mapping.Column;
 import org.hibernate.annotations.GenericGenerator;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "neighborhoodpackagehistory")
+
+@Table( "neighborhoodpackagehistory")
 @Getter
 @NoArgsConstructor
 public class NeighborhoodPackageHistoryEntity {
 
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "id_neighborhood_package_history")
+    
+    @Column( "id_neighborhood_package_history")
     private String idNeighborhoodPackageHistory;
 
-    @ManyToOne
-    @JoinColumn(name = "fk_neighborhood_package")
+    
+    (name = "fk_neighborhood_package")
     private NeighborhoodPackageEntity  neighborhoodPackage;
 
-    @ManyToOne
-    @JoinColumn(name = "fk_neighborhood_package_state")
+    
+    (name = "fk_neighborhood_package_state")
     private NeighborhoodPackageStateEntity  neighborhoodPackageState;
 
-    @Column(name = "description")
+    @Column( "description")
     private String description;
 
-    @Column(name = "init")
+    @Column( "init")
     private LocalDateTime init;
 
-    @Column(name = "finish")
+    @Column( "finish")
     private LocalDateTime finish;
 }

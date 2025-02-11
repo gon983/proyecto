@@ -1,32 +1,32 @@
 package com.proyect.mvp.domain.model.entities;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import jakarta.persistence.*;
+import lombok.NoArgsConstructor;import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
+import org.springframework.data.relational.core.mapping.Column;
 import org.hibernate.annotations.GenericGenerator;
 
-@Entity
-@Table(name = "collectionpoint")
+
+@Table( "collectionpoint")
 @Getter
 @NoArgsConstructor
 public class CollectionPointEntity {
 
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "id_collection_point")
+    
+    @Column( "id_collection_point")
     private String idCollectionPoint;
 
-    @Column(name = "name")
+    @Column( "name")
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "fk_neighborhood")
+    
+    (name = "fk_neighborhood")
     private NeighborhoodEntity neighborhood;
 
-    @Column(name = "use_price")
+    @Column( "use_price")
     private String usePrice;
 
-    @ManyToOne
-    @JoinColumn(name = "fk_owner")
+    
+    (name = "fk_owner")
     private UserEntity owner;
 }

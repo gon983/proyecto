@@ -1,21 +1,21 @@
 package com.proyect.mvp.domain.model.entities;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import jakarta.persistence.*;
+import lombok.NoArgsConstructor;import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
+import org.springframework.data.relational.core.mapping.Column;
 import org.hibernate.annotations.GenericGenerator;
 
-@Entity
-@Table(name = "userstate")
+
+@Table( "userstate")
 @Getter
 @NoArgsConstructor
 public class UserStateEntity {
 
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "id_user_state")
+    
+    @Column( "id_user_state")
     private String idUserState;
 
-    @Column(name = "name")
+    @Column( "name")
     private String name;
 }
