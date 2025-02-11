@@ -3,7 +3,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.data.relational.core.mapping.Column;
-import org.hibernate.annotations.GenericGenerator;
+
 import java.time.LocalDateTime;
 
 
@@ -18,11 +18,11 @@ public class UserHistoryEntity {
     private String idUserHistory;
 
     
-    (name = "fk_user")
+    
     private UserEntity user;
 
     
-    (name = "fk_user_state")
+    
     private UserStateEntity userState;
 
     @Column( "description")

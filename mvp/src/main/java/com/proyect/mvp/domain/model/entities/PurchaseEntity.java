@@ -3,7 +3,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.data.relational.core.mapping.Column;
-import org.hibernate.annotations.GenericGenerator;
+
 
 
 @Table( "purchase")
@@ -17,21 +17,21 @@ public class PurchaseEntity {
     private String idPurchase;
 
     
-    (name = "fk_user")
+    
     private UserEntity  user;
 
     
-    (name = "fk_type_purchase")
+    
     private PurchaseTypeEntity  typePurchase;
 
     @Column( "amount")
     private double amount;
 
     
-    (name = "fk_neighborhood_package")
+    
     private NeighborhoodPackageEntity  neighborhoodPackage;
 
     
-    (name = "fk_payment_method")
+    
     private PaymentMethodEntity  paymentMethod;
 }

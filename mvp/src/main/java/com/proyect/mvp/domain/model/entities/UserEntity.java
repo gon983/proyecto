@@ -3,7 +3,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.data.relational.core.mapping.Column;
-import org.hibernate.annotations.GenericGenerator;
+
 import java.time.LocalDateTime;
 
 
@@ -39,7 +39,7 @@ public class UserEntity {
     private String documentNumber;
 
     
-    (name = "fk_neighborhood")
+    
     private NeighborhoodEntity neighborhood;
 
     @Column( "phone")

@@ -3,7 +3,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.data.relational.core.mapping.Column;
-import org.hibernate.annotations.GenericGenerator;
+
 
 
 @Table( "collectionpoint")
@@ -20,13 +20,13 @@ public class CollectionPointEntity {
     private String name;
 
     
-    (name = "fk_neighborhood")
+    
     private NeighborhoodEntity neighborhood;
 
     @Column( "use_price")
     private String usePrice;
 
     
-    (name = "fk_owner")
+    
     private UserEntity owner;
 }

@@ -3,7 +3,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.data.relational.core.mapping.Column;
-import org.hibernate.annotations.GenericGenerator;
+
 import java.time.LocalDateTime;
 
 
@@ -18,11 +18,11 @@ public class NeighborhoodPackageHistoryEntity {
     private String idNeighborhoodPackageHistory;
 
     
-    (name = "fk_neighborhood_package")
+    
     private NeighborhoodPackageEntity  neighborhoodPackage;
 
     
-    (name = "fk_neighborhood_package_state")
+    
     private NeighborhoodPackageStateEntity  neighborhoodPackageState;
 
     @Column( "description")

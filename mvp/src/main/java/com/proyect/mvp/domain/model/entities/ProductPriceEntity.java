@@ -3,7 +3,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.data.relational.core.mapping.Column;
-import org.hibernate.annotations.GenericGenerator;
+
 
 
 @Table( "productprice")
@@ -17,11 +17,11 @@ public class ProductPriceEntity {
     private String idProductPrice;
 
     
-    (name = "fk_product")
+    
     private ProductEntity  product;
 
     
-    (name = "fk_product_state")
+    
     private ProductStateEntity  productState;
 
     @Column( "price")

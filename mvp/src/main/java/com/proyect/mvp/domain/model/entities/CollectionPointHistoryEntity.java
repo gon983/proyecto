@@ -3,7 +3,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.data.relational.core.mapping.Column;
-import org.hibernate.annotations.GenericGenerator;
+
 import java.time.LocalDateTime; // Importa LocalDateTime para los tipos de datos datetime
 
 
@@ -18,11 +18,11 @@ public class CollectionPointHistoryEntity { // PascalCase
     private String idCollectionPointHistory;
 
     
-    (name = "fk_collection_point")
+    
     private CollectionPointEntity collectionPoint; // Relación con CollectionPoint
 
     
-    (name = "fk_collection_point_state")
+    
     private CollectionPointStateEntity  collectionPointState; // Relación con CollectionPointState
 
     @Column( "description")
