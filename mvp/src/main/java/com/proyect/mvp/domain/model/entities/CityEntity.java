@@ -1,23 +1,27 @@
 package com.proyect.mvp.domain.model.entities;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import javax.persistence.*;
+import org.hibernate.annotations.GenericGenerator;
+import jakarta.persistence.*;
+
 
 @Entity
-@Table(name = "productcategory")
+@Table(name = "city")
 @Getter
 @NoArgsConstructor
-public class ProductCategoryEntity {
+public class CityEntity {
 
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "id_product_category")
-    private String idProductCategory;
+    @Column(name = "id_city")
+    private String idCity;
 
     @Column(name = "name")
     private String name;
 
-    @Column(name = "measurement_unity")
-    private String measurementUnity;
+    @ManyToOne
+    @JoinColumn(name = "fk_country")
+    private CountryEntity country; 
 }

@@ -1,28 +1,29 @@
 package com.proyect.mvp.domain.model.entities;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import javax.persistence.*;
+import jakarta.persistence.*;
+import org.hibernate.annotations.GenericGenerator;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "producthistory")
+@Table(name = "salehistory")
 @Getter
 @NoArgsConstructor
-public class ProductHistoryEntity {
+public class SaleHistoryEntity {
 
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "id_product_history")
-    private String idProductHistory;
+    @Column(name = "id_sale_history")
+    private String idSaleHistory;
 
     @ManyToOne
-    @JoinColumn(name = "fk_product")
-    private Product product;
+    @JoinColumn(name = "fk_sale")
+    private Sale sale;
 
     @ManyToOne
-    @JoinColumn(name = "fk_product_state")
-    private ProductState productState;
+    @JoinColumn(name = "fk_sale_state")
+    private SaleState saleState;
 
     @Column(name = "description")
     private String description;

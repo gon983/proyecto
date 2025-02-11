@@ -1,7 +1,8 @@
 package com.proyect.mvp.domain.model.entities;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import javax.persistence.*;
+import jakarta.persistence.*;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "collectionpoint")
@@ -20,12 +21,12 @@ public class CollectionPointEntity {
 
     @ManyToOne
     @JoinColumn(name = "fk_neighborhood")
-    private Neighborhood neighborhood;
+    private NeighborhoodEntity neighborhood;
 
     @Column(name = "use_price")
     private String usePrice;
 
     @ManyToOne
     @JoinColumn(name = "fk_owner")
-    private User owner;
+    private UserEntity owner;
 }

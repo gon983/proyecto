@@ -1,24 +1,21 @@
 package com.proyect.mvp.domain.model.entities;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import javax.persistence.*;
+import jakarta.persistence.*;
+import org.hibernate.annotations.GenericGenerator;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "neighborhoodpackage")
+@Table(name = "collectionpointpayments")
 @Getter
 @NoArgsConstructor
-public class NeighborhoodPackageEntity {
+public class CollectionPointPaymentsEntity {
 
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "id_neighborhood_package")
-    private String idNeighborhoodPackage;
-
-    @ManyToOne
-    @JoinColumn(name = "fk_in_charge")
-    private User inCharge;
+    @Column(name = "id_collection_point_payments")
+    private String idCollectionPointPayments;
 
     @ManyToOne
     @JoinColumn(name = "fk_collection_point")
@@ -26,4 +23,10 @@ public class NeighborhoodPackageEntity {
 
     @Column(name = "date")
     private LocalDateTime date;
+
+    @Column(name = "note")
+    private String note;
+
+    @Column(name = "amount")
+    private double amount;
 }

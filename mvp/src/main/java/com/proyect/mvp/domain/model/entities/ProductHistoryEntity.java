@@ -1,28 +1,29 @@
 package com.proyect.mvp.domain.model.entities;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import javax.persistence.*;
+import jakarta.persistence.*;
+import org.hibernate.annotations.GenericGenerator;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "neighborhoodpackagehistory")
+@Table(name = "producthistory")
 @Getter
 @NoArgsConstructor
-public class NeighborhoodPackageHistoryEntity {
+public class ProductHistoryEntity {
 
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "id_neighborhood_package_history")
-    private String idNeighborhoodPackageHistory;
+    @Column(name = "id_product_history")
+    private String idProductHistory;
 
     @ManyToOne
-    @JoinColumn(name = "fk_neighborhood_package")
-    private NeighborhoodPackage neighborhoodPackage;
+    @JoinColumn(name = "fk_product")
+    private Product product;
 
     @ManyToOne
-    @JoinColumn(name = "fk_neighborhood_package_state")
-    private NeighborhoodPackageState neighborhoodPackageState;
+    @JoinColumn(name = "fk_product_state")
+    private ProductState productState;
 
     @Column(name = "description")
     private String description;

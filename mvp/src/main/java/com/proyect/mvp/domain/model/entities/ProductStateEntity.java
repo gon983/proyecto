@@ -1,19 +1,20 @@
 package com.proyect.mvp.domain.model.entities;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import javax.persistence.*;
+import jakarta.persistence.*;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-@Table(name = "neighborhoodpackagestate")
+@Table(name = "productstate")
 @Getter
 @NoArgsConstructor
-public class NeighborhoodPackageStateEntity {
+public class ProductStateEntity {
 
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "id_neighborhood_package_state")
-    private String idNeighborhoodPackageState;
+    @Column(name = "id_product_state")
+    private String idProductState;
 
     @Column(name = "name")
     private String name;

@@ -1,19 +1,20 @@
 package com.proyect.mvp.domain.model.entities;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import javax.persistence.*;
+import jakarta.persistence.*;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-@Table(name = "purchasedetail")
+@Table(name = "saledetail")
 @Getter
 @NoArgsConstructor
-public class PurchaseDetailEntity {
+public class SaleDetailEntity {
 
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "id_purchase_detail")
-    private String idPurchaseDetail;
+    @Column(name = "id_sale_detail")
+    private String idSaleDetail;
 
     @ManyToOne
     @JoinColumn(name = "fk_product")
@@ -23,6 +24,6 @@ public class PurchaseDetailEntity {
     private double quantity;
 
     @ManyToOne
-    @JoinColumn(name = "fk_purchase")
-    private Purchase purchase;
+    @JoinColumn(name = "fk_sale")
+    private Sale sale;
 }
