@@ -1,3 +1,5 @@
+package com.proyect.mvp.domain.model.entities;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
