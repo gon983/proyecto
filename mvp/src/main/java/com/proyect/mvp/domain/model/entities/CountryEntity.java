@@ -1,13 +1,16 @@
 package com.proyect.mvp.domain.model.entities;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.NoArgsConstructor;
-import javax.persistence.*;
+import jakarta.persistence.*;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "country")
 @Getter
+@Setter
 @NoArgsConstructor
-public class CountryEntity {
+public class CountryEntity{
 
     @Id
     @GeneratedValue(generator = "UUID")
