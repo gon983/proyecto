@@ -1,9 +1,9 @@
 package com.proyect.mvp.domain.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 
 import com.proyect.mvp.domain.model.entities.ProductPriceEntity;
 
-public interface ProductPriceRepository extends JpaRepository<ProductPriceEntity,String> {
+public interface ProductPriceRepository extends R2dbcRepository<ProductPriceEntity,String> {
 
 }

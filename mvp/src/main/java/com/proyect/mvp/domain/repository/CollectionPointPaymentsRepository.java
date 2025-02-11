@@ -1,9 +1,9 @@
 package com.proyect.mvp.domain.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 
 import com.proyect.mvp.domain.model.entities.CollectionPointPaymentsEntity;
 
-public interface CollectionPointPaymentsRepository extends JpaRepository<CollectionPointPaymentsEntity,String> {
+public interface CollectionPointPaymentsRepository extends R2dbcRepository<CollectionPointPaymentsEntity,String> {
 
 }
