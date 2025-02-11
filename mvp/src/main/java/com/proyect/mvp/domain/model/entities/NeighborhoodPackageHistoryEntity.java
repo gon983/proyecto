@@ -19,11 +19,11 @@ public class NeighborhoodPackageHistoryEntity {
 
     @ManyToOne
     @JoinColumn(name = "fk_neighborhood_package")
-    private NeighborhoodPackage neighborhoodPackage;
+    private NeighborhoodPackageEntity  neighborhoodPackage;
 
     @ManyToOne
     @JoinColumn(name = "fk_neighborhood_package_state")
-    private NeighborhoodPackageState neighborhoodPackageState;
+    private NeighborhoodPackageStateEntity  neighborhoodPackageState;
 
     @Column(name = "description")
     private String description;

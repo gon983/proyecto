@@ -18,9 +18,9 @@ public class ProductorxProductEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_product")
-    private Product product;
+    private ProductEntity  product;
 
     @ManyToOne
     @JoinColumn(name = "id_productor")
-    private User productor; // Assuming "productor" refers to the User entity
+    private UserEntity  productor; // Assuming "productor" refers to the User entity
 }

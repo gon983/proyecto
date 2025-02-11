@@ -18,12 +18,12 @@ public class PurchaseDetailEntity {
 
     @ManyToOne
     @JoinColumn(name = "fk_product")
-    private Product product;
+    private ProductEntity  product;
 
     @Column(name = "quantity")
     private double quantity;
 
     @ManyToOne
     @JoinColumn(name = "fk_purchase")
-    private Purchase purchase;
+    private PurchaseEntity  purchase;
 }

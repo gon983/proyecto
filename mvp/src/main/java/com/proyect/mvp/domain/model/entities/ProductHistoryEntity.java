@@ -19,11 +19,11 @@ public class ProductHistoryEntity {
 
     @ManyToOne
     @JoinColumn(name = "fk_product")
-    private Product product;
+    private ProductEntity  product;
 
     @ManyToOne
     @JoinColumn(name = "fk_product_state")
-    private ProductState productState;
+    private ProductStateEntity  productState;
 
     @Column(name = "description")
     private String description;

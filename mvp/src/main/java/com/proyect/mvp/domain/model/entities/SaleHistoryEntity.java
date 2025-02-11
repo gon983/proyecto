@@ -19,11 +19,11 @@ public class SaleHistoryEntity {
 
     @ManyToOne
     @JoinColumn(name = "fk_sale")
-    private Sale sale;
+    private SaleEntity  sale;
 
     @ManyToOne
     @JoinColumn(name = "fk_sale_state")
-    private SaleState saleState;
+    private SaleStateEntity  saleState;
 
     @Column(name = "description")
     private String description;

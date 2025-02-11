@@ -19,25 +19,20 @@ public class StockMovementEntity {
 
     @ManyToOne
     @JoinColumn(name = "fk_product")
-    private Product product;
+    private ProductEntity  product;
 
     @Column(name = "quantity")
     private double quantity;
 
-    @Enumerated(EnumType.STRING) // For enum type
+    @Enumerated(EnumType.STRING) 
     @Column(name = "type")
-    private StockMovementType type; // Create a StockMovementType enum (see below)
+    private StockMovementTypeEnum  type; 
 
     @Column(name = "date")
-    private LocalDate date; // Use LocalDate for DATE type
+    private LocalDate date; 
 
     @Column(name = "coment")
-    private String comment; // Corrected typo "coment" to "comment"
+    private String comment; 
 }
 
-// Create a separate enum class for the 'type' field
-public enum StockMovementType {
-    IN,
-    OUT,
-    EDITION
-}
+

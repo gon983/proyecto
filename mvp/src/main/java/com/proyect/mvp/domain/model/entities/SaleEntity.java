@@ -21,15 +21,15 @@ public class SaleEntity {
 
     @ManyToOne
     @JoinColumn(name = "fk_productor")
-    private User productor; // Assuming "productor" refers to the User entity
+    private UserEntity  productor; // Assuming "productor" refers to the User entity
 
     @ManyToOne
     @JoinColumn(name = "fk_deliver_guy")
-    private User deliverGuy;
+    private UserEntity  deliverGuy;
 
     @ManyToOne
     @JoinColumn(name = "fk_payment_method")
-    private PaymentMethod paymentMethod;
+    private PaymentMethodEntity  paymentMethod;
 
     @Column(name = "bill")
     private String bill;

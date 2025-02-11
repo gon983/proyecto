@@ -21,5 +21,5 @@ public class LocalityEntity {
 
     @ManyToOne
     @JoinColumn(name = "fk_city")
-    private City city; // Assuming you have a City entity
+    private CityEntity  city; // Assuming you have a City entity
 }

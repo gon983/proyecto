@@ -18,20 +18,20 @@ public class PurchaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "fk_user")
-    private User user;
+    private UserEntity  user;
 
     @ManyToOne
     @JoinColumn(name = "fk_type_purchase")
-    private PurchaseType typePurchase;
+    private PurchaseTypeEntity  typePurchase;
 
     @Column(name = "amount")
     private double amount;
 
     @ManyToOne
     @JoinColumn(name = "fk_neighborhood_package")
-    private NeighborhoodPackage neighborhoodPackage;
+    private NeighborhoodPackageEntity  neighborhoodPackage;
 
     @ManyToOne
     @JoinColumn(name = "fk_payment_method")
-    private PaymentMethod paymentMethod;
+    private PaymentMethodEntity  paymentMethod;
 }

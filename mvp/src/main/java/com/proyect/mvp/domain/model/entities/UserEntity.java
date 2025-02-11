@@ -40,7 +40,7 @@ public class UserEntity {
 
     @ManyToOne
     @JoinColumn(name = "fk_neighborhood")
-    private Neighborhood neighborhood;
+    private NeighborhoodEntity neighborhood;
 
     @Column(name = "phone")
     private String phone;

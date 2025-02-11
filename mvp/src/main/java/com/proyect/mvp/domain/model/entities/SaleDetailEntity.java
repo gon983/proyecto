@@ -18,12 +18,12 @@ public class SaleDetailEntity {
 
     @ManyToOne
     @JoinColumn(name = "fk_product")
-    private Product product;
+    private ProductEntity  product;
 
     @Column(name = "quantity")
     private double quantity;
 
     @ManyToOne
     @JoinColumn(name = "fk_sale")
-    private Sale sale;
+    private SaleEntity  sale;
 }

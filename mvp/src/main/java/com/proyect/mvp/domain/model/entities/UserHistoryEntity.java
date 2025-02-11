@@ -19,11 +19,11 @@ public class UserHistoryEntity {
 
     @ManyToOne
     @JoinColumn(name = "fk_user")
-    private User user;
+    private UserEntity user;
 
     @ManyToOne
     @JoinColumn(name = "fk_user_state")
-    private UserState userState;
+    private UserStateEntity userState;
 
     @Column(name = "description")
     private String description;

@@ -19,11 +19,11 @@ public class CollectionPointHistoryEntity { // PascalCase
 
     @ManyToOne
     @JoinColumn(name = "fk_collection_point")
-    private CollectionPoint collectionPoint; // Relación con CollectionPoint
+    private CollectionPointEntity collectionPoint; // Relación con CollectionPoint
 
     @ManyToOne
     @JoinColumn(name = "fk_collection_point_state")
-    private CollectionPointState collectionPointState; // Relación con CollectionPointState
+    private CollectionPointStateEntity  collectionPointState; // Relación con CollectionPointState
 
     @Column(name = "description")
     private String description;
@@ -34,3 +34,4 @@ public class CollectionPointHistoryEntity { // PascalCase
     @Column(name = "finish")
     private LocalDateTime finish; // Usando LocalDateTime para datetime
 }
+

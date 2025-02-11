@@ -19,11 +19,11 @@ public class NeighborhoodPackageEntity {
 
     @ManyToOne
     @JoinColumn(name = "fk_in_charge")
-    private User inCharge;
+    private UserEntity  inCharge;
 
     @ManyToOne
     @JoinColumn(name = "fk_collection_point")
-    private CollectionPoint collectionPoint;
+    private CollectionPointEntity  collectionPoint;
 
     @Column(name = "date")
     private LocalDateTime date;

@@ -21,5 +21,5 @@ public class NeighborhoodEntity {
 
     @ManyToOne
     @JoinColumn(name = "fk_locality")
-    private Locality locality; 
+    private LocalityEntity  locality; 
 }
