@@ -1,5 +1,9 @@
 package com.proyect.mvp.domain.repository;
 
-public interface CollectionPointRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.proyect.mvp.domain.model.entities.CollectionPointEntity;
+
+public interface CollectionPointRepository extends JpaRepository<CollectionPointEntity,String> {
 
 }

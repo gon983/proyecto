@@ -1,5 +1,9 @@
 package com.proyect.mvp.domain.repository;
 
-public interface SaleStateRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.proyect.mvp.domain.model.entities.SaleStateEntity;
+
+public interface SaleStateRepository extends JpaRepository<SaleStateEntity,String> {
 
 }
