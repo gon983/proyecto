@@ -6,7 +6,7 @@ import javax.persistence.*;
 @Table(name = "userstate")
 @Getter
 @NoArgsConstructor
-public class UserState {
+public class UserStateEntity {
 
     @Id
     @GeneratedValue(generator = "UUID")

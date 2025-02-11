@@ -7,7 +7,7 @@ import javax.persistence.*;
 @Table(name = "paymentmethod")
 @Getter
 @NoArgsConstructor
-public class PaymentMethod {
+public class PaymentMethodEntity {
 
     @Id
     @GeneratedValue(generator = "UUID")

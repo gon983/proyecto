@@ -7,7 +7,7 @@ import java.time.LocalDateTime; // Importa LocalDateTime para los tipos de datos
 @Table(name = "collectionpointhistory")
 @Getter
 @NoArgsConstructor
-public class CollectionPointHistory { // PascalCase
+public class CollectionPointHistoryEntity { // PascalCase
 
     @Id
     @GeneratedValue(generator = "UUID")

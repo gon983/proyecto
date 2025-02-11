@@ -1,12 +1,13 @@
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "city")
 @Getter
 @NoArgsConstructor
-public class City {
+public class CityEntity {
 
     @Id
     @GeneratedValue(generator = "UUID")

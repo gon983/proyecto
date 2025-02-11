@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 @Table(name = "neighborhoodpackage")
 @Getter
 @NoArgsConstructor
-public class NeighborhoodPackage {
+public class NeighborhoodPackageEntity {
 
     @Id
     @GeneratedValue(generator = "UUID")
