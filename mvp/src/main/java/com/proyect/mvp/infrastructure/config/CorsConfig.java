@@ -7,6 +7,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.springframework.web.reactive.config.CorsRegistry;
+import org.springframework.web.reactive.config.WebFluxConfigurer;
 import org.springframework.web.server.WebFilter;
 
 import reactor.core.publisher.Mono;
@@ -17,20 +19,17 @@ public class CorsConfig {
     @Bean
     public WebFilter corsFilter() {
         return (exchange, chain) -> {
-            ServerHttpRequest request =  exchange.getRequest();
+            ServerHttpRequest request = exchange.getRequest();
             ServerHttpResponse response = exchange.getResponse();
 
-            // Configurar los encabezados CORS
-            response.getHeaders().add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "http://localhost:9090"); // Origen permitido
-            response.getHeaders().add(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "GET, POST, PUT, DELETE"); // Métodos permitidos
-            response.getHeaders().add(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "*"); // Encabezados permitidos
+            String allowedOrigin = "http://localhost:9090"; // O el origen que necesites
+            response.getHeaders().add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, allowedOrigin);
+            response.getHeaders().add(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "GET, POST, PUT, DELETE, OPTIONS"); // Incluye OPTIONS
+            response.getHeaders().add(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "*");
+            response.getHeaders().add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true"); // Si es necesario
 
-            // Permitir que el navegador envíe credenciales (si es necesario)
-            response.getHeaders().add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
-
-            // Si es una solicitud OPTIONS (preflight), responder con los encabezados CORS
             if (request.getMethod() == HttpMethod.OPTIONS) {
-                response.getHeaders().add(HttpHeaders.ACCESS_CONTROL_MAX_AGE, "3600"); // Tiempo de caché para preflight
+                response.getHeaders().add(HttpHeaders.ACCESS_CONTROL_MAX_AGE, "3600");
                 response.setStatusCode(HttpStatus.OK);
                 return Mono.empty();
             }
@@ -38,4 +37,20 @@ public class CorsConfig {
             return chain.filter(exchange);
         };
     }
+
+
+    // Esta configuración resuelve el problema de la URL de redirección de OAuth2
+    @Bean
+    public WebFluxConfigurer corsConfigurer() {
+        return new WebFluxConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**") // Aplica a todos los endpoints
+                        .allowedOrigins("http://localhost:9090") // Tu origen permitido
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        .allowCredentials(true); // Si necesitas enviar cookies o encabezados de autenticación
+            }
+        };
+    }
+
 }
