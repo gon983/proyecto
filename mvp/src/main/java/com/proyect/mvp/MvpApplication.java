@@ -2,12 +2,11 @@ package com.proyect.mvp;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
+
 
 import io.github.cdimascio.dotenv.Dotenv;
 
-@SpringBootApplication
-@ComponentScan(basePackages = {"com.proyect.mvp.infrastructure.routes", "com.proyect.mvp.application.services", "com.proyect.mvp.infrastructure.config", "com.proyect.mvp.domain.repository"})
+@SpringBootApplication(scanBasePackages = {"com.proyect.mvp.infrastructure.routes", "com.proyect.mvp.infrastructure.config", "com.proyect.mvp.application.services"})
 public class MvpApplication {
 
     public static void main(String[] args) {
