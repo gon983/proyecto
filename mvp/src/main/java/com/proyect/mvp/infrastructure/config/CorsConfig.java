@@ -17,9 +17,7 @@ import reactor.core.publisher.Mono;
 public class CorsConfig {
 
     private static final String[] ALLOWED_ORIGINS = {
-            "http://localhost:8080", // Puerto principal de la aplicación
-            "http://localhost:9090"  // Puerto de management (Swagger UI)
-            // Agrega aquí otros orígenes si es necesario (ej: dominios de producción)
+            "http://localhost:8080"
     };
 
     @Bean
