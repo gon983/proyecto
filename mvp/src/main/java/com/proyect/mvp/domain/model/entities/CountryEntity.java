@@ -13,8 +13,7 @@ import org.springframework.data.relational.core.mapping.Column;
 @NoArgsConstructor
 public class CountryEntity{
 
-    @Id
-    
+    @Id  
     @Column( "id_country")
     private String idCountry;
 

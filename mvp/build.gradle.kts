@@ -33,6 +33,7 @@ dependencies {
 	implementation("com.mysql:mysql-connector-j:8.3.0")
 	implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
     implementation("org.mariadb:r2dbc-mariadb") 
+	implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.2.0")
 	
 	
 	compileOnly("org.projectlombok:lombok")
