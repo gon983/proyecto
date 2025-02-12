@@ -3,7 +3,7 @@ package com.proyect.mvp.application.services;
 import com.proyect.mvp.domain.model.entities.CountryEntity;
 import com.proyect.mvp.domain.repository.CountryRepository;
 
-import org.springframework.stereotype.Component;
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;

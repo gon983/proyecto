@@ -27,14 +27,13 @@ public class CountryRoute {
 
     @Bean
     @RouterOperations({
-        @RouterOperation(path = "/countries", produces = MediaType.APPLICATION_JSON_VALUE,
+        @RouterOperation(path = "/countries", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET,
             operation = @Operation(summary = "Obtener todos los países", description = "Retorna una lista de países",
                 responses = {
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Lista de países",
                         content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = CountryEntity.class)))
-                }))
-        ,
+                })),
         @RouterOperation(path = "/countries/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET,
             operation = @Operation(summary = "Obtener país por ID", description = "Retorna un país según su ID",
                 parameters = {
@@ -45,8 +44,7 @@ public class CountryRoute {
                         content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = CountryEntity.class))),
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "País no encontrado")
-                }))
-        ,
+                })),
         @RouterOperation(path = "/countries", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST,
             operation = @Operation(summary = "Crear un nuevo país", description = "Guarda un nuevo país en la base de datos",
                 requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
@@ -56,8 +54,7 @@ public class CountryRoute {
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "País creado",
                         content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = CountryEntity.class)))
-                }))
-        ,
+                })),
         @RouterOperation(path = "/countries/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT,
             operation = @Operation(summary = "Actualizar un país", description = "Actualiza los datos de un país existente",
                 parameters = {
@@ -70,8 +67,7 @@ public class CountryRoute {
                     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "País actualizado",
                         content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = CountryEntity.class)))
-                }))
-        ,
+                })),
         @RouterOperation(path = "/countries/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE,
             operation = @Operation(summary = "Eliminar un país", description = "Borra un país según su ID",
                 parameters = {
