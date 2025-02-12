@@ -31,8 +31,11 @@ dependencies {
 	implementation("io.github.cdimascio:dotenv-java:3.0.0")
 	implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
     implementation("org.mariadb:r2dbc-mariadb") 
-	implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.2.0") 
 	
+	
+    
+
+
 	
 	
 	compileOnly("org.projectlombok:lombok")
