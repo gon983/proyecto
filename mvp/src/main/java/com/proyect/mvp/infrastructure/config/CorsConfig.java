@@ -16,17 +16,27 @@ import reactor.core.publisher.Mono;
 @Configuration
 public class CorsConfig {
 
+    private static final String[] ALLOWED_ORIGINS = {
+            "http://localhost:8080", // Puerto principal de la aplicación
+            "http://localhost:9090"  // Puerto de management (Swagger UI)
+            // Agrega aquí otros orígenes si es necesario (ej: dominios de producción)
+    };
+
     @Bean
     public WebFilter corsFilter() {
         return (exchange, chain) -> {
             ServerHttpRequest request = exchange.getRequest();
             ServerHttpResponse response = exchange.getResponse();
 
-            String allowedOrigin = "http://localhost:9090"; // O el origen que necesites
-            response.getHeaders().add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, allowedOrigin);
-            response.getHeaders().add(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "GET, POST, PUT, DELETE, OPTIONS"); // Incluye OPTIONS
-            response.getHeaders().add(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "*");
-            response.getHeaders().add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true"); // Si es necesario
+            String origin = request.getHeaders().getOrigin(); // Obtén el origen de la solicitud
+
+            if (origin != null && java.util.Arrays.asList(ALLOWED_ORIGINS).contains(origin)) { // Verifica si el origen está permitido
+                response.getHeaders().add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, origin);
+                response.getHeaders().add(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "GET, POST, PUT, DELETE, OPTIONS");
+                response.getHeaders().add(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "*");
+                response.getHeaders().add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
+            }
+
 
             if (request.getMethod() == HttpMethod.OPTIONS) {
                 response.getHeaders().add(HttpHeaders.ACCESS_CONTROL_MAX_AGE, "3600");
@@ -38,19 +48,16 @@ public class CorsConfig {
         };
     }
 
-
-    // Esta configuración resuelve el problema de la URL de redirección de OAuth2
     @Bean
     public WebFluxConfigurer corsConfigurer() {
         return new WebFluxConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**") // Aplica a todos los endpoints
-                        .allowedOrigins("http://localhost:9090") // Tu origen permitido
+                registry.addMapping("/**")
+                        .allowedOrigins(ALLOWED_ORIGINS) // Usa los mismos orígenes permitidos
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                        .allowCredentials(true); // Si necesitas enviar cookies o encabezados de autenticación
+                        .allowCredentials(true);
             }
         };
     }
-
 }
