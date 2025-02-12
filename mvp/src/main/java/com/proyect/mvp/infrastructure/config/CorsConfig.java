@@ -10,7 +10,7 @@ import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.reactive.config.CorsRegistry;
 import org.springframework.web.reactive.config.WebFluxConfigurer;
 import org.springframework.web.server.WebFilter;
-
+import org.springframework.lang.NonNull;
 import reactor.core.publisher.Mono;
 
 @Configuration
@@ -52,7 +52,7 @@ public class CorsConfig {
     public WebFluxConfigurer corsConfigurer() {
         return new WebFluxConfigurer() {
             @Override
-            public void addCorsMappings(CorsRegistry registry) {
+            public void addCorsMappings(@NonNull CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowedOrigins(ALLOWED_ORIGINS) // Usa los mismos orígenes permitidos
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
