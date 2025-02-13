@@ -24,7 +24,7 @@ USE `proyecto` ;
 DROP TABLE IF EXISTS `proyecto`.`COUNTRY` ;
 
 CREATE TABLE IF NOT EXISTS `proyecto`.`COUNTRY` (
-  `id_country` CHAR(36) NOT NULL,
+  `id_country` UUID NOT NULL,
   `name` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id_country`),
   UNIQUE INDEX `id_country_UNIQUE` (`id_country` ASC) VISIBLE,
@@ -38,9 +38,9 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `proyecto`.`CITY` ;
 
 CREATE TABLE IF NOT EXISTS `proyecto`.`CITY` (
-  `id_city` CHAR(36) NOT NULL,
+  `id_city` UUID NOT NULL,
   `name` VARCHAR(45) NOT NULL,
-  `fk_country` CHAR(36) NOT NULL,
+  `fk_country` UUID NOT NULL,
   PRIMARY KEY (`id_city`),
   UNIQUE INDEX `id_city_UNIQUE` (`id_city` ASC) VISIBLE,
   INDEX `fk_country_idx` (`fk_country` ASC) VISIBLE,
@@ -58,9 +58,9 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `proyecto`.`LOCALITY` ;
 
 CREATE TABLE IF NOT EXISTS `proyecto`.`LOCALITY` (
-  `id_locality` CHAR(36) NOT NULL,
+  `id_locality` UUID NOT NULL,
   `name` VARCHAR(45) NOT NULL,
-  `fk_city` CHAR(36) NOT NULL,
+  `fk_city` UUID NOT NULL,
   PRIMARY KEY (`id_locality`),
   UNIQUE INDEX `id_locality_UNIQUE` (`id_locality` ASC) VISIBLE,
   INDEX `fk_city_idx` (`fk_city` ASC) VISIBLE,
@@ -78,9 +78,9 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `proyecto`.`NEIGHBORHOOD` ;
 
 CREATE TABLE IF NOT EXISTS `proyecto`.`NEIGHBORHOOD` (
-  `id_neighborhood` CHAR(36) NOT NULL,
+  `id_neighborhood` UUID NOT NULL,
   `name` VARCHAR(45) NOT NULL,
-  `fk_locality` CHAR(36) NOT NULL,
+  `fk_locality` UUID NOT NULL,
   PRIMARY KEY (`id_neighborhood`),
   UNIQUE INDEX `id_neighborhood_UNIQUE` (`id_neighborhood` ASC) VISIBLE,
   INDEX `fk_neighborhood_idx` (`fk_locality` ASC) VISIBLE,
@@ -98,7 +98,7 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `proyecto`.`USER` ;
 
 CREATE TABLE IF NOT EXISTS `proyecto`.`USER` (
-  `id_user` CHAR(36) NOT NULL,
+  `id_user` UUID NOT NULL,
   `username` VARCHAR(45) NOT NULL,
   `email` VARCHAR(45) NOT NULL,
   `created_at` DATETIME NOT NULL,
@@ -106,7 +106,7 @@ CREATE TABLE IF NOT EXISTS `proyecto`.`USER` (
   `last_name` VARCHAR(45) NOT NULL,
   `document_type` VARCHAR(45) NOT NULL,
   `document_number` VARCHAR(45) NOT NULL,
-  `fk_neighborhood` CHAR(36) NOT NULL,
+  `fk_neighborhood` UUID NOT NULL,
   `phone` VARCHAR(45) NULL,
   `photo` VARCHAR(45) NULL,
   PRIMARY KEY (`id_user`),
@@ -127,7 +127,7 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `proyecto`.`USERSTATE` ;
 
 CREATE TABLE IF NOT EXISTS `proyecto`.`USERSTATE` (
-  `id_user_state` CHAR(36) NOT NULL,
+  `id_user_state` UUID NOT NULL,
   `name` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id_user_state`),
   UNIQUE INDEX `id_user_state_UNIQUE` (`id_user_state` ASC) VISIBLE)
@@ -140,7 +140,7 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `proyecto`.`PRODUCTCATEGORY` ;
 
 CREATE TABLE IF NOT EXISTS `proyecto`.`PRODUCTCATEGORY` (
-  `id_product_category` CHAR(36) NOT NULL,
+  `id_product_category` UUID NOT NULL,
   `name` VARCHAR(45) NOT NULL,
   `measurement_unity` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id_product_category`))
@@ -153,12 +153,12 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `proyecto`.`PRODUCT` ;
 
 CREATE TABLE IF NOT EXISTS `proyecto`.`PRODUCT` (
-  `id_product` CHAR(36) NOT NULL,
+  `id_product` UUID NOT NULL,
   `name` VARCHAR(45) NOT NULL,
   `stock` DOUBLE NOT NULL,
   `alert_stock` DOUBLE NULL,
   `photo` VARCHAR(45) NULL,
-  `fk_product_category` CHAR(36) NULL,
+  `fk_product_category` UUID NULL,
   PRIMARY KEY (`id_product`),
   UNIQUE INDEX `id_productor_UNIQUE` (`id_product` ASC) VISIBLE,
   UNIQUE INDEX `name_UNIQUE` (`name` ASC) VISIBLE,
@@ -177,9 +177,9 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `proyecto`.`PRODUCTORXPRODUCT` ;
 
 CREATE TABLE IF NOT EXISTS `proyecto`.`PRODUCTORXPRODUCT` (
-  `id_product` CHAR(36) NOT NULL,
-  `id_productor` CHAR(36) NOT NULL,
-  `id_productxproductor` CHAR(36) NOT NULL,
+  `id_product` UUID NOT NULL,
+  `id_productor` UUID NOT NULL,
+  `id_productxproductor` UUID NOT NULL,
   PRIMARY KEY (`id_productxproductor`),
   INDEX `fk_productor_idx` (`id_productor` ASC) VISIBLE,
   CONSTRAINT `fk_product_productorxproduct`
@@ -201,7 +201,7 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `proyecto`.`PRODUCTSTATE` ;
 
 CREATE TABLE IF NOT EXISTS `proyecto`.`PRODUCTSTATE` (
-  `id_product_state` CHAR(36) NOT NULL,
+  `id_product_state` UUID NOT NULL,
   `name` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id_product_state`),
   UNIQUE INDEX `name_UNIQUE` (`name` ASC) VISIBLE)
@@ -214,9 +214,9 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `proyecto`.`PRODUCTPRICE` ;
 
 CREATE TABLE IF NOT EXISTS `proyecto`.`PRODUCTPRICE` (
-  `id_product_price` CHAR(36) NOT NULL,
-  `fk_product` CHAR(36) NOT NULL,
-  `fk_product_state` CHAR(36) NULL,
+  `id_product_price` UUID NOT NULL,
+  `fk_product` UUID NOT NULL,
+  `fk_product_state` UUID NULL,
   `price` DOUBLE NOT NULL,
   `description` VARCHAR(200) NOT NULL,
   PRIMARY KEY (`id_product_price`),
@@ -241,11 +241,11 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `proyecto`.`COLLECTIONPOINT` ;
 
 CREATE TABLE IF NOT EXISTS `proyecto`.`COLLECTIONPOINT` (
-  `id_collection_point` CHAR(36) NOT NULL,
+  `id_collection_point` UUID NOT NULL,
   `name` VARCHAR(45) NOT NULL,
-  `fk_neighborhood` CHAR(36) NOT NULL,
+  `fk_neighborhood` UUID NOT NULL,
   `use_price` VARCHAR(45) NULL,
-  `fk_owner` CHAR(36) NOT NULL,
+  `fk_owner` UUID NOT NULL,
   PRIMARY KEY (`id_collection_point`),
   INDEX `fk_neighborhood_idx` (`fk_neighborhood` ASC) VISIBLE,
   INDEX `fk_owner_idx` (`fk_owner` ASC) VISIBLE,
@@ -268,7 +268,7 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `proyecto`.`COLLECTIONPOINTSTATE` ;
 
 CREATE TABLE IF NOT EXISTS `proyecto`.`COLLECTIONPOINTSTATE` (
-  `id_collection_point_state` CHAR(36) NOT NULL,
+  `id_collection_point_state` UUID NOT NULL,
   `name` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id_collection_point_state`))
 ENGINE = InnoDB;
@@ -280,10 +280,10 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `proyecto`.`NEIGHBORHOODPACKAGE` ;
 
 CREATE TABLE IF NOT EXISTS `proyecto`.`NEIGHBORHOODPACKAGE` (
-  `fk_in_charge` CHAR(36) NOT NULL,
-  `fk_collection_point` CHAR(36) NOT NULL,
+  `fk_in_charge` UUID NOT NULL,
+  `fk_collection_point` UUID NOT NULL,
   `date` DATETIME NOT NULL,
-  `id_neighborhood_package` CHAR(36) NOT NULL,
+  `id_neighborhood_package` UUID NOT NULL,
   INDEX `fk_collection_point_idx` (`fk_collection_point` ASC) VISIBLE,
   PRIMARY KEY (`id_neighborhood_package`),
   CONSTRAINT `fk_user_neighborhood_package`
@@ -305,7 +305,7 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `proyecto`.`PURCHASETYPE` ;
 
 CREATE TABLE IF NOT EXISTS `proyecto`.`PURCHASETYPE` (
-  `id_purchase_type` CHAR(36) NOT NULL,
+  `id_purchase_type` UUID NOT NULL,
   `name` VARCHAR(45) NULL,
   PRIMARY KEY (`id_purchase_type`))
 ENGINE = InnoDB;
@@ -317,7 +317,7 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `proyecto`.`PAYMENTMETHOD` ;
 
 CREATE TABLE IF NOT EXISTS `proyecto`.`PAYMENTMETHOD` (
-  `id_payment_method` CHAR(36) NOT NULL,
+  `id_payment_method` UUID NOT NULL,
   `name` VARCHAR(45) NULL,
   PRIMARY KEY (`id_payment_method`))
 ENGINE = InnoDB;
@@ -329,12 +329,12 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `proyecto`.`PURCHASE` ;
 
 CREATE TABLE IF NOT EXISTS `proyecto`.`PURCHASE` (
-  `id_purchase` CHAR(36) NOT NULL,
-  `fk_user` CHAR(36) NOT NULL,
-  `fk_type_purchase` CHAR(36) NOT NULL,
+  `id_purchase` UUID NOT NULL,
+  `fk_user` UUID NOT NULL,
+  `fk_type_purchase` UUID NOT NULL,
   `amount` DOUBLE NOT NULL,
-  `fk_neighborhood_package` CHAR(36) NULL,
-  `fk_payment_method` CHAR(36) NOT NULL,
+  `fk_neighborhood_package` UUID NULL,
+  `fk_payment_method` UUID NOT NULL,
   PRIMARY KEY (`id_purchase`),
   INDEX `fk_purchase_type_idx` (`fk_type_purchase` ASC) VISIBLE,
   INDEX `fk_user_idx` (`fk_user` ASC) VISIBLE,
@@ -369,10 +369,10 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `proyecto`.`PURCHASEDETAIL` ;
 
 CREATE TABLE IF NOT EXISTS `proyecto`.`PURCHASEDETAIL` (
-  `id_purchase_detail` CHAR(36) NOT NULL,
-  `fk_product` CHAR(36) NOT NULL,
+  `id_purchase_detail` UUID NOT NULL,
+  `fk_product` UUID NOT NULL,
   `quantity` DOUBLE NOT NULL,
-  `fk_purchase` CHAR(36) NOT NULL,
+  `fk_purchase` UUID NOT NULL,
   PRIMARY KEY (`id_purchase_detail`),
   INDEX `fk_purchase_idx` (`fk_purchase` ASC) VISIBLE,
   INDEX `fk_product_purchase_detail_idx` (`fk_product` ASC) VISIBLE,
@@ -395,7 +395,7 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `proyecto`.`NEIGHBORHOODPACKAGESTATE` ;
 
 CREATE TABLE IF NOT EXISTS `proyecto`.`NEIGHBORHOODPACKAGESTATE` (
-  `id_neighborhood_package_state` CHAR(36) NOT NULL,
+  `id_neighborhood_package_state` UUID NOT NULL,
   `name` VARCHAR(45) NULL,
   PRIMARY KEY (`id_neighborhood_package_state`))
 ENGINE = InnoDB;
@@ -407,9 +407,9 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `proyecto`.`USERHISTORY` ;
 
 CREATE TABLE IF NOT EXISTS `proyecto`.`USERHISTORY` (
-  `id_user_history` CHAR(36) NOT NULL,
-  `fk_user` CHAR(36) NOT NULL,
-  `fk_user_state` CHAR(36) NOT NULL,
+  `id_user_history` UUID NOT NULL,
+  `fk_user` UUID NOT NULL,
+  `fk_user_state` UUID NOT NULL,
   `description` VARCHAR(1500) NULL,
   `init` DATETIME NOT NULL,
   `finish` DATETIME NULL,
@@ -435,9 +435,9 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `proyecto`.`PRODUCTHISTORY` ;
 
 CREATE TABLE IF NOT EXISTS `proyecto`.`PRODUCTHISTORY` (
-  `id_product_history` CHAR(36) NOT NULL,
-  `fk_product` CHAR(36) NOT NULL,
-  `fk_product_state` CHAR(36) NOT NULL,
+  `id_product_history` UUID NOT NULL,
+  `fk_product` UUID NOT NULL,
+  `fk_product_state` UUID NOT NULL,
   `description` VARCHAR(1500) NULL,
   `init` DATETIME NOT NULL,
   `finish` DATETIME NULL,
@@ -463,8 +463,8 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `proyecto`.`STOCKMOVEMENT` ;
 
 CREATE TABLE IF NOT EXISTS `proyecto`.`STOCKMOVEMENT` (
-  `id_stock_movement` CHAR(36) NOT NULL,
-  `fk_product` CHAR(36) NOT NULL,
+  `id_stock_movement` UUID NOT NULL,
+  `fk_product` UUID NOT NULL,
   `quantity` DOUBLE NOT NULL,
   `type` ENUM('in', 'out', 'edition') NOT NULL,
   `date` DATE NOT NULL,
@@ -485,9 +485,9 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `proyecto`.`NEIGHBORHOODPACKAGEHISTORY` ;
 
 CREATE TABLE IF NOT EXISTS `proyecto`.`NEIGHBORHOODPACKAGEHISTORY` (
-  `id_neighborhood_package_history` CHAR(36) NOT NULL,
-  `fk_neighborhood_package` CHAR(36) NOT NULL,
-  `fk_neighborhood_package_state` CHAR(36) NOT NULL,
+  `id_neighborhood_package_history` UUID NOT NULL,
+  `fk_neighborhood_package` UUID NOT NULL,
+  `fk_neighborhood_package_state` UUID NOT NULL,
   `description` VARCHAR(1500) NULL,
   `init` DATETIME NOT NULL,
   `finish` DATETIME NULL,
@@ -513,9 +513,9 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `proyecto`.`COLLECTIONPOINTHISTORY` ;
 
 CREATE TABLE IF NOT EXISTS `proyecto`.`COLLECTIONPOINTHISTORY` (
-  `id_collection_point_history` CHAR(36) NOT NULL,
-  `fk_collection_point` CHAR(36) NOT NULL,
-  `fk_collection_point_state` CHAR(36) NOT NULL,
+  `id_collection_point_history` UUID NOT NULL,
+  `fk_collection_point` UUID NOT NULL,
+  `fk_collection_point_state` UUID NOT NULL,
   `description` VARCHAR(1500) NULL,
   `init` DATETIME NOT NULL,
   `finish` DATETIME NULL,
@@ -541,11 +541,11 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `proyecto`.`SALE` ;
 
 CREATE TABLE IF NOT EXISTS `proyecto`.`SALE` (
-  `id_sale` CHAR(36) NOT NULL,
+  `id_sale` UUID NOT NULL,
   `amount` DOUBLE NOT NULL,
-  `fk_productor` CHAR(36) NOT NULL,
-  `fk_deliver_guy` CHAR(36) NOT NULL,
-  `fk_payment_method` CHAR(36) NULL,
+  `fk_productor` UUID NOT NULL,
+  `fk_deliver_guy` UUID NOT NULL,
+  `fk_payment_method` UUID NULL,
   `bill` VARCHAR(45) NULL,
   PRIMARY KEY (`id_sale`),
   INDEX `fk_user_idx` (`fk_productor` ASC) VISIBLE,
@@ -575,7 +575,7 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `proyecto`.`SALESTATE` ;
 
 CREATE TABLE IF NOT EXISTS `proyecto`.`SALESTATE` (
-  `id_sale_state` CHAR(36) NOT NULL,
+  `id_sale_state` UUID NOT NULL,
   `name` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id_sale_state`))
 ENGINE = InnoDB;
@@ -587,9 +587,9 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `proyecto`.`SALEHISTORY` ;
 
 CREATE TABLE IF NOT EXISTS `proyecto`.`SALEHISTORY` (
-  `id_sale_history` CHAR(36) NOT NULL,
-  `fk_sale` CHAR(36) NOT NULL,
-  `fk_sale_state` CHAR(36) NOT NULL,
+  `id_sale_history` UUID NOT NULL,
+  `fk_sale` UUID NOT NULL,
+  `fk_sale_state` UUID NOT NULL,
   `description` VARCHAR(1500) NULL,
   `init` DATETIME NOT NULL,
   `finish` DATETIME NULL,
@@ -615,10 +615,10 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `proyecto`.`SALEDETAIL` ;
 
 CREATE TABLE IF NOT EXISTS `proyecto`.`SALEDETAIL` (
-  `id_sale_detail` CHAR(36) NOT NULL,
-  `fk_product` CHAR(36) NOT NULL,
+  `id_sale_detail` UUID NOT NULL,
+  `fk_product` UUID NOT NULL,
   `quantity` DOUBLE NOT NULL,
-  `fk_sale` CHAR(36) NOT NULL,
+  `fk_sale` UUID NOT NULL,
   PRIMARY KEY (`id_sale_detail`),
   INDEX `fk_sale_idx` (`fk_sale` ASC) VISIBLE,
   INDEX `fk_product_idx` (`fk_product` ASC) VISIBLE,
@@ -641,8 +641,8 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `proyecto`.`COLLECTIONPOINTPAYMENTS` ;
 
 CREATE TABLE IF NOT EXISTS `proyecto`.`COLLECTIONPOINTPAYMENTS` (
-  `id_collection_point_payments` CHAR(36) NOT NULL,
-  `fk_collection_point` CHAR(36) NOT NULL,
+  `id_collection_point_payments` UUID NOT NULL,
+  `fk_collection_point` UUID NOT NULL,
   `date` DATETIME NOT NULL,
   `note` VARCHAR(45) NOT NULL,
   `amount` DOUBLE NOT NULL,

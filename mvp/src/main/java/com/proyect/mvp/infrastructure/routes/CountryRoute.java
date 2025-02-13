@@ -32,9 +32,8 @@ public class CountryRoute {
 
     
 
-    private Flux<ServerResponse> getAllCountries(CountryService countryService) {
-        return countryService.getAllCountries() 
-                .flatMap(country -> ServerResponse.ok().bodyValue(country)); 
+    private Mono<ServerResponse> getAllCountries(CountryService countryService) {
+        return ServerResponse.ok().body(countryService.getAllCountries(), CountryEntity.class);
     }
 
     private Mono<ServerResponse> getCountryById(ServerRequest request, CountryService countryService) {
