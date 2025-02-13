@@ -1,11 +1,11 @@
-package com.proyect.mvp.domain.model.dtos;
+package com.proyect.mvp.dtos.create;
 import lombok.Getter;
 import lombok.NoArgsConstructor; // Necesario para la creación con new
 import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
-public class CityDTO {
+public class CityCreateDTO {
     private String name;
-    private UUID countryId;
+    private UUID idCountry;
 }

@@ -29,7 +29,10 @@ public class CountryEntity {
     private Set<CityEntity> cities;
 
     
-   
+    public CountryEntity(String name) {
+        this.idCountry = UUID.randomUUID();
+        this.name = name;
+    }
 
    
 

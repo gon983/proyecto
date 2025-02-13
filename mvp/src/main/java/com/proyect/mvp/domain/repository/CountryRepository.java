@@ -15,6 +15,8 @@ public interface CountryRepository extends R2dbcRepository<CountryEntity,UUID> {
     @Query("INSERT INTO country (id_country, name) VALUES (:id, :name)")
     Mono<CountryEntity> insertCountry(@Param("id") UUID id, @Param("name") String name);
 
+    
+
  }  
 
 

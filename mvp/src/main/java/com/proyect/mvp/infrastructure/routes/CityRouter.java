@@ -1,8 +1,9 @@
 package com.proyect.mvp.infrastructure.routes;
 
 import com.proyect.mvp.application.services.CityService;
-import com.proyect.mvp.domain.model.dtos.CityDTO;
 import com.proyect.mvp.domain.model.entities.CityEntity;
+import com.proyect.mvp.dtos.create.CityCreateDTO;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -28,10 +29,10 @@ public class CityRouter {
     }
 
     private Mono<ServerResponse> createCity(ServerRequest request, CityService cityService) {
-        return request.bodyToMono(CityDTO.class)
+        return request.bodyToMono(CityCreateDTO.class)
                 .map(dto -> CityEntity.builder() // Use builder
                         .name(dto.getName())
-                        .countryId(dto.getCountryId())
+                        .countryId(dto.getIdCountry())
                         .build())
                 .flatMap(cityService::saveCity)
                 .flatMap(savedCity -> ServerResponse.ok().bodyValue(savedCity))

@@ -1,8 +1,10 @@
 package com.proyect.mvp.infrastructure.routes;
 
 import com.proyect.mvp.application.services.CountryService;
-import com.proyect.mvp.domain.model.dtos.CountryDTO;
 import com.proyect.mvp.domain.model.entities.CountryEntity;
+import com.proyect.mvp.dtos.create.CountryCreateDTO;
+import com.proyect.mvp.dtos.update.CountryUpdateDTO;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -18,7 +20,7 @@ import static org.springframework.web.reactive.function.server.RequestPredicates
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
 @Configuration
-public class CountryRoute {
+public class CountryRouter {
 
     @Bean
     public RouterFunction<ServerResponse> routes(CountryService countryService) {
@@ -44,9 +46,9 @@ public class CountryRoute {
     }
 
     private Mono<ServerResponse> createCountry(ServerRequest request, CountryService countryService) {
-        return request.bodyToMono(CountryDTO.class)
-                .map(dto -> CountryEntity.builder().name(dto.getName()).build()) // Use builder
-                .flatMap(countryService::saveCountry)
+        return request.bodyToMono(CountryCreateDTO.class)
+                .map(dto -> new CountryEntity(dto.getName())) // Usa el constructor de CountryEntity
+                .flatMap(country -> countryService.saveCountry(country))
                 .flatMap(savedCountry -> ServerResponse.ok().bodyValue(savedCountry))
                 .onErrorResume(ResponseStatusException.class, e -> ServerResponse.status(e.getStatusCode()).bodyValue(e.getMessage()));
     }
@@ -54,8 +56,7 @@ public class CountryRoute {
     private Mono<ServerResponse> updateCountry(ServerRequest request, CountryService countryService) {
         try {
             UUID id = UUID.fromString(request.pathVariable("id"));
-            return request.bodyToMono(CountryDTO.class)
-                    .map(dto -> CountryEntity.builder().name(dto.getName()).build()) // Use builder
+            return request.bodyToMono(CountryUpdateDTO.class)
                     .flatMap(country -> countryService.updateCountry(id, country))
                     .flatMap(updatedCountry -> ServerResponse.ok().bodyValue(updatedCountry));
         } catch (IllegalArgumentException e) {

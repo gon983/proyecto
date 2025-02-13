@@ -2,6 +2,8 @@ package com.proyect.mvp.application.services;
 
 import com.proyect.mvp.domain.model.entities.CountryEntity;
 import com.proyect.mvp.domain.repository.CountryRepository;
+import com.proyect.mvp.dtos.update.CountryUpdateDTO;
+
 import lombok.Builder;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -39,13 +41,12 @@ public class CountryService {
                 });
     }
 
-    public Mono<CountryEntity> updateCountry(UUID id, CountryEntity updatedCountry) {
+    public Mono<CountryEntity> updateCountry(UUID id, CountryUpdateDTO updatedCountry) {
         return countryRepository.findById(id)
                 .flatMap(existingCountry -> {
                     CountryEntity newCountry = CountryEntity.builder()
                             .idCountry(id)
                             .name(updatedCountry.getName())
-                            .cities(updatedCountry.getCities())
                             .build();
                     return countryRepository.save(newCountry);
                 })
