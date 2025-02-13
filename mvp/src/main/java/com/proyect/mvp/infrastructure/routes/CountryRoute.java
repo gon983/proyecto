@@ -1,8 +1,8 @@
 package com.proyect.mvp.infrastructure.routes;
 
+import com.proyect.mvp.application.services.CountryService;
 import com.proyect.mvp.domain.model.dtos.CountryDTO;
 import com.proyect.mvp.domain.model.entities.CountryEntity;
-import com.proyect.mvp.application.services.CountryService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -34,36 +34,42 @@ public class CountryRoute {
     }
 
     private Mono<ServerResponse> getCountryById(ServerRequest request, CountryService countryService) {
-        UUID id = UUID.fromString(request.pathVariable("id")); // Obtiene el UUID directamente del path variable
-        return countryService.getCountryById(id)
-                .flatMap(country -> ServerResponse.ok().bodyValue(country))
-                .onErrorResume(IllegalArgumentException.class, e -> Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid UUID format")))
-                .onErrorResume(ResponseStatusException.class, e -> ServerResponse.status(e.getStatusCode()).bodyValue(e.getMessage()));
+        try {
+            UUID id = UUID.fromString(request.pathVariable("id"));
+            return countryService.getCountryById(id)
+                    .flatMap(country -> ServerResponse.ok().bodyValue(country));
+        } catch (IllegalArgumentException e) {
+            return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid UUID format"));
+        }
     }
 
     private Mono<ServerResponse> createCountry(ServerRequest request, CountryService countryService) {
         return request.bodyToMono(CountryDTO.class)
-                .map(dto -> new CountryEntity(dto.getName())) // Crea la entidad usando el constructor con name
+                .map(dto -> CountryEntity.builder().name(dto.getName()).build()) // Use builder
                 .flatMap(countryService::saveCountry)
                 .flatMap(savedCountry -> ServerResponse.ok().bodyValue(savedCountry))
                 .onErrorResume(ResponseStatusException.class, e -> ServerResponse.status(e.getStatusCode()).bodyValue(e.getMessage()));
     }
 
     private Mono<ServerResponse> updateCountry(ServerRequest request, CountryService countryService) {
-        UUID id = UUID.fromString(request.pathVariable("id")); // Obtiene el UUID directamente del path variable
-        return request.bodyToMono(CountryDTO.class) // Recibe el DTO con el UUID
-                .map(dto -> new CountryEntity(dto.getName())) // Mapea a la entidad
-                .flatMap(country -> countryService.updateCountry(id, country)) // Llama al servicio con UUID y entidad
-                .flatMap(updatedCountry -> ServerResponse.ok().bodyValue(updatedCountry))
-                .onErrorResume(IllegalArgumentException.class, e -> Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid UUID format")))
-                .onErrorResume(ResponseStatusException.class, e -> ServerResponse.status(e.getStatusCode()).bodyValue(e.getMessage()));
+        try {
+            UUID id = UUID.fromString(request.pathVariable("id"));
+            return request.bodyToMono(CountryDTO.class)
+                    .map(dto -> CountryEntity.builder().name(dto.getName()).build()) // Use builder
+                    .flatMap(country -> countryService.updateCountry(id, country))
+                    .flatMap(updatedCountry -> ServerResponse.ok().bodyValue(updatedCountry));
+        } catch (IllegalArgumentException e) {
+            return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid UUID format"));
+        }
     }
 
     private Mono<ServerResponse> deleteCountry(ServerRequest request, CountryService countryService) {
-        UUID id = UUID.fromString(request.pathVariable("id")); // Obtiene el UUID directamente del path variable
-        return countryService.deleteCountryById(id)
-                .then(ServerResponse.noContent().build())
-                .onErrorResume(IllegalArgumentException.class, e -> Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid UUID format")))
-                .onErrorResume(ResponseStatusException.class, e -> ServerResponse.status(e.getStatusCode()).bodyValue(e.getMessage()));
+        try {
+            UUID id = UUID.fromString(request.pathVariable("id"));
+            return countryService.deleteCountryById(id)
+                    .then(ServerResponse.noContent().build());
+        } catch (IllegalArgumentException e) {
+            return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid UUID format"));
+        }
     }
 }

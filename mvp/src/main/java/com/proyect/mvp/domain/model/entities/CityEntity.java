@@ -1,8 +1,10 @@
 package com.proyect.mvp.domain.model.entities;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+
 
 import java.util.UUID;
 
@@ -10,11 +12,10 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.data.relational.core.mapping.Column;
 
-
-
+@Builder
+@AllArgsConstructor
 @Table("city")
 @Getter
-@Setter
 @NoArgsConstructor
 public class CityEntity {
     @Id 

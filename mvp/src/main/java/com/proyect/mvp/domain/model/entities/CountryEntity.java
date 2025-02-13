@@ -4,14 +4,18 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+
 
 import java.util.Set;
 import java.util.UUID;
+
+@Builder
+@AllArgsConstructor
 @Getter
-@Setter
 @NoArgsConstructor
 @Table("country")
 public class CountryEntity {
@@ -25,11 +29,7 @@ public class CountryEntity {
     private Set<CityEntity> cities;
 
     
-
-    public CountryEntity(String name) {
-        this.idCountry = UUID.randomUUID();
-        this.name = name;
-    }
+   
 
    
 
