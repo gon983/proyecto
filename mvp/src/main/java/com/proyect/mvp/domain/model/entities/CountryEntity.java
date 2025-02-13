@@ -5,11 +5,14 @@ import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Set;
 import java.util.UUID;
 @Getter
 @Setter
+@NoArgsConstructor
 @Table("country")
 public class CountryEntity {
 
@@ -19,13 +22,15 @@ public class CountryEntity {
 
     private String name;
 
-    public CountryEntity() {
-        this.idCountry = UUID.randomUUID();
-    }
+    private Set<CityEntity> cities;
+
+    
 
     public CountryEntity(String name) {
         this.idCountry = UUID.randomUUID();
         this.name = name;
     }
+
+   
 
 }
