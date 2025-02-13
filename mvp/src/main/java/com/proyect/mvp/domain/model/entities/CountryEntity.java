@@ -4,8 +4,12 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
-import java.util.UUID;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.util.UUID;
+@Getter
+@Setter
 @Table("country")
 public class CountryEntity {
 
@@ -24,17 +28,4 @@ public class CountryEntity {
         this.name = name;
     }
 
-    // ... getters y setters (necesarios para que R2DBC persista los datos)
-    public void setName(String name) {
-        this.name = name;
-    }
-    public String getName() {
-        return name;
-    }
-    public UUID getIdCountry() {
-        return idCountry;
-    }
-    public void setIdCountry(UUID idCountry) {
-        this.idCountry = idCountry;
-    }
 }
