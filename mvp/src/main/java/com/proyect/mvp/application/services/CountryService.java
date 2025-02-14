@@ -28,16 +28,19 @@ public class CountryService {
         
     }
 
-     public Flux<CountryEntity> getAllCountries() {
-       return countryRepository.findAll()
-            .flatMap(country -> cityRepository.findByCountryId(country.getIdCountry()) // Buscar ciudades del país
-                    .collectList()
-                    .map(cities -> {
-                        country.insertCities(new HashSet<>(cities)); // Agregar ciudades al país
-                        return country;
-                    })
+    public Flux<CountryEntity> getAllCountries() {
+        return countryRepository.findAll()
+            .flatMap(country -> cityRepository.findByCountryId(country.getIdCountry())
+                .collectList()
+                .doOnNext(cities -> {
+                    // Agregar log para verificar si están llegando ciudades
+                    System.out.println("Ciudades encontradas para país " + country.getIdCountry() + ": " + cities.size());
+                })
+                .map(cities -> {
+                    country.insertCities(new HashSet<>(cities));
+                    return country;
+                })
             );
-    
     }
 
     public Mono<CountryEntity> getCountryById(UUID id) {
