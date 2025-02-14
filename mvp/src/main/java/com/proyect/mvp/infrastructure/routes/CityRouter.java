@@ -30,11 +30,7 @@ public class CityRouter {
 
     private Mono<ServerResponse> createCity(ServerRequest request, CityService cityService) {
         return request.bodyToMono(CityCreateDTO.class)
-                .map(dto -> CityEntity.builder() // Use builder
-                        .name(dto.getName())
-                        .countryId(dto.getIdCountry())
-                        .build())
-                .flatMap(cityService::saveCity)
+                .flatMap(city -> cityService.saveNewCity(city))
                 .flatMap(savedCity -> ServerResponse.ok().bodyValue(savedCity))
                 .onErrorResume(ResponseStatusException.class, e ->
                         ServerResponse.status(e.getStatusCode()).bodyValue(e.getMessage()));

@@ -2,6 +2,8 @@ package com.proyect.mvp.application.services;
 
 import com.proyect.mvp.domain.model.entities.CityEntity;
 import com.proyect.mvp.domain.repository.CityRepository;
+import com.proyect.mvp.dtos.create.CityCreateDTO;
+
 import lombok.Builder;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -29,12 +31,14 @@ public class CityService {
                 .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)));
     }
 
-    public Mono<CityEntity> saveCity(CityEntity city) {
+    public Mono<CityEntity> saveNewCity(CityCreateDTO city) {
         CityEntity cityEntity = CityEntity.builder()
+                .idCity(UUID.randomUUID())
                 .name(city.getName())
                 .countryId(city.getCountryId())
                 .build();
         return cityRepository.insertCity(cityEntity.getIdCity(), cityEntity.getName(), cityEntity.getCountryId())
+                .thenReturn(cityEntity)
                 .onErrorMap(error -> {
                     System.err.println("Error al guardar ciudad: " + error.getMessage());
                     return new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error saving city", error);

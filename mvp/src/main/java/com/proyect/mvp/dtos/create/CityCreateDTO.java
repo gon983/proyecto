@@ -7,5 +7,5 @@ import java.util.UUID;
 @NoArgsConstructor
 public class CityCreateDTO {
     private String name;
-    private UUID idCountry;
+    private UUID countryId;
 }

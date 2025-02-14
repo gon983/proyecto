@@ -1,0 +1,107 @@
+{
+	"info": {
+		"_postman_id": "51cbd64a-9afd-4e50-8d18-ff5ca796bf50",
+		"name": "proyecto",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39888894"
+	},
+	"item": [
+		{
+			"name": "country",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\":\"Argentina\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/countries",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"countries"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "country id",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\":\"Chile\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/countries/6a79ddc2-60e2-4be4-9b11-dcc7a894c4af",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"countries",
+						"6a79ddc2-60e2-4be4-9b11-dcc7a894c4af"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "country id",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\":\"Chile\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/countries/6a79ddc2-60e2-4be4-9b11-dcc7a894c4af",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"countries",
+						"6a79ddc2-60e2-4be4-9b11-dcc7a894c4af"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "countries",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}

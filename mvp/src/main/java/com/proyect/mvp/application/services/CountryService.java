@@ -37,7 +37,8 @@ public class CountryService {
             .name(country.getName())
             .build();
     
-        return countryRepository.insertCountry(countryEntity.getIdCountry(), countryEntity.getName()) // Devuelve el Mono<CountryEntity>
+        return countryRepository.insertCountry(countryEntity.getIdCountry(), countryEntity.getName())
+            .thenReturn(countryEntity) // Devuelve el Mono<CountryEntity>
             .onErrorMap(error -> {
                 System.err.println("Error al guardar: " + error.getMessage());
                 return new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error saving country", error);

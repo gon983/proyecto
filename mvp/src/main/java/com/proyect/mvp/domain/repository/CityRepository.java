@@ -20,7 +20,7 @@ public interface CityRepository extends R2dbcRepository<CityEntity,UUID> {
 
     Flux<CityEntity> findByCountryId(UUID countryId);
 
-    @Query("INSERT INTO city (id_city, name, country_id) VALUES (:idCity, :name, :countryId)")
+    @Query("INSERT INTO city (id_city, name, fk_country) VALUES (:idCity, :name, :countryId)")
     Mono<CityEntity> insertCity(UUID idCity, String name, UUID countryId);
 
 

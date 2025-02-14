@@ -22,6 +22,7 @@ public class CityEntity {
     @Column( "id_city")
     private UUID idCity;
     private String name;
+    @Column( "fk_country")
     private UUID countryId;
     
     public CityEntity(String name , UUID countryId) {
