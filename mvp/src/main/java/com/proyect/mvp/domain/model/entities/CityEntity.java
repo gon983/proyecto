@@ -5,10 +5,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.data.relational.core.mapping.Column;
 
@@ -24,10 +25,17 @@ public class CityEntity {
     private String name;
     @Column( "fk_country")
     private UUID countryId;
+    @Transient
+    private Set<LocalityEntity> localities;
     
     public CityEntity(String name , UUID countryId) {
         this.idCity = UUID.randomUUID();
         this.name = name;
         this.countryId = countryId;
+    }
+
+
+    public void insertLocalities(Set<LocalityEntity> localities) {
+        this.localities = localities;
     }
 }

@@ -1,6 +1,10 @@
 package com.proyect.mvp.domain.model.entities;
 import lombok.Getter;
-import lombok.NoArgsConstructor;import org.springframework.data.annotation.Id;
+import lombok.NoArgsConstructor;
+
+import java.util.UUID;
+
+import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.data.relational.core.mapping.Column;
 
@@ -18,8 +22,8 @@ public class LocalityEntity {
 
     @Column( "name")
     private String name;
+    @Column( "fk_city")
+    private UUID cityId;
 
     
-    
-    private CityEntity  city; // Assuming you have a City entity
 }
