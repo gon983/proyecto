@@ -1,6 +1,7 @@
 package com.proyect.mvp.domain.model.entities;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -25,7 +26,7 @@ public class CountryEntity {
     private UUID idCountry;
 
     private String name;
-
+    @Transient
     private Set<CityEntity> cities;
 
     
