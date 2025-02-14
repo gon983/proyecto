@@ -29,7 +29,9 @@ public class CountryEntity {
     @Transient
     private Set<CityEntity> cities;
 
-    
+    public void insertCities(Set<CityEntity> cities) {
+        this.cities = cities;
+    }
    
    
 

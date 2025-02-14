@@ -1,6 +1,7 @@
 package com.proyect.mvp.application.services;
 
 import com.proyect.mvp.domain.model.entities.CountryEntity;
+import com.proyect.mvp.domain.repository.CityRepository;
 import com.proyect.mvp.domain.repository.CountryRepository;
 import com.proyect.mvp.dtos.create.CountryCreateDTO;
 import com.proyect.mvp.dtos.update.CountryUpdateDTO;
@@ -11,25 +12,46 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.HashSet;
 import java.util.UUID;
 
 @Service
 public class CountryService {
 
     private final CountryRepository countryRepository;
+    private final CityRepository cityRepository;
 
-    public CountryService(CountryRepository countryRepository) {
+    public CountryService(CountryRepository countryRepository, CityRepository cityRepository) {
         this.countryRepository = countryRepository;
+        this.cityRepository = cityRepository;
+        
     }
 
-    public Flux<CountryEntity> getAllCountries() {
-        return countryRepository.findAll();
+     public Flux<CountryEntity> getAllCountries() {
+       return countryRepository.findAll()
+            .flatMap(country -> cityRepository.findByCountryId(country.getIdCountry()) // Buscar ciudades del país
+                    .collectList()
+                    .map(cities -> {
+                        country.insertCities(new HashSet<>(cities)); // Agregar ciudades al país
+                        return country;
+                    })
+            );
+    
     }
 
     public Mono<CountryEntity> getCountryById(UUID id) {
-        return countryRepository.findById(id)
-                .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)));
-    }
+    return countryRepository.findById(id)
+            .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND))) // Manejo de error si el país no existe
+            .flatMap(country -> cityRepository.findByCountryId(country.getIdCountry()) // Buscar ciudades del país
+                    .collectList()
+                    .map(cities -> {
+                        country.insertCities(new HashSet<>(cities)); // Agregar ciudades al país
+                        return country;
+                    })
+            );
+}
+
 
     public Mono<CountryEntity> saveNewCountry(CountryCreateDTO country) {
         CountryEntity countryEntity = CountryEntity.builder()

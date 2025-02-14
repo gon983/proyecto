@@ -64,7 +64,5 @@ public class CityService {
                 .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)));
     }
 
-    public Flux<CityEntity> getCitiesByCountryId(UUID countryId) {
-        return cityRepository.findByCountryId(countryId);
-    }
+    
 }

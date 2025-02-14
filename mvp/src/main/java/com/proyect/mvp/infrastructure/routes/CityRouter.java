@@ -25,7 +25,8 @@ public class CityRouter {
     public RouterFunction<ServerResponse> cityRoutes(CityService cityService) {
         return route(POST("/cities"), request -> createCity(request, cityService))
                 .andRoute(GET("/cities"), request -> getAllCities(cityService))
-                .andRoute(GET("/countries/{countryId}/cities"), request -> getCitiesByCountryId(request, cityService));
+                .andRoute(GET("/cities/{id}"), request -> getCityById(request, cityService));
+                
     }
 
     private Mono<ServerResponse> createCity(ServerRequest request, CityService cityService) {
@@ -40,15 +41,13 @@ public class CityRouter {
         return ServerResponse.ok().body(cityService.getAllCities(), CityEntity.class);
     }
 
-    private Mono<ServerResponse> getCitiesByCountryId(ServerRequest request, CityService cityService) {
-        try {
-            UUID countryId = UUID.fromString(request.pathVariable("countryId"));
-            return cityService.getCitiesByCountryId(countryId)
-                    .collectList()
-                    .flatMap(cities -> ServerResponse.ok().bodyValue(cities));
-        } catch (IllegalArgumentException e) {
-            return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid UUID format"));
-        }
-
+    private Mono<ServerResponse> getCityById(ServerRequest request, CityService cityService) {
+        UUID id = UUID.fromString(request.pathVariable("id"));
+        return cityService.getCityById(id)
+                .flatMap(city -> ServerResponse.ok().bodyValue(city))
+                .onErrorResume(ResponseStatusException.class, e ->
+                        ServerResponse.status(e.getStatusCode()).bodyValue(e.getMessage()));
     }
+
+    
 }
