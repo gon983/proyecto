@@ -47,8 +47,7 @@ public class CountryRouter {
 
     private Mono<ServerResponse> createCountry(ServerRequest request, CountryService countryService) {
         return request.bodyToMono(CountryCreateDTO.class)
-                .map(dto -> new CountryEntity(dto.getName())) // Usa el constructor de CountryEntity
-                .flatMap(country -> countryService.saveCountry(country))
+                .flatMap(country -> countryService.saveNewCountry(country))
                 .flatMap(savedCountry -> ServerResponse.ok().bodyValue(savedCountry))
                 .onErrorResume(ResponseStatusException.class, e -> ServerResponse.status(e.getStatusCode()).bodyValue(e.getMessage()));
     }

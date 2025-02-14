@@ -2,6 +2,7 @@ package com.proyect.mvp.application.services;
 
 import com.proyect.mvp.domain.model.entities.CountryEntity;
 import com.proyect.mvp.domain.repository.CountryRepository;
+import com.proyect.mvp.dtos.create.CountryCreateDTO;
 import com.proyect.mvp.dtos.update.CountryUpdateDTO;
 
 import lombok.Builder;
@@ -30,15 +31,17 @@ public class CountryService {
                 .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)));
     }
 
-    public Mono<CountryEntity> saveCountry(CountryEntity country) {
+    public Mono<CountryEntity> saveNewCountry(CountryCreateDTO country) {
         CountryEntity countryEntity = CountryEntity.builder()
-                .name(country.getName())
-                .build();
-        return countryRepository.insertCountry(countryEntity.getIdCountry(), countryEntity.getName())
-                .onErrorMap(error -> {
-                    System.err.println("Error al guardar: " + error.getMessage());
-                    return new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error saving country", error);
-                });
+            .idCountry(UUID.randomUUID())
+            .name(country.getName())
+            .build();
+    
+        return countryRepository.insertCountry(countryEntity.getIdCountry(), countryEntity.getName()) // Devuelve el Mono<CountryEntity>
+            .onErrorMap(error -> {
+                System.err.println("Error al guardar: " + error.getMessage());
+                return new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error saving country", error);
+            });
     }
 
     public Mono<CountryEntity> updateCountry(UUID id, CountryUpdateDTO updatedCountry) {
