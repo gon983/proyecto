@@ -577,6 +577,60 @@ LOCK TABLES `purchasedetail` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `purchasedetailstate`
+--
+
+DROP TABLE IF EXISTS `purchasedetailstate`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `purchasedetailstate` (
+  `id_purchase_detail_state` uuid NOT NULL,
+  `name` varchar(100) NOT NULL,
+  PRIMARY KEY (`id_purchase_detail_state`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_uca1400_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `purchasedetailstate`
+--
+
+LOCK TABLES `purchasedetailstate` WRITE;
+/*!40000 ALTER TABLE `purchasedetailstate` DISABLE KEYS */;
+/*!40000 ALTER TABLE `purchasedetailstate` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `purchasedetailstatehistory`
+--
+
+DROP TABLE IF EXISTS `purchasedetailstatehistory`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `purchasedetailstatehistory` (
+  `id_purchase_detail_state_history` uuid NOT NULL,
+  `fk_purchase_detail` uuid NOT NULL,
+  `fk_purchase_detail_state` uuid NOT NULL,
+  `initial_date` datetime NOT NULL,
+  `final_date` datetime DEFAULT NULL,
+  `description` varchar(1500) DEFAULT NULL,
+  PRIMARY KEY (`id_purchase_detail_state_history`),
+  KEY `purchasedetailstatehistory_purchasedetailstate_FK` (`fk_purchase_detail_state`),
+  KEY `purchasedetailstatehistory_purchasedetail_FK` (`fk_purchase_detail`),
+  CONSTRAINT `purchasedetailstatehistory_purchasedetail_FK` FOREIGN KEY (`fk_purchase_detail`) REFERENCES `purchasedetail` (`id_purchase_detail`) ON UPDATE CASCADE,
+  CONSTRAINT `purchasedetailstatehistory_purchasedetailstate_FK` FOREIGN KEY (`fk_purchase_detail_state`) REFERENCES `purchasedetailstate` (`id_purchase_detail_state`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_uca1400_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `purchasedetailstatehistory`
+--
+
+LOCK TABLES `purchasedetailstatehistory` WRITE;
+/*!40000 ALTER TABLE `purchasedetailstatehistory` DISABLE KEYS */;
+/*!40000 ALTER TABLE `purchasedetailstatehistory` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `purchasestate`
 --
 
@@ -902,4 +956,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-02-16 11:14:09
+-- Dump completed on 2025-02-16 12:10:28
