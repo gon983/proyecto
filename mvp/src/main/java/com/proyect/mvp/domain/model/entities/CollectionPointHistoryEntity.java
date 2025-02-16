@@ -1,37 +1,39 @@
 package com.proyect.mvp.domain.model.entities;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Table;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
-import java.time.LocalDateTime; // Importa LocalDateTime para los tipos de datos datetime
+import java.time.LocalDateTime;
+import java.util.UUID;
 
-
-@Table( "collectionpointhistory")
+@Builder
+@Table("collectionpointhistory")
+@AllArgsConstructor
 @Getter
 @NoArgsConstructor
-public class CollectionPointHistoryEntity { // PascalCase
+public class CollectionPointHistoryEntity {
 
     @Id
-    
-    @Column( "id_collection_point_history")
-    private String idCollectionPointHistory;
+    @Column("id_collection_point_history")
+    private UUID idCollectionPointHistory;  // ID como UUID
 
-    
-    
-    private CollectionPointEntity collectionPoint; // Relación con CollectionPoint
+    @Column("id_collection_point") // Clave foránea a CollectionPoint
+    private UUID fkCollectionPoint; // Usar UUID y nombre consistente
 
-    
-    
-    private CollectionPointStateEntity  collectionPointState; // Relación con CollectionPointState
+    @Column("id_collection_point_state") // Clave foránea a CollectionPointState
+    private UUID fkCollectionPointState; // Usar UUID y nombre consistente
 
-    @Column( "description")
+    @Column("description")
     private String description;
 
-    @Column( "init")
-    private LocalDateTime init; // Usando LocalDateTime para datetime
+    @Column("initial_date")
+    private LocalDateTime init;
 
-    @Column( "finish")
-    private LocalDateTime finish; // Usando LocalDateTime para datetime
+    @Column("final_date")
+    private LocalDateTime finish;
 }
-
