@@ -12,20 +12,20 @@ import java.util.UUID;
 
 @Builder
 @AllArgsConstructor
-@Table("salestate")
+@Table("purchasestate")
 @Getter
 @NoArgsConstructor
-public class SaleStateEntity {
+public class PurchaseStateEntity {
 
     @Id
-    @Column("id_sale_state")
-    private UUID idSaleState;
+    @Column("id_purchase_state")
+    private UUID idPurchaseState;
 
     @Column("name")
     private String name;
 
-    public SaleStateEntity(String name) {
-        this.idSaleState = UUID.randomUUID();
+    public PurchaseStateEntity(String name) {
+        this.idPurchaseState = UUID.randomUUID();
         this.name = name;
     }
 }
