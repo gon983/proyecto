@@ -1,36 +1,39 @@
 package com.proyect.mvp.domain.model.entities;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Table;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
-
-@Table( "neighborhoodpackagehistory")
+@Builder
+@Table("neighborhood_package_history") // Use snake_case for table names
+@AllArgsConstructor
 @Getter
 @NoArgsConstructor
 public class NeighborhoodPackageHistoryEntity {
 
     @Id
-    
-    @Column( "id_neighborhood_package_history")
-    private String idNeighborhoodPackageHistory;
+    @Column("id_neighborhood_package_history")
+    private UUID idNeighborhoodPackageHistory;
 
-    
-    
-    private NeighborhoodPackageEntity  neighborhoodPackage;
+    @Column("id_neighborhood_package") // Foreign key to neighborhood_package
+    private UUID idNeighborhoodPackage;
 
-    
-    
-    private NeighborhoodPackageStateEntity  neighborhoodPackageState;
+    @Column("id_package_state") // Foreign key to package_state
+    private UUID idPackageState;
 
-    @Column( "description")
+    @Column("description")
     private String description;
 
-    @Column( "init")
+    @Column("initial_date")
     private LocalDateTime init;
 
-    @Column( "finish")
+    @Column("final_date")
     private LocalDateTime finish;
 }

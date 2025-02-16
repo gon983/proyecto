@@ -12,22 +12,24 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Builder
-@Table("sale_history")
+@Table("purchase_history")
 @AllArgsConstructor
 @Getter
 @NoArgsConstructor
-public class SaleHistoryEntity {
+public class PurchaseHistoryEntity {
 
     @Id
-    @Column("id_sale_history")
-    private UUID idSaleHistory;
+    @Column("id_purchase_history")
+    private UUID idPurchaseHistory;
 
-    @Column("id_sale") // Foreign key to sale
-    private UUID idSale;
+    @Column("id_purchase") // Foreign key to purchase
+    private UUID idPurchase;
 
-    @Column("id_sale_state") // Foreign key to sale_state
-    private UUID idSaleState;
+    @Column("id_purchase_state") // Foreign key to purchase_state
+    private UUID idPurchaseState;
 
+    @Column("previous_purchase_state") // Previous state for history tracking
+    private UUID previousPurchaseState;
 
     @Column("initial_date") // Correct column name
     private LocalDateTime initialDate;
@@ -35,5 +37,6 @@ public class SaleHistoryEntity {
     @Column("final_date") // Correct column name
     private LocalDateTime finalDate;
 
-    
+    @Column("changed_by") // User who made the change
+    private UUID changedBy;
 }

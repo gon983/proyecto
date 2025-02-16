@@ -1,36 +1,41 @@
 package com.proyect.mvp.domain.model.entities;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Table;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
-
-@Table( "producthistory")
+@Builder
+@Table("product_history")
+@AllArgsConstructor
 @Getter
 @NoArgsConstructor
 public class ProductHistoryEntity {
 
     @Id
-    
-    @Column( "id_product_history")
-    private String idProductHistory;
+    @Column("id_product_history")
+    private UUID idProductHistory;
 
-    
-    
-    private ProductEntity  product;
+    @Column("id_product") // Foreign key to product
+    private UUID idProduct;
 
-    
-    
-    private ProductStateEntity  productState;
+    @Column("id_product_state") // Foreign key to product_state
+    private UUID idProductState;
 
-    @Column( "description")
-    private String description;
+    @Column("previous_product_state") // Previous state for history tracking
+    private UUID previousProductState;
 
-    @Column( "init")
-    private LocalDateTime init;
+    @Column("change_date")
+    private LocalDateTime changeDate;
 
-    @Column( "finish")
-    private LocalDateTime finish;
+    // You might include other relevant information in the history,
+    // e.g., the user who made the change.  Add those fields here.
+    @Column("changed_by")
+    private UUID changedBy; // Example: User ID who made the change
 }

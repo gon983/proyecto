@@ -1,36 +1,39 @@
 package com.proyect.mvp.domain.model.entities;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Table;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
-
-@Table( "userhistory")
+@Builder
+@Table("user_history")
+@AllArgsConstructor
 @Getter
 @NoArgsConstructor
 public class UserHistoryEntity {
 
     @Id
-    
-    @Column( "id_user_history")
-    private String idUserHistory;
+    @Column("id_user_history")
+    private UUID idUserHistory;
 
-    
-    
-    private UserEntity user;
+    @Column("id_user")
+    private UUID idUser;
 
-    
-    
-    private UserStateEntity userState;
+    @Column("id_user_state")
+    private UUID idUserState;
 
-    @Column( "description")
+    @Column("initial_date")
+    private LocalDateTime initialDate;
+
+    @Column("final_date")
+    private LocalDateTime finalDate;
+
+    @Column("description")
     private String description;
-
-    @Column( "init")
-    private LocalDateTime init;
-
-    @Column( "finish")
-    private LocalDateTime finish;
 }
