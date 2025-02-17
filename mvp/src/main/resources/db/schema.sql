@@ -359,12 +359,13 @@ CREATE TABLE `product` (
   `stock` double NOT NULL,
   `alert_stock` double DEFAULT NULL,
   `photo` varchar(45) DEFAULT NULL,
-  `fk_product_category` uuid DEFAULT NULL,
+  `unit_measurement` varchar(100) NOT NULL,
+  `fk_productor` uuid NOT NULL,
   PRIMARY KEY (`id_product`),
   UNIQUE KEY `id_productor_UNIQUE` (`id_product`),
   UNIQUE KEY `name_UNIQUE` (`name`),
-  KEY `fk_product_category_product_idx` (`fk_product_category`),
-  CONSTRAINT `fk_product_category_product` FOREIGN KEY (`fk_product_category`) REFERENCES `productcategory` (`id_product_category`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `product_user_FK` (`fk_productor`),
+  CONSTRAINT `product_user_FK` FOREIGN KEY (`fk_productor`) REFERENCES `user` (`id_user`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_uca1400_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -375,30 +376,6 @@ CREATE TABLE `product` (
 LOCK TABLES `product` WRITE;
 /*!40000 ALTER TABLE `product` DISABLE KEYS */;
 /*!40000 ALTER TABLE `product` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `productcategory`
---
-
-DROP TABLE IF EXISTS `productcategory`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `productcategory` (
-  `id_product_category` uuid NOT NULL,
-  `name` varchar(45) NOT NULL,
-  `measurement_unity` varchar(45) NOT NULL,
-  PRIMARY KEY (`id_product_category`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_uca1400_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `productcategory`
---
-
-LOCK TABLES `productcategory` WRITE;
-/*!40000 ALTER TABLE `productcategory` DISABLE KEYS */;
-/*!40000 ALTER TABLE `productcategory` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -430,34 +407,6 @@ CREATE TABLE `producthistory` (
 LOCK TABLES `producthistory` WRITE;
 /*!40000 ALTER TABLE `producthistory` DISABLE KEYS */;
 /*!40000 ALTER TABLE `producthistory` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `productorxproduct`
---
-
-DROP TABLE IF EXISTS `productorxproduct`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `productorxproduct` (
-  `id_product` uuid NOT NULL,
-  `id_productor` uuid NOT NULL,
-  `id_productxproductor` uuid NOT NULL,
-  PRIMARY KEY (`id_productxproductor`),
-  KEY `fk_productor_idx` (`id_productor`),
-  KEY `fk_product_productorxproduct` (`id_product`),
-  CONSTRAINT `fk_product_productorxproduct` FOREIGN KEY (`id_product`) REFERENCES `product` (`id_product`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_productor_producoxproductor` FOREIGN KEY (`id_productor`) REFERENCES `user` (`id_user`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_uca1400_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `productorxproduct`
---
-
-LOCK TABLES `productorxproduct` WRITE;
-/*!40000 ALTER TABLE `productorxproduct` DISABLE KEYS */;
-/*!40000 ALTER TABLE `productorxproduct` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -873,6 +822,8 @@ CREATE TABLE `user` (
   `fk_neighborhood` uuid NOT NULL,
   `phone` varchar(45) DEFAULT NULL,
   `photo` varchar(45) DEFAULT NULL,
+  `minimal_sale_kg` double NOT NULL,
+  `minimal_sale_units` int(11) NOT NULL,
   PRIMARY KEY (`id_user`),
   UNIQUE KEY `email_UNIQUE` (`email`),
   UNIQUE KEY `id_user_UNIQUE` (`id_user`),
@@ -958,4 +909,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-02-17 16:03:21
+-- Dump completed on 2025-02-17 18:43:47
