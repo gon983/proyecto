@@ -28,7 +28,15 @@ public class CollectionPointService {
     }
 
     public Flux<CollectionPointEntity> getAllCollectionPoints() {
-        return collectionPointRepository.findAll();
+        return collectionPointRepository.findAll()
+                .flatMap(collectionPoint -> {
+                    return collectionPointHistoryService.getCollectionPointHistory(collectionPoint.getIdCollectionPoint())
+                            .collectList()
+                            .flatMap(historyList -> {
+                                collectionPoint.addHistory(historyList);
+                                return Mono.just(collectionPoint);
+                            });
+                });
     }
     
 
