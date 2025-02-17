@@ -1,32 +1,43 @@
 package com.proyect.mvp.domain.model.entities;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;import org.springframework.data.annotation.Id;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+
+import java.util.UUID;
+
+import org.springframework.data.annotation.Id;
+
+import org.springframework.data.geo.Point;
 import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.data.relational.core.mapping.Column;
 
-
-
+@Builder
 @Table( "collectionpoint")
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class CollectionPointEntity {
 
     @Id
     
     @Column( "id_collection_point")
-    private String idCollectionPoint;
+    private UUID idCollectionPoint;
 
     @Column( "name")
     private String name;
 
-    
-    
-    private NeighborhoodEntity neighborhood;
+    private UUID fk_neighborhood;
+
 
     @Column( "use_price")
-    private String usePrice;
+    private Double usePrice;
 
+    private UUID fk_owner;
+
+
+    private Point ubication;
+
+    private String description;
     
-    
-    private UserEntity owner;
 }

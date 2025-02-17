@@ -54,8 +54,10 @@ CREATE TABLE `collectionpoint` (
   `id_collection_point` uuid NOT NULL,
   `name` varchar(45) NOT NULL,
   `fk_neighborhood` uuid NOT NULL,
-  `use_price` varchar(45) DEFAULT NULL,
+  `use_price` double DEFAULT NULL,
   `fk_owner` uuid NOT NULL,
+  `description` varchar(1500) DEFAULT NULL,
+  `ubication` point NOT NULL,
   PRIMARY KEY (`id_collection_point`),
   KEY `fk_neighborhood_idx` (`fk_neighborhood`),
   KEY `fk_owner_idx` (`fk_owner`),
@@ -956,4 +958,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-02-16 12:10:28
+-- Dump completed on 2025-02-17 16:03:21
