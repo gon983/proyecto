@@ -1,34 +1,41 @@
 package com.proyect.mvp.domain.model.entities;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Table;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
+import java.util.UUID;
 
-
-@Table( "product")
+@Builder
+@Table("product")
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class ProductEntity {
 
     @Id
-    
-    @Column( "id_product")
-    private String idProduct;
+    @Column("id_product")
+    private UUID idProduct; // Use UUID
 
-    @Column( "name")
+    @Column("name")
     private String name;
 
-    @Column( "stock")
+    @Column("stock")
     private double stock;
 
-    @Column( "alert_stock")
+    @Column("alert_stock")
     private double alertStock;
 
-    @Column( "photo")
+    @Column("photo")
     private String photo;
 
-    
-    
-    private ProductCategoryEntity  productCategory;
+    @Column("unit_measurement")
+    private String unitMeasurement;
+
+    @Column("fk_productor") // Use @Column for FK
+    private UUID fkProductor; // Use UUID
 }
