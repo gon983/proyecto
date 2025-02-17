@@ -5,9 +5,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.util.Set;
 import java.util.UUID;
 
 @Builder
@@ -38,4 +40,6 @@ public class ProductEntity {
 
     @Column("fk_productor") // Use @Column for FK
     private UUID fkProductor; // Use UUID
+    @Transient
+    private Set<ProductHistoryEntity> history;
 }

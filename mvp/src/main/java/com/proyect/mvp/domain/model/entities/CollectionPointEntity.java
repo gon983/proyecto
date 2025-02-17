@@ -4,10 +4,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.data.annotation.Id;
-
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.geo.Point;
 import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.data.relational.core.mapping.Column;
@@ -39,5 +41,12 @@ public class CollectionPointEntity {
     private Point ubication;
 
     private String description;
+    @Transient
+    private List<CollectionPointHistoryEntity> history; 
+
+    public void addHistory(List<CollectionPointHistoryEntity> history){
+        this.history = history;
+
+    }
     
 }
