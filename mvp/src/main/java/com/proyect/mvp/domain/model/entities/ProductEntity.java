@@ -10,7 +10,7 @@ import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.util.List;
-import java.util.Set;
+
 import java.util.UUID;
 
 @Builder
@@ -44,7 +44,7 @@ public class ProductEntity {
     @Transient
     private List<ProductHistoryEntity> history;
     @Transient
-    private ProductPriceEntity price;
+    private double unity_price;
 
     public void addHistory(List<ProductHistoryEntity> history){
         this.history = history;

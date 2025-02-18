@@ -361,6 +361,7 @@ CREATE TABLE `product` (
   `photo` varchar(45) DEFAULT NULL,
   `unit_measurement` varchar(100) NOT NULL,
   `fk_productor` uuid NOT NULL,
+  `unity_price` double NOT NULL,
   PRIMARY KEY (`id_product`),
   UNIQUE KEY `id_productor_UNIQUE` (`id_product`),
   UNIQUE KEY `name_UNIQUE` (`name`),
@@ -407,36 +408,6 @@ CREATE TABLE `producthistory` (
 LOCK TABLES `producthistory` WRITE;
 /*!40000 ALTER TABLE `producthistory` DISABLE KEYS */;
 /*!40000 ALTER TABLE `producthistory` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `productprice`
---
-
-DROP TABLE IF EXISTS `productprice`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `productprice` (
-  `id_product_price` uuid NOT NULL,
-  `fk_product` uuid NOT NULL,
-  `fk_product_state` uuid DEFAULT NULL,
-  `price` double NOT NULL,
-  `description` varchar(200) NOT NULL,
-  PRIMARY KEY (`id_product_price`),
-  KEY `fk_product_idx` (`fk_product`),
-  KEY `fk_product_state_idx` (`fk_product_state`),
-  CONSTRAINT `fk_product_product_price` FOREIGN KEY (`fk_product`) REFERENCES `product` (`id_product`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_product_state_product_price` FOREIGN KEY (`fk_product_state`) REFERENCES `productstate` (`id_product_state`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_uca1400_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `productprice`
---
-
-LOCK TABLES `productprice` WRITE;
-/*!40000 ALTER TABLE `productprice` DISABLE KEYS */;
-/*!40000 ALTER TABLE `productprice` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -909,4 +880,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-02-17 18:43:47
+-- Dump completed on 2025-02-18 16:18:36
