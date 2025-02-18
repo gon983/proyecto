@@ -531,11 +531,19 @@ CREATE TABLE `purchasedetail` (
   `fk_product` uuid NOT NULL,
   `quantity` double NOT NULL,
   `fk_purchase` uuid NOT NULL,
+  `unit_price` double NOT NULL,
+  `fk_state` uuid NOT NULL,
+  `created_by` uuid DEFAULT NULL,
+  `updated_by` uuid DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id_purchase_detail`),
   KEY `fk_purchase_idx` (`fk_purchase`),
   KEY `fk_product_purchase_detail_idx` (`fk_product`),
+  KEY `purchasedetail_purchasedetailstate_FK` (`fk_state`),
   CONSTRAINT `fk_product_purchase_detail` FOREIGN KEY (`fk_product`) REFERENCES `product` (`id_product`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_purchase_purchase_detail` FOREIGN KEY (`fk_purchase`) REFERENCES `purchase` (`id_purchase`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `fk_purchase_purchase_detail` FOREIGN KEY (`fk_purchase`) REFERENCES `purchase` (`id_purchase`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `purchasedetail_purchasedetailstate_FK` FOREIGN KEY (`fk_state`) REFERENCES `purchasedetailstate` (`id_purchase_detail_state`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_uca1400_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -930,4 +938,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-02-18 17:09:40
+-- Dump completed on 2025-02-18 18:41:47
