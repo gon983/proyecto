@@ -9,6 +9,7 @@ import org.springframework.data.annotation.Transient;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -41,5 +42,11 @@ public class ProductEntity {
     @Column("fk_productor") // Use @Column for FK
     private UUID fkProductor; // Use UUID
     @Transient
-    private Set<ProductHistoryEntity> history;
+    private List<ProductHistoryEntity> history;
+    @Transient
+    private ProductPriceEntity price;
+
+    public void addHistory(List<ProductHistoryEntity> history){
+        this.history = history;
+    }
 }

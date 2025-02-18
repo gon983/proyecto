@@ -15,14 +15,51 @@ import java.util.UUID;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final ProductHistoryService productHistoryService;
 
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository, ProductHistoryService productHistoryService) {
         this.productRepository = productRepository;
+        this.productHistoryService = productHistoryService;
+    }
+
+
+
+    public Flux<ProductEntity> getAllProducts() {
+        return productRepository.findAll()
+                .flatMap(product -> {
+                    return productHistoryService.getProductHistory(product.getIdProduct()) // Assuming getProductHistory exists
+                            .collectList()
+                            .flatMap(historyList -> {
+                                product.addHistory(historyList); // Assuming addHistory accepts List
+                                return Mono.just(product);
+                            });
+                });
     }
 
     public Flux<ProductEntity> getProductsByProducer(UUID fkProductor) {
-        return productRepository.findByFkProductor(fkProductor);
+        return productRepository.findByFkProductor(fkProductor)
+                .flatMap(product -> {
+                    return productHistoryService.getProductHistory(product.getIdProduct())
+                            .collectList()
+                            .flatMap(historyList -> {
+                                product.addHistory(historyList);
+                                return Mono.just(product);
+                            });
+                });
     }
+
+    public Mono<ProductEntity> getProductById(UUID id) {
+        return productRepository.findById(id)
+                .flatMap(product -> {
+                    return productHistoryService.getProductHistory(product.getIdProduct())
+                            .collectList()
+                            .flatMap(historyList -> {
+                                product.addHistory(historyList);
+                                return Mono.just(product);
+                            });
+                });
+    }
+}
 
     public Mono<ProductEntity> createProduct(ProductCreateDTO productDTO) {
         ProductEntity product = ProductEntity.builder()
