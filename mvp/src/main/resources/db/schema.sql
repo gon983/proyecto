@@ -185,6 +185,32 @@ INSERT INTO `country` VALUES ('6a9fe61b-be17-4821-a4a3-71fa282e9289','Argentina'
 UNLOCK TABLES;
 
 --
+-- Table structure for table `defaultdonation`
+--
+
+DROP TABLE IF EXISTS `defaultdonation`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `defaultdonation` (
+  `id_default_donation` uuid NOT NULL,
+  `level` enum('1','2','3','4','5','6','7') NOT NULL,
+  `fk_organization` uuid NOT NULL,
+  PRIMARY KEY (`id_default_donation`),
+  KEY `defaultdonation_ong_FK` (`fk_organization`),
+  CONSTRAINT `defaultdonation_ong_FK` FOREIGN KEY (`fk_organization`) REFERENCES `ong` (`id_ong`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_uca1400_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `defaultdonation`
+--
+
+LOCK TABLES `defaultdonation` WRITE;
+/*!40000 ALTER TABLE `defaultdonation` DISABLE KEYS */;
+/*!40000 ALTER TABLE `defaultdonation` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `locality`
 --
 
@@ -321,6 +347,30 @@ CREATE TABLE `neighborhoodpackagestate` (
 LOCK TABLES `neighborhoodpackagestate` WRITE;
 /*!40000 ALTER TABLE `neighborhoodpackagestate` DISABLE KEYS */;
 /*!40000 ALTER TABLE `neighborhoodpackagestate` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ong`
+--
+
+DROP TABLE IF EXISTS `ong`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `ong` (
+  `id_ong` uuid NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `account` varchar(100) NOT NULL,
+  PRIMARY KEY (`id_ong`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_uca1400_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ong`
+--
+
+LOCK TABLES `ong` WRITE;
+/*!40000 ALTER TABLE `ong` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ong` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -880,4 +930,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-02-18 16:18:36
+-- Dump completed on 2025-02-18 17:09:40
