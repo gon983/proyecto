@@ -1,50 +1,64 @@
 # proyecto
-empezar con la logica del negocio.
-1- Stock Movement -> afectara el stock del producto
+
+1- Stock Movement  
+
 2- Purchase - Purchase Detail
+
 3- Sale - Sale Detail
+
 4- Neigbhorhood Package
 
 Para los endpoints de pedido (purchase) y detalle de pedido (purchasedetail), te conviene seguir los patrones estándar de una API RESTful.
 
-1️⃣ Endpoints Estándar para Purchase (Pedido)
-Estos endpoints gestionan la compra en sí.
+# API de Pedidos (`purchase`) y Detalles de Pedido (`purchasedetail`)
 
-Método	Endpoint	Descripción
-POST	/purchases	Crea un nuevo pedido.
-GET	/purchases	Obtiene la lista de pedidos.
-GET	/purchases/{id}	Obtiene un pedido específico.
-PUT	/purchases/{id}	Actualiza un pedido existente.
-DELETE	/purchases/{id}	Elimina un pedido.
-✅ Consideraciones:
+Esta API maneja la gestión de pedidos y sus detalles en un sistema de compras.
 
-Al crear un pedido (POST), lo lógico es que no envíes los detalles (PurchaseDetailEntity) directamente, sino solo las referencias a los productos y su cantidad.
-Cuando obtienes un pedido (GET /purchases/{id}), puedes incluir los detalles como un objeto anidado o devolverlos aparte con otro endpoint.
-2️⃣ Endpoints Estándar para PurchaseDetail (Detalle del Pedido)
-Estos endpoints manejan los ítems de un pedido.
+---
 
-Método	Endpoint	Descripción
-POST	/purchases/{purchaseId}/details	Agrega un ítem a un pedido.
-GET	/purchases/{purchaseId}/details	Obtiene todos los ítems de un pedido.
-GET	/purchases/{purchaseId}/details/{id}	Obtiene un ítem específico.
-PUT	/purchases/{purchaseId}/details/{id}	Actualiza un ítem de un pedido.
-DELETE	/purchases/{purchaseId}/details/{id}	Elimina un ítem de un pedido.
-✅ Consideraciones:
+## 📌 **Endpoints para `Purchase` (Pedidos)**
 
-Los detalles de un pedido siempre dependen de un pedido, por eso los endpoints van anidados bajo /purchases/{purchaseId}/details.
-Si permites que los usuarios editen los pedidos, podrías necesitar actualizar o eliminar ítems.
-¿Qué Endpoint Conviene Hacer Primero?
-Te recomiendo el siguiente orden:
+Estos endpoints permiten gestionar los pedidos.
 
-1️⃣ POST /purchases → Para crear un pedido vacío.
-2️⃣ POST /purchases/{purchaseId}/details → Para agregar ítems al pedido.
-3️⃣ GET /purchases/{id} → Para obtener un pedido con sus detalles.
-4️⃣ GET /purchases/{id}/details → Para obtener los ítems de un pedido.
-5️⃣ PUT y DELETE → Solo si permites editar o eliminar pedidos/detalles.
+| Método  | Endpoint              | Descripción |
+|---------|-----------------------|-------------|
+| **POST**   | `/purchases`            | Crea un nuevo pedido. |
+| **GET**    | `/purchases`            | Obtiene la lista de pedidos. |
+| **GET**    | `/purchases/{id}`       | Obtiene un pedido específico. |
+| **PUT**    | `/purchases/{id}`       | Actualiza un pedido existente. |
+| **DELETE** | `/purchases/{id}`       | Elimina un pedido. |
 
-Flujo Completo
-El usuario crea un pedido (sin detalles todavía) → POST /purchases
-El usuario agrega productos al pedido → POST /purchases/{id}/details
-El usuario consulta su pedido → GET /purchases/{id}
-El usuario ve los detalles del pedido → GET /purchases/{id}/details
-(Opcional) Si necesita editarlo o eliminarlo → Usa PUT o DELETE.
+✅ **Notas**:
+- Al crear un pedido (`POST`), no se incluyen los detalles de compra, solo información general del pedido.
+- Para obtener los detalles de un pedido, se puede usar `GET /purchases/{id}/details`.
+
+---
+
+## 📌 **Endpoints para `PurchaseDetail` (Detalles del Pedido)**
+
+Estos endpoints permiten manejar los productos dentro de un pedido.
+
+| Método  | Endpoint                                  | Descripción |
+|---------|-------------------------------------------|-------------|
+| **POST**   | `/purchases/{purchaseId}/details`         | Agrega un ítem a un pedido. |
+| **GET**    | `/purchases/{purchaseId}/details`         | Obtiene todos los ítems de un pedido. |
+| **GET**    | `/purchases/{purchaseId}/details/{id}`    | Obtiene un ítem específico. |
+| **PUT**    | `/purchases/{purchaseId}/details/{id}`    | Actualiza un ítem de un pedido. |
+| **DELETE** | `/purchases/{purchaseId}/details/{id}`    | Elimina un ítem de un pedido. |
+
+✅ **Notas**:
+- Los detalles siempre están vinculados a un pedido (`purchase`).
+- Si permites modificar un pedido, es posible que necesites actualizar o eliminar detalles.
+
+---
+
+## 🔄 **Flujo Completo de la API**
+
+1️⃣ **Crear un pedido vacío** → `POST /purchases`  
+2️⃣ **Agregar productos al pedido** → `POST /purchases/{id}/details`  
+3️⃣ **Consultar un pedido** → `GET /purchases/{id}`  
+4️⃣ **Ver los detalles de un pedido** → `GET /purchases/{id}/details`  
+5️⃣ **Editar o eliminar pedidos/detalles** (Opcional) → `PUT / DELETE`
+
+Con este diseño, la API sigue principios RESTful y permite gestionar pedidos y sus detalles de forma organizada. 🚀
+
