@@ -1,4 +1,6 @@
 package com.proyect.mvp.domain.model.entities;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -11,7 +13,8 @@ import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.data.relational.core.mapping.Column;
 
 
-
+@Builder
+@AllArgsConstructor
 @Table( "purchasedetail")
 @Getter
 @NoArgsConstructor
@@ -33,11 +36,11 @@ public class PurchaseDetailEntity {
     private double unitPrice;
     @Column("created_by")
     private UUID createdBy;
-    @Column("updatedBY")
-    private UUID updated_by;
+    @Column("updated_by")
+    private UUID updatedBy;
     @Column("created_at")
     private LocalDateTime createdAt;
-    @Column("updatedAt")
+    @Column("updated_at")
     private LocalDateTime updatedAt;
 
     

@@ -494,19 +494,22 @@ DROP TABLE IF EXISTS `purchase`;
 CREATE TABLE `purchase` (
   `id_purchase` uuid NOT NULL,
   `fk_user` uuid NOT NULL,
-  `fk_type_purchase` uuid NOT NULL,
   `amount` double NOT NULL,
   `fk_neighborhood_package` uuid DEFAULT NULL,
   `fk_payment_method` uuid NOT NULL,
+  `created_at` timestamp NOT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `level` varchar(10) DEFAULT NULL,
+  `fk_current_state` uuid NOT NULL,
   PRIMARY KEY (`id_purchase`),
-  KEY `fk_purchase_type_idx` (`fk_type_purchase`),
   KEY `fk_user_idx` (`fk_user`),
   KEY `fk_neighborhood_package_purchase_idx` (`fk_neighborhood_package`),
   KEY `fk_payment_method_purchase_idx` (`fk_payment_method`),
+  KEY `purchase_purchasestate_FK` (`fk_current_state`),
   CONSTRAINT `fk_neighborhood_package_purchase` FOREIGN KEY (`fk_neighborhood_package`) REFERENCES `neighborhoodpackage` (`id_neighborhood_package`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_payment_method_purchase` FOREIGN KEY (`fk_payment_method`) REFERENCES `paymentmethod` (`id_payment_method`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_purchase_type_purchase` FOREIGN KEY (`fk_type_purchase`) REFERENCES `purchasetype` (`id_purchase_type`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_user_purchase` FOREIGN KEY (`fk_user`) REFERENCES `user` (`id_user`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `fk_user_purchase` FOREIGN KEY (`fk_user`) REFERENCES `user` (`id_user`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `purchase_purchasestate_FK` FOREIGN KEY (`fk_current_state`) REFERENCES `purchasestate` (`id_purchase_state`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_uca1400_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -662,29 +665,6 @@ CREATE TABLE `purchasestatehistory` (
 LOCK TABLES `purchasestatehistory` WRITE;
 /*!40000 ALTER TABLE `purchasestatehistory` DISABLE KEYS */;
 /*!40000 ALTER TABLE `purchasestatehistory` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `purchasetype`
---
-
-DROP TABLE IF EXISTS `purchasetype`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `purchasetype` (
-  `id_purchase_type` uuid NOT NULL,
-  `name` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`id_purchase_type`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_uca1400_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `purchasetype`
---
-
-LOCK TABLES `purchasetype` WRITE;
-/*!40000 ALTER TABLE `purchasetype` DISABLE KEYS */;
-/*!40000 ALTER TABLE `purchasetype` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -938,4 +918,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-02-18 18:41:47
+-- Dump completed on 2025-02-19 18:18:31
