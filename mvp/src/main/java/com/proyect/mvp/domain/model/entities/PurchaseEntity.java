@@ -1,6 +1,10 @@
 package com.proyect.mvp.domain.model.entities;
 import lombok.Getter;
-import lombok.NoArgsConstructor;import org.springframework.data.annotation.Id;
+import lombok.NoArgsConstructor;
+
+import java.util.Set;
+
+import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.data.relational.core.mapping.Column;
 
@@ -20,9 +24,6 @@ public class PurchaseEntity {
     
     private UserEntity  user;
 
-    
-    
-    private PurchaseTypeEntity  typePurchase;
 
     @Column( "amount")
     private double amount;
@@ -34,4 +35,5 @@ public class PurchaseEntity {
     
     
     private PaymentMethodEntity  paymentMethod;
+    private Set<PurchaseDetailEntity> details;
 }
