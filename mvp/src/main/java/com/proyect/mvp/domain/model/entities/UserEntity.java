@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
+import org.springframework.lang.Nullable;
 import org.springframework.data.relational.core.mapping.Column;
 
 import java.time.LocalDateTime;
@@ -47,7 +48,7 @@ public class UserEntity {
 
     @Column( "phone")
     private String phone;
-
+    @Nullable
     @Column( "photo")
     private String photo;
 
@@ -56,12 +57,15 @@ public class UserEntity {
     
 
     // Hasta aca los campos obligatorios
+    @Nullable
     @Column("fk_role_two")
     private UUID roleTwo;
+    @Nullable
     @Column("fk_role_three")
     private UUID roleThree;
+    @Nullable
     @Column("minimal_sale")
-    private double minimalSale;
+    private Double minimalSale;
     
 
 }

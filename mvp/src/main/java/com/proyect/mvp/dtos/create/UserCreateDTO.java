@@ -22,7 +22,7 @@ public class UserCreateDTO {
     private String email;
 
     
-    private LocalDateTime createdAt;
+    
 
     private String firstName;
 
