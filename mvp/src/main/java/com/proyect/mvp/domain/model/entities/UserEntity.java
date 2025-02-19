@@ -1,21 +1,24 @@
 package com.proyect.mvp.domain.model.entities;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.data.relational.core.mapping.Column;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
-
+@Builder
+@AllArgsConstructor
 @Table( "user") 
 @Getter
 @NoArgsConstructor
 public class UserEntity {
 
     @Id
-    
     @Column( "id_user")
-    private String idUser;
+    private UUID idUser;
 
     @Column( "username")
     private String username;
@@ -39,12 +42,26 @@ public class UserEntity {
     private String documentNumber;
 
     
-    
-    private NeighborhoodEntity neighborhood;
+    @Column("fk_neighborhood")
+    private UUID fkNeighborhood;
 
     @Column( "phone")
     private String phone;
 
     @Column( "photo")
     private String photo;
+
+    @Column("fk_role_one")
+    private UUID roleOne;
+    
+
+    // Hasta aca los campos obligatorios
+    @Column("fk_role_two")
+    private UUID roleTwo;
+    @Column("fk_role_three")
+    private UUID roleThree;
+    @Column("minimal_sale")
+    private double minimalSale;
+    
+
 }

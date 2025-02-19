@@ -23,7 +23,7 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 public class CountryRouter {
 
     @Bean
-    public RouterFunction<ServerResponse> routes(CountryService countryService) {
+    public RouterFunction<ServerResponse> countryRoutes(CountryService countryService) {
         return route(GET("/countries"), request -> getAllCountries(countryService))
                 .andRoute(GET("/countries/{id}"), request -> getCountryById(request, countryService))
                 .andRoute(POST("/countries"), request -> createCountry(request, countryService))

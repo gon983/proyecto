@@ -22,7 +22,7 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 public class CollectionPointRouter {
 
     @Bean
-    public RouterFunction<ServerResponse> routes(CollectionPointService collectionPointService) {
+    public RouterFunction<ServerResponse> collectionPointRoutes(CollectionPointService collectionPointService) {
         return route(GET("/collectionpoints"), request -> getAllCollectionPoints(collectionPointService))
                 .andRoute(GET("/collectionpoints/{id}"), request -> getCollectionPointById(request, collectionPointService))
                 .andRoute(POST("/collectionpoints"), request -> createCollectionPoint(request, collectionPointService))

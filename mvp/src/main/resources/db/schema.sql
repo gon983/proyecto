@@ -668,6 +668,29 @@ LOCK TABLES `purchasestatehistory` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `role`
+--
+
+DROP TABLE IF EXISTS `role`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `role` (
+  `id_role` uuid NOT NULL,
+  `name` uuid NOT NULL,
+  PRIMARY KEY (`id_role`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_uca1400_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `role`
+--
+
+LOCK TABLES `role` WRITE;
+/*!40000 ALTER TABLE `role` DISABLE KEYS */;
+/*!40000 ALTER TABLE `role` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `sale`
 --
 
@@ -831,13 +854,21 @@ CREATE TABLE `user` (
   `fk_neighborhood` uuid NOT NULL,
   `phone` varchar(45) DEFAULT NULL,
   `photo` varchar(45) DEFAULT NULL,
-  `minimal_sale_kg` double NOT NULL,
-  `minimal_sale_units` int(11) NOT NULL,
+  `minimal_sale` double NOT NULL,
+  `fk_role_one` uuid NOT NULL,
+  `fk_rol_two` uuid DEFAULT NULL,
+  `fk_role_three` uuid DEFAULT NULL,
   PRIMARY KEY (`id_user`),
   UNIQUE KEY `email_UNIQUE` (`email`),
   UNIQUE KEY `id_user_UNIQUE` (`id_user`),
   KEY `fk_neighborhood_idx` (`fk_neighborhood`),
-  CONSTRAINT `fk_neighborhood_user` FOREIGN KEY (`fk_neighborhood`) REFERENCES `neighborhood` (`id_neighborhood`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `user_role_FK` (`fk_role_one`),
+  KEY `user_role_FK_1` (`fk_rol_two`),
+  KEY `user_role_FK_2` (`fk_role_three`),
+  CONSTRAINT `fk_neighborhood_user` FOREIGN KEY (`fk_neighborhood`) REFERENCES `neighborhood` (`id_neighborhood`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `user_role_FK` FOREIGN KEY (`fk_role_one`) REFERENCES `role` (`id_role`) ON UPDATE CASCADE,
+  CONSTRAINT `user_role_FK_1` FOREIGN KEY (`fk_rol_two`) REFERENCES `role` (`id_role`),
+  CONSTRAINT `user_role_FK_2` FOREIGN KEY (`fk_role_three`) REFERENCES `role` (`id_role`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_uca1400_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -918,4 +949,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-02-19 18:36:00
+-- Dump completed on 2025-02-19 19:58:04
