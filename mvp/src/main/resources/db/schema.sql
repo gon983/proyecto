@@ -16,6 +16,29 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `category`
+--
+
+DROP TABLE IF EXISTS `category`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `category` (
+  `id_category` uuid NOT NULL,
+  `name` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id_category`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_uca1400_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `category`
+--
+
+LOCK TABLES `category` WRITE;
+/*!40000 ALTER TABLE `category` DISABLE KEYS */;
+/*!40000 ALTER TABLE `category` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `city`
 --
 
@@ -208,6 +231,38 @@ CREATE TABLE `defaultdonation` (
 LOCK TABLES `defaultdonation` WRITE;
 /*!40000 ALTER TABLE `defaultdonation` DISABLE KEYS */;
 /*!40000 ALTER TABLE `defaultdonation` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `defaultproductxcollectionpointxweek`
+--
+
+DROP TABLE IF EXISTS `defaultproductxcollectionpointxweek`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `defaultproductxcollectionpointxweek` (
+  `id_default_product_x_collection_point` uuid NOT NULL,
+  `fk_collection_point` uuid NOT NULL,
+  `fk_product` uuid DEFAULT NULL,
+  `fk_standar_product` uuid DEFAULT NULL,
+  `date_init_week` timestamp NOT NULL,
+  PRIMARY KEY (`id_default_product_x_collection_point`),
+  KEY `defaultproductxcollectionpointxweek_collectionpoint_FK` (`fk_collection_point`),
+  KEY `defaultproductxcollectionpointxweek_product_FK` (`fk_product`),
+  KEY `defaultproductxcollectionpointxweek_standarproduct_FK` (`fk_standar_product`),
+  CONSTRAINT `defaultproductxcollectionpointxweek_collectionpoint_FK` FOREIGN KEY (`fk_collection_point`) REFERENCES `collectionpoint` (`id_collection_point`),
+  CONSTRAINT `defaultproductxcollectionpointxweek_product_FK` FOREIGN KEY (`fk_product`) REFERENCES `product` (`id_product`),
+  CONSTRAINT `defaultproductxcollectionpointxweek_standarproduct_FK` FOREIGN KEY (`fk_standar_product`) REFERENCES `standarproduct` (`id_standar_product`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_uca1400_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `defaultproductxcollectionpointxweek`
+--
+
+LOCK TABLES `defaultproductxcollectionpointxweek` WRITE;
+/*!40000 ALTER TABLE `defaultproductxcollectionpointxweek` DISABLE KEYS */;
+/*!40000 ALTER TABLE `defaultproductxcollectionpointxweek` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -412,10 +467,16 @@ CREATE TABLE `product` (
   `unit_measurement` varchar(100) NOT NULL,
   `fk_productor` uuid NOT NULL,
   `unity_price` double NOT NULL,
+  `fk_locality` uuid DEFAULT NULL,
+  `fk_standar_product` uuid NOT NULL,
   PRIMARY KEY (`id_product`),
   UNIQUE KEY `id_productor_UNIQUE` (`id_product`),
   UNIQUE KEY `name_UNIQUE` (`name`),
   KEY `product_user_FK` (`fk_productor`),
+  KEY `product_locality_FK` (`fk_locality`),
+  KEY `product_standarproduct_FK` (`fk_standar_product`),
+  CONSTRAINT `product_locality_FK` FOREIGN KEY (`fk_locality`) REFERENCES `locality` (`id_locality`) ON UPDATE CASCADE,
+  CONSTRAINT `product_standarproduct_FK` FOREIGN KEY (`fk_standar_product`) REFERENCES `standarproduct` (`id_standar_product`),
   CONSTRAINT `product_user_FK` FOREIGN KEY (`fk_productor`) REFERENCES `user` (`id_user`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_uca1400_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -808,6 +869,32 @@ LOCK TABLES `salestate` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `standarproduct`
+--
+
+DROP TABLE IF EXISTS `standarproduct`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `standarproduct` (
+  `id_standar_product` uuid NOT NULL,
+  `name` varchar(100) DEFAULT NULL,
+  `fk_category` uuid NOT NULL,
+  PRIMARY KEY (`id_standar_product`),
+  KEY `standarproduct_category_FK` (`fk_category`),
+  CONSTRAINT `standarproduct_category_FK` FOREIGN KEY (`fk_category`) REFERENCES `category` (`id_category`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_uca1400_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `standarproduct`
+--
+
+LOCK TABLES `standarproduct` WRITE;
+/*!40000 ALTER TABLE `standarproduct` DISABLE KEYS */;
+/*!40000 ALTER TABLE `standarproduct` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `stockmovement`
 --
 
@@ -859,6 +946,7 @@ CREATE TABLE `user` (
   `fk_role_one` uuid NOT NULL,
   `fk_rol_two` uuid DEFAULT NULL,
   `fk_role_three` uuid DEFAULT NULL,
+  `fk_collection_point_suscribed` uuid NOT NULL,
   PRIMARY KEY (`id_user`),
   UNIQUE KEY `email_UNIQUE` (`email`),
   UNIQUE KEY `id_user_UNIQUE` (`id_user`),
@@ -866,7 +954,9 @@ CREATE TABLE `user` (
   KEY `user_role_FK` (`fk_role_one`),
   KEY `user_role_FK_1` (`fk_rol_two`),
   KEY `user_role_FK_2` (`fk_role_three`),
+  KEY `user_collectionpoint_FK` (`fk_collection_point_suscribed`),
   CONSTRAINT `fk_neighborhood_user` FOREIGN KEY (`fk_neighborhood`) REFERENCES `neighborhood` (`id_neighborhood`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `user_collectionpoint_FK` FOREIGN KEY (`fk_collection_point_suscribed`) REFERENCES `collectionpoint` (`id_collection_point`),
   CONSTRAINT `user_role_FK` FOREIGN KEY (`fk_role_one`) REFERENCES `role` (`id_role`) ON UPDATE CASCADE,
   CONSTRAINT `user_role_FK_1` FOREIGN KEY (`fk_rol_two`) REFERENCES `role` (`id_role`),
   CONSTRAINT `user_role_FK_2` FOREIGN KEY (`fk_role_three`) REFERENCES `role` (`id_role`) ON UPDATE CASCADE
@@ -938,6 +1028,37 @@ LOCK TABLES `userstate` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `vote`
+--
+
+DROP TABLE IF EXISTS `vote`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `vote` (
+  `id_vote` varchar(100) NOT NULL,
+  `fk_product` uuid NOT NULL,
+  `fk_user` uuid NOT NULL,
+  `calification` int(11) NOT NULL,
+  `date` timestamp NOT NULL,
+  `comment` text DEFAULT NULL,
+  PRIMARY KEY (`id_vote`),
+  KEY `vote_product_FK` (`fk_product`),
+  KEY `vote_user_FK` (`fk_user`),
+  CONSTRAINT `vote_product_FK` FOREIGN KEY (`fk_product`) REFERENCES `product` (`id_product`),
+  CONSTRAINT `vote_user_FK` FOREIGN KEY (`fk_user`) REFERENCES `user` (`id_user`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_uca1400_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `vote`
+--
+
+LOCK TABLES `vote` WRITE;
+/*!40000 ALTER TABLE `vote` DISABLE KEYS */;
+/*!40000 ALTER TABLE `vote` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Dumping routines for database 'proyecto'
 --
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -950,4 +1071,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-02-19 21:25:25
+-- Dump completed on 2025-02-20 18:05:26
