@@ -10,6 +10,13 @@ import reactor.core.publisher.Mono;
 import java.util.UUID;
 
 public interface UserRepository extends R2dbcRepository<UserEntity, UUID> {
-    @Query("INSERT INTO user (id_user, name, email) VALUES (:id, :name, :email)")
-    Mono<UserEntity> insertUser(@Param("id") UUID id, @Param("name") String name, @Param("email") String email);
+    @Query("INSERT INTO user " +
+    "(id_user, username, email, created_at, first_name, last_name, " +
+    "document_type, document_number, fk_neighborhood, phone, fk_role_one) " +
+    "VALUES " +
+    "(:#{#user.idUser}, :#{#user.username}, :#{#user.email}, " +
+    ":#{#user.createdAt}, :#{#user.firstName}, :#{#user.lastName}, " +
+    ":#{#user.documentType}, :#{#user.documentNumber}, :#{#user.fkNeighborhood}, " +
+    ":#{#user.phone}, :#{#user.roleOne})")
+    Mono<UserEntity> insertUser(@Param("user") UserEntity user);
 }

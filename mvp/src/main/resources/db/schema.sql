@@ -855,7 +855,7 @@ CREATE TABLE `user` (
   `fk_neighborhood` uuid NOT NULL,
   `phone` varchar(45) DEFAULT NULL,
   `photo` varchar(45) DEFAULT NULL,
-  `minimal_sale` double NOT NULL,
+  `minimal_sale` double DEFAULT 0,
   `fk_role_one` uuid NOT NULL,
   `fk_rol_two` uuid DEFAULT NULL,
   `fk_role_three` uuid DEFAULT NULL,
@@ -950,4 +950,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-02-19 20:36:23
+-- Dump completed on 2025-02-19 21:25:25

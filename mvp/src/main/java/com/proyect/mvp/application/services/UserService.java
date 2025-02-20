@@ -44,13 +44,8 @@ public class UserService {
                 .fkNeighborhood(userDto.getFkNeighborhood())
                 .phone(userDto.getPhone())
                 .roleOne(userDto.getRoleOne())
-                //opcionales
-                .roleTwo(null)
-                .roleThree(null)
-                .minimalSale(0.0)
-                .photo(null)
                 .build();
-        return userRepository.save(userEntity)
+        return userRepository.insertUser(userEntity)
                 .thenReturn(userEntity)
                 .onErrorMap(error -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error saving user", error));
     }
