@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 public class UserCreateDTO {
-  
+
 
 
 
@@ -36,8 +36,8 @@ public class UserCreateDTO {
 
     
     private UUID fkNeighborhood;
-
     private UUID fkCollectionPointSuscribed;
+
 
     private String phone;
 

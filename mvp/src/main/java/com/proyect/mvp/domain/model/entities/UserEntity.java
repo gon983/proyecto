@@ -58,6 +58,9 @@ public class UserEntity {
 
     // Hasta aca los campos obligatorios
     @Nullable
+    @Column("fk_collection_point_suscribed")
+    private UUID fkCollectionPointSuscribed;
+    @Nullable
     @Column("fk_role_two")
     private UUID roleTwo;
     @Nullable

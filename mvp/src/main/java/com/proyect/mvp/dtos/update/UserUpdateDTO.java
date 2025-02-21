@@ -38,6 +38,7 @@ public class UserUpdateDTO {
 
     
     private UUID fkNeighborhood;
+    private UUID fkCollectionPointSuscribed;
 
     private String phone;
 

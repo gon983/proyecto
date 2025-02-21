@@ -44,6 +44,7 @@ public class UserService {
                 .fkNeighborhood(userDto.getFkNeighborhood())
                 .phone(userDto.getPhone())
                 .roleOne(userDto.getRoleOne())
+                .fkCollectionPointSuscribed(userDto.getFkCollectionPointSuscribed())
                 .build();
         return userRepository.insertUser(userEntity)
                 .thenReturn(userEntity)
@@ -65,6 +66,7 @@ public class UserService {
                             .fkNeighborhood(userDto.getFkNeighborhood())
                             .phone(userDto.getPhone())
                             .roleOne(userDto.getRoleOne())
+                            .fkCollectionPointSuscribed(userDto.getFkCollectionPointSuscribed())
                             .build();
                     
                     return userRepository.save(userEntity); // Retornar el nuevo usuario guardado
