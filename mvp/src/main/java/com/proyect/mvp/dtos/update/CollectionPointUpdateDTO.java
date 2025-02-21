@@ -3,7 +3,7 @@ package com.proyect.mvp.dtos.update;
 
 
 import java.util.UUID;
-import org.springframework.data.geo.Point;
+import org.locationtech.jts.geom.Point;
 
 import lombok.Getter;
 

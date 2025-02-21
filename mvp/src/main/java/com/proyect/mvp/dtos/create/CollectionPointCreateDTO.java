@@ -2,8 +2,8 @@ package com.proyect.mvp.dtos.create;
 
 import java.util.UUID;
 
-import org.springframework.data.geo.Point;
 
+import org.locationtech.jts.geom.Point;
 import lombok.Getter;
 
 @Getter
