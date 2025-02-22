@@ -30,7 +30,8 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	implementation("io.github.cdimascio:dotenv-java:3.0.0")
 	implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
-    implementation("org.mariadb:r2dbc-mariadb") 
+    implementation("org.postgresql:r2dbc-postgresql:1.0.7.RELEASE")
+
 
 
 	implementation("com.fasterxml.jackson.core:jackson-databind")
