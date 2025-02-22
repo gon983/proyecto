@@ -22,10 +22,10 @@ public class NeighborhoodPackageHistoryEntity {
     @Column("id_neighborhood_package_history")
     private UUID idNeighborhoodPackageHistory;
 
-    @Column("id_neighborhood_package") // Foreign key to neighborhood_package
+    @Column("fk_neighborhood_package") // Foreign key to neighborhood_package
     private UUID idNeighborhoodPackage;
 
-    @Column("id_package_state") // Foreign key to package_state
+    @Column("fk_package_state") // Foreign key to package_state
     private UUID idPackageState;
 
     @Column("description")

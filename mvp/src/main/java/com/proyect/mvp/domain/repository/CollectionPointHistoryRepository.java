@@ -13,7 +13,7 @@ import java.util.UUID;
 @Repository
 public interface CollectionPointHistoryRepository extends R2dbcRepository<CollectionPointHistoryEntity, UUID> {
 
-    @Query("SELECT * FROM collection_point_history WHERE id_collection_point = :collectionPointId")
+    @Query("SELECT * FROM collection_point_history WHERE fk_collection_point = :collectionPointId")
     Flux<CollectionPointHistoryEntity> findByCollectionPointId(UUID collectionPointId);
 
     @Query("INSERT INTO collection_point_history (id_collection_point_history, id_collection_point, id_collection_point_state, description, initial_date, final_date) " +

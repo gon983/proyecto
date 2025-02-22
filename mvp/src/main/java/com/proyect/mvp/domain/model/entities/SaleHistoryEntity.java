@@ -22,10 +22,10 @@ public class SaleHistoryEntity {
     @Column("id_sale_history")
     private UUID idSaleHistory;
 
-    @Column("id_sale") // Foreign key to sale
+    @Column("fk_sale") // Foreign key to sale
     private UUID idSale;
 
-    @Column("id_sale_state") // Foreign key to sale_state
+    @Column("fk_sale_state") // Foreign key to sale_state
     private UUID idSaleState;
 
 

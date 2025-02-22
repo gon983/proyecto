@@ -22,10 +22,10 @@ public class PurchaseHistoryEntity {
     @Column("id_purchase_history")
     private UUID idPurchaseHistory;
 
-    @Column("id_purchase") // Foreign key to purchase
+    @Column("fk_purchase") // Foreign key to purchase
     private UUID idPurchase;
 
-    @Column("id_purchase_state") // Foreign key to purchase_state
+    @Column("fk_purchase_state") // Foreign key to purchase_state
     private UUID idPurchaseState;
 
     @Column("previous_purchase_state") // Previous state for history tracking

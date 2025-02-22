@@ -22,10 +22,10 @@ public class CollectionPointHistoryEntity {
     @Column("id_collection_point_history")
     private UUID idCollectionPointHistory;  // ID como UUID
 
-    @Column("id_collection_point") // Clave foránea a CollectionPoint
+    @Column("fk_collection_point") // Clave foránea a CollectionPoint
     private UUID fkCollectionPoint; // Usar UUID y nombre consistente
 
-    @Column("id_collection_point_state") // Clave foránea a CollectionPointState
+    @Column("fk_collection_point_state") // Clave foránea a CollectionPointState
     private UUID fkCollectionPointState; // Usar UUID y nombre consistente
 
     @Column("description")

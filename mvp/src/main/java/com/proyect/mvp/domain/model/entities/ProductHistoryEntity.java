@@ -22,14 +22,13 @@ public class ProductHistoryEntity {
     @Column("id_product_history")
     private UUID idProductHistory;
 
-    @Column("id_product") // Foreign key to product
+    @Column("fk_product") // Foreign key to product
     private UUID idProduct;
 
-    @Column("id_product_state") // Foreign key to product_state
+    @Column("fk_product_state") // Foreign key to product_state
     private UUID idProductState;
 
-    @Column("previous_product_state") // Previous state for history tracking
-    private UUID previousProductState;
+    
 
     @Column("change_date")
     private LocalDateTime changeDate;

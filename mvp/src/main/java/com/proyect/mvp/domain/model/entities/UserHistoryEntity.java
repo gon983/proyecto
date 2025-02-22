@@ -22,10 +22,10 @@ public class UserHistoryEntity {
     @Column("id_user_history")
     private UUID idUserHistory;
 
-    @Column("id_user")
+    @Column("fk_user")
     private UUID idUser;
 
-    @Column("id_user_state")
+    @Column("fk_user_state")
     private UUID idUserState;
 
     @Column("initial_date")
