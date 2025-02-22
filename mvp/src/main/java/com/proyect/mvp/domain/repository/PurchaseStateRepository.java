@@ -9,6 +9,6 @@ import java.util.UUID;
 
 public interface PurchaseStateRepository extends R2dbcRepository<PurchaseStateEntity, UUID> {
 
-    @Query("INSERT INTO purchasestate (id_purchase_state, name) VALUES (:idPurchaseState, :name)")
+    @Query("INSERT INTO purchase_state (id_purchase_state, name) VALUES (:idPurchaseState, :name)")
     Mono<PurchaseStateEntity> insertPurchaseState(UUID idPurchaseState, String name);
 }

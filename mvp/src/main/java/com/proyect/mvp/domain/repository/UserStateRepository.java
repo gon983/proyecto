@@ -9,6 +9,6 @@ import java.util.UUID;
 
 public interface UserStateRepository extends R2dbcRepository<UserStateEntity, UUID> {
 
-    @Query("INSERT INTO userstate (id_user_state, name) VALUES (:idUserState, :name)")
+    @Query("INSERT INTO user_state (id_user_state, name) VALUES (:idUserState, :name)")
     Mono<UserStateEntity> insertUserState(UUID idUserState, String name);
 }

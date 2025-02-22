@@ -9,6 +9,6 @@ import java.util.UUID;
 
 public interface NeighborhoodPackageStateRepository extends R2dbcRepository<NeighborhoodPackageStateEntity, UUID> {
 
-    @Query("INSERT INTO neighborhoodpackagestate (id_neighborhood_package_state, name) VALUES (:idNeighborhoodPackageState, :name)")
+    @Query("INSERT INTO neighborhood_package_state (id_neighborhood_package_state, name) VALUES (:idNeighborhoodPackageState, :name)")
     Mono<NeighborhoodPackageStateEntity> insertNeighborhoodPackageState(UUID idNeighborhoodPackageState, String name);
 }
