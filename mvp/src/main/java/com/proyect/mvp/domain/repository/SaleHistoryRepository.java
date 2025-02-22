@@ -16,7 +16,7 @@ public interface SaleHistoryRepository extends R2dbcRepository<SaleHistoryEntity
     @Query("SELECT * FROM sale_history WHERE id_sale = :saleId ORDER BY initial_date ASC")
     Flux<SaleHistoryEntity> findBySaleId(UUID saleId);
 
-    @Query("INSERT INTO sale_history (id_sale_history, id_sale, id_sale_state, previous_sale_state, initial_date, final_date, changed_by) " +
+    @Query("INSERT INTO sale_history (id_sale_history, fk_sale, fk_sale_state,  initial_date, final_date, changed_by) " +
             "VALUES (:idSaleHistory, :idSale, :idSaleState, :initialDate, :finalDate)")
     Mono<SaleHistoryEntity> insertSaleHistory(UUID idSaleHistory, UUID idSale, UUID idSaleState, LocalDateTime initialDate, LocalDateTime finalDate);
 }

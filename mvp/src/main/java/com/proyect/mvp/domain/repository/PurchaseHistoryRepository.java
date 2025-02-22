@@ -16,7 +16,7 @@ public interface PurchaseHistoryRepository extends R2dbcRepository<PurchaseHisto
     @Query("SELECT * FROM purchase_history WHERE id_purchase = :purchaseId ORDER BY initial_date ASC")
     Flux<PurchaseHistoryEntity> findByPurchaseId(UUID purchaseId);
 
-    @Query("INSERT INTO purchase_history (id_purchase_history, id_purchase, id_purchase_state, previous_purchase_state, initial_date, final_date, changed_by) " +
+    @Query("INSERT INTO purchase_history (id_purchase_history, fk_purchase, fk_purchase_state, previous_purchase_state, initial_date, final_date, changed_by) " +
             "VALUES (:idPurchaseHistory, :idPurchase, :idPurchaseState, :previousPurchaseState, :initialDate, :finalDate, :changedBy)")
     Mono<PurchaseHistoryEntity> insertPurchaseHistory(UUID idPurchaseHistory, UUID idPurchase, UUID idPurchaseState, UUID previousPurchaseState, LocalDateTime initialDate, LocalDateTime finalDate, UUID changedBy);
 }

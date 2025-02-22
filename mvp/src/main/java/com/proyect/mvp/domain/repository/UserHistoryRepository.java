@@ -16,7 +16,7 @@ public interface UserHistoryRepository extends R2dbcRepository<UserHistoryEntity
     @Query("SELECT * FROM user_history WHERE id_user = :userId ORDER BY initial_date ASC")
     Flux<UserHistoryEntity> findByUserId(UUID userId);
 
-    @Query("INSERT INTO user_history (id_user_history, id_user, id_user_state, initial_date, final_date, description) " +
+    @Query("INSERT INTO user_history (id_user_history, fk_user, fk_user_state, initial_date, final_date, description) " +
             "VALUES (:idUserHistory, :idUser, :idUserState, :initialDate, :finalDate, :description)")
     Mono<UserHistoryEntity> insertUserHistory(UUID idUserHistory, UUID idUser, UUID idUserState, LocalDateTime initialDate, LocalDateTime finalDate, String description);
 }
