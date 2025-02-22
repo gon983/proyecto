@@ -35,10 +35,10 @@ dependencies {
 
 	implementation("com.fasterxml.jackson.core:jackson-databind")
 	implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
-	implementation("com.fasterxml.jackson.core:jackson-core")
-	implementation("com.fasterxml.jackson.core:jackson-annotations")
 	implementation("org.n52.jackson:jackson-datatype-jts:1.2.9")
 	implementation("org.locationtech.jts:jts-core:1.19.0")
+
+
 	
 	
     

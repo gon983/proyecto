@@ -28,14 +28,15 @@ public class CollectionPointEntity {
 
     @Column( "name")
     private String name;
-
-    private UUID fk_neighborhood;
+    @Column( "fk_neighborhood")
+    private UUID fkNeighborhood;
 
 
     @Column( "use_price")
     private Double usePrice;
 
-    private UUID fk_owner;
+    @Column( "fk_owner")
+    private UUID fkOwner;
 
 
     private Point ubication;

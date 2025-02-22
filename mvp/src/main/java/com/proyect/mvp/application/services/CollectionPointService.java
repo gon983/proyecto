@@ -4,13 +4,19 @@ import com.proyect.mvp.domain.model.entities.CollectionPointEntity;
 import com.proyect.mvp.domain.model.entities.CollectionPointHistoryEntity;
 import com.proyect.mvp.dtos.create.CollectionPointCreateDTO;
 import com.proyect.mvp.dtos.update.CollectionPointUpdateDTO;
+import com.proyect.mvp.infrastructure.config.converters.SpatialConverter;
 import com.proyect.mvp.domain.repository.CollectionPointHistoryRepository;
 import com.proyect.mvp.domain.repository.CollectionPointRepository;
 
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.geom.PrecisionModel;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -19,11 +25,15 @@ public class CollectionPointService {
 
     private final CollectionPointRepository collectionPointRepository;
     private final CollectionPointHistoryService collectionPointHistoryService;
+    private final GeometryFactory geometryFactory;
+    private final SpatialConverter spatialConverter;
 
     public CollectionPointService(CollectionPointRepository collectionPointRepository,
-                                CollectionPointHistoryService collectionPointHistoryService) {
+                                CollectionPointHistoryService collectionPointHistoryService, GeometryFactory geometryFactory, SpatialConverter spatialConverter) {
         this.collectionPointRepository = collectionPointRepository;
         this.collectionPointHistoryService = collectionPointHistoryService;
+        this.geometryFactory = geometryFactory;
+        this.spatialConverter = spatialConverter;
         
     }
 
@@ -52,18 +62,24 @@ public class CollectionPointService {
                 });
     }
 
-    public Mono<CollectionPointEntity> saveNewCollectionPoint(CollectionPointCreateDTO collectionPointDTO) {
-        CollectionPointEntity collectionPoint = CollectionPointEntity.builder()
-                .idCollectionPoint(UUID.randomUUID())
-                .name(collectionPointDTO.getName())
-                .fk_neighborhood(collectionPointDTO.getFk_neighborhood())
-                .usePrice(collectionPointDTO.getUsePrice())
-                .fk_owner(collectionPointDTO.getFk_owner())
-                .ubication(collectionPointDTO.getUbication())
-                .description(collectionPointDTO.getDescription())
-                .build();
-        return collectionPointRepository.save(collectionPoint);
-    }
+        public Mono<CollectionPointEntity> saveNewCollectionPoint(CollectionPointCreateDTO collectionPointDTO) {
+            // Create JTS Point object
+            Double latitude = collectionPointDTO.getUbication().getY();
+            Double longitude = collectionPointDTO.getUbication().getX();
+            Coordinate coordinate = new Coordinate(longitude, latitude);
+            Point ubication = geometryFactory.createPoint(coordinate);
+            byte[] wkbUbication = spatialConverter.pointToWKB(ubication);
+
+            return collectionPointRepository.saveNew(
+                UUID.randomUUID(),
+                collectionPointDTO.getName(),
+                collectionPointDTO.getFkNeighborhood(),
+                collectionPointDTO.getUsePrice(),
+                collectionPointDTO.getFkOwner(),
+                wkbUbication,
+                collectionPointDTO.getDescription()
+            );
+        }
 
     public Mono<CollectionPointEntity> updateCollectionPoint(UUID id, CollectionPointUpdateDTO collectionPointDTO) {
         return collectionPointRepository.findById(id)
@@ -71,9 +87,9 @@ public class CollectionPointService {
                     CollectionPointEntity updatedCollectionPoint = CollectionPointEntity.builder()
                             .idCollectionPoint(id)
                             .name(collectionPointDTO.getName())
-                            .fk_neighborhood(collectionPointDTO.getFk_neighborhood())
+                            .fkNeighborhood(collectionPointDTO.getFkNeighborhood())
                             .usePrice(collectionPointDTO.getUsePrice())
-                            .fk_owner(collectionPointDTO.getFk_owner())
+                            .fkOwner(collectionPointDTO.getFkOwner())
                             .ubication(collectionPointDTO.getUbication())
                             .description(collectionPointDTO.getDescription())
                             .build();

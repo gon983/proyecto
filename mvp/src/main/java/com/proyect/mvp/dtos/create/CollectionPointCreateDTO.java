@@ -13,12 +13,12 @@ public class CollectionPointCreateDTO {
 
     private String name;
 
-    private UUID fk_neighborhood;
+    private UUID fkNeighborhood;
 
 
     private Double usePrice;
 
-    private UUID fk_owner;
+    private UUID fkOwner;
 
 
     private Point ubication;
