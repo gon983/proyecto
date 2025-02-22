@@ -68,6 +68,7 @@ public class CollectionPointService {
             Double longitude = collectionPointDTO.getUbication().getX();
             Coordinate coordinate = new Coordinate(longitude, latitude);
             Point ubication = geometryFactory.createPoint(coordinate);
+            ubication.setSRID(4326);
             byte[] wkbUbication = spatialConverter.pointToWKB(ubication);
 
             return collectionPointRepository.saveNew(
