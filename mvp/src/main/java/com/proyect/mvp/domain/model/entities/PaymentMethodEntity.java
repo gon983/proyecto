@@ -6,7 +6,7 @@ import org.springframework.data.relational.core.mapping.Column;
 
 
 
-@Table( "paymentmethod")
+@Table( "payment_method")
 @Getter
 @NoArgsConstructor
 public class PaymentMethodEntity {

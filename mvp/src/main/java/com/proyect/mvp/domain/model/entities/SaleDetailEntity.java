@@ -6,7 +6,7 @@ import org.springframework.data.relational.core.mapping.Column;
 
 
 
-@Table( "saledetail")
+@Table( "sale_detail")
 @Getter
 @NoArgsConstructor
 public class SaleDetailEntity {

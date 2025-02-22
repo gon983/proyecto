@@ -15,7 +15,7 @@ import org.springframework.data.relational.core.mapping.Column;
 
 @Builder
 @AllArgsConstructor
-@Table( "purchasedetail")
+@Table( "purchase_detail")
 @Getter
 @NoArgsConstructor
 public class PurchaseDetailEntity {

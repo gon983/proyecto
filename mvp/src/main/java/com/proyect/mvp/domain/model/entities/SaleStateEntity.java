@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Builder
 @AllArgsConstructor
-@Table("salestate")
+@Table("sale_state")
 @Getter
 @NoArgsConstructor
 public class SaleStateEntity {

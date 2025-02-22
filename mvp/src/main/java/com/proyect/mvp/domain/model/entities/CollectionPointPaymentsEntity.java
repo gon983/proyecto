@@ -7,7 +7,7 @@ import org.springframework.data.relational.core.mapping.Column;
 import java.time.LocalDateTime;
 
 
-@Table( "collectionpointpayments")
+@Table( "collection_point_payments")
 @Getter
 @NoArgsConstructor
 public class CollectionPointPaymentsEntity {

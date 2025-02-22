@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Builder
 @AllArgsConstructor
-@Table("productstate")
+@Table("product_state")
 @Getter
 @NoArgsConstructor
 public class ProductStateEntity {

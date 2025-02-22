@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Builder
 @AllArgsConstructor
-@Table("purchasestate")
+@Table("purchase_state")
 @Getter
 @NoArgsConstructor
 public class PurchaseStateEntity {

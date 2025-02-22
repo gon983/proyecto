@@ -15,7 +15,7 @@ import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.data.relational.core.mapping.Column;
 
 @Builder
-@Table( "collectionpoint")
+@Table( "collection_point")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor

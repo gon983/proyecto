@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Builder
 @AllArgsConstructor
-@Table("neighborhoodpackagestate")
+@Table("neighborhood_package_state")
 @Getter
 @NoArgsConstructor
 public class NeighborhoodPackageStateEntity {

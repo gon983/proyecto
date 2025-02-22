@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Builder
 @AllArgsConstructor
-@Table("collectionpointstate")
+@Table("collection_point_state")
 @Getter
 @NoArgsConstructor
 public class CollectionPointStateEntity {

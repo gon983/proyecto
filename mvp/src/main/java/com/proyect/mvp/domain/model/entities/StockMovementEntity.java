@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 
-@Table( "stockmovement")
+@Table( "stock_movement")
 @Getter
 @NoArgsConstructor
 public class StockMovementEntity {

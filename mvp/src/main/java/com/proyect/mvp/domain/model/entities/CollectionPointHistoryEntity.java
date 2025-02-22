@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Builder
-@Table("collectionpointhistory")
+@Table("collection_point_history")
 @AllArgsConstructor
 @Getter
 @NoArgsConstructor
