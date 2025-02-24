@@ -43,8 +43,12 @@ public class ProductEntity {
     private UUID fkProductor; // Use UUID
     @Transient
     private List<ProductHistoryEntity> history;
-    @Transient
-    private double unity_price;
+    
+    private Double unity_price;
+    @Column("fk_locality")
+    private UUID fkLocality;
+    @Column("fk_standar_product")
+    private UUID fkStandarProduct;
 
     public void addHistory(List<ProductHistoryEntity> history){
         this.history = history;

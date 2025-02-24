@@ -13,4 +13,7 @@ public class ProductCreateDTO {
     private String photo;
     private String unitMeasurement;
     private UUID fkProductor;
+    private double unity_price;
+    private UUID fkLocality;
+    private UUID fkStandarProduct;
 }

@@ -36,7 +36,9 @@ public class StandarProductRouter {
     }
     
     private Mono<ServerResponse> createStandarProduct(ServerRequest request, StandarProductService standarProductService) {
-        StandarProductCreateDTO standarProductDto = request.bodyToMono(StandarProductCreateDTO.class).block();
-        return ServerResponse.ok().body(standarProductService.createStandarProduct(standarProductDto), StandarProductEntity.class);
+        return request.bodyToMono(StandarProductCreateDTO.class)
+                        .flatMap(standarProduct-> standarProductService.createStandarProduct(standarProduct))
+                        .flatMap(savedStandarProduct -> ServerResponse.ok().bodyValue(savedStandarProduct));
+        
     }
 }

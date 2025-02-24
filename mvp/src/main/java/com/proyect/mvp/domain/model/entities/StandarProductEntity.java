@@ -22,7 +22,7 @@ public class StandarProductEntity {
     private final UUID idStandarProduct;
     @Column("name")
     private String name;
-    @Column("fk_categoty")
+    @Column("fk_category")
     private UUID fkCategory; 
     
 }

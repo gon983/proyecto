@@ -63,16 +63,18 @@ public class ProductService {
 
     public Mono<ProductEntity> createProduct(ProductCreateDTO productDTO) {
         ProductEntity product = ProductEntity.builder()
-                .idProduct(UUID.randomUUID())
                 .name(productDTO.getName())
                 .stock(productDTO.getStock())
                 .alertStock(productDTO.getAlertStock())
                 .photo(productDTO.getPhoto())
                 .unitMeasurement(productDTO.getUnitMeasurement())
                 .fkProductor(productDTO.getFkProductor())
+                .unity_price(productDTO.getUnity_price())
+                .fkLocality(productDTO.getFkLocality())
+                .fkStandarProduct(productDTO.getFkStandarProduct())
                 .build();
         
-        return productRepository.insertProduct(product.getIdProduct(), product.getName(), product.getStock(), product.getAlertStock(), product.getPhoto(), product.getUnitMeasurement(), product.getFkProductor());
+        return productRepository.save(product);
     }
 
     
