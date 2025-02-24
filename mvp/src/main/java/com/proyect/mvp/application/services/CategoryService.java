@@ -34,7 +34,6 @@ public class CategoryService {
     
     public Mono<CategoryEntity> saveNewCategory(CategoryCreateDTO categoryDTO){
         CategoryEntity category = CategoryEntity.builder()
-                                                .idCategory(UUID.randomUUID())
                                                 .name(categoryDTO.getName())
                                                 .build();
         return categoryRepository.save(category)
