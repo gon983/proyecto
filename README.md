@@ -1,4 +1,5 @@
 # proyecto
+Notas: Ahora q migre a posgreSQL los UUID se pueden generar en la BD. Para despuees
 
 1- Stock Movement  
 
