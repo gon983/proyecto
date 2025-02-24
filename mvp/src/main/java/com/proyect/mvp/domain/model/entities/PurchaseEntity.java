@@ -46,4 +46,7 @@ public class PurchaseEntity {
 
     @Transient
     private Set<PurchaseDetailEntity> details;
+
+    @Column("fk_current_state")
+    private UUID fkCurrentState;
 }

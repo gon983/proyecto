@@ -20,7 +20,7 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 public class PurchaseRouter {
 
     @Bean
-    public RouterFunction<ServerResponse> purchaseRouter(PurchaseService purchaseService) {
+    public RouterFunction<ServerResponse> purchaseRoutes(PurchaseService purchaseService) {
         return route(POST("/purchases"), request-> createPurchase(request, purchaseService));
 
     }
