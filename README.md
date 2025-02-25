@@ -58,6 +58,7 @@ Estos endpoints permiten manejar los productos dentro de un pedido.
 1️⃣ **Crear un pedido vacío** → `POST /purchases`  
 2️⃣ **Agregar productos al pedido** → `POST /purchases/{id}/details`  
 para agregar productos al pedido deberia hacer un endpoint q me devuelva todos los default-product de un collectionPointSuscribed con el precio de acuerdo al nivel de la purchase
+
 3️⃣ **Consultar un pedido** → `GET /purchases/{id}`  
 4️⃣ **Ver los detalles de un pedido** → `GET /purchases/{id}/details`  
 5️⃣ **Editar o eliminar pedidos/detalles** (Opcional) → `PUT / DELETE`
