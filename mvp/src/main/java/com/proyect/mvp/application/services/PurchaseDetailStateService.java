@@ -49,4 +49,11 @@ public class PurchaseDetailStateService {
                 .flatMap(existingPurchaseDetailState -> purchaseDetailStateRepository.deleteById(id))
                 .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)));
     }
+
+    public Mono<PurchaseDetailStateEntity> findByName(String name){
+        return purchaseDetailStateRepository.findOneByName(name)
+                                            .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)));
+
+
+    }
 }
