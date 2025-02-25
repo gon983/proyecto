@@ -29,6 +29,8 @@ public class PurchaseDetailEntity {
     private UUID fkProduct;
     @Column("fk_purchase")
     private UUID fkPurchase;
+    @Column("fk_state")
+    private UUID fkState;
 
     @Column( "quantity")
     private double quantity;

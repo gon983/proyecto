@@ -11,4 +11,6 @@ public interface PurchaseDetailStateRepository extends R2dbcRepository<PurchaseD
 
     @Query("INSERT INTO purchase_detail_state (id_purchase_detail_state, name) VALUES (:idPurchaseDetailState, :name)")
     Mono<PurchaseDetailStateEntity> insertPurchaseDetailState(UUID idPurchaseDetailState, String name);
+
+    Mono<PurchaseDetailStateEntity> findOneByName(String name);
 }

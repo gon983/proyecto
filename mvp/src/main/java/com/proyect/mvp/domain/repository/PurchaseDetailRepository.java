@@ -8,6 +8,6 @@ import com.proyect.mvp.domain.model.entities.PurchaseDetailStateEntity;
 import reactor.core.publisher.Mono;
 
 public interface PurchaseDetailRepository extends R2dbcRepository<PurchaseDetailEntity,String> {
-    Mono<PurchaseDetailStateEntity> findOneByName(String name);
+    
 
 }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.proyect.mvp.domain.model.entities.PurchaseDetailEntity;
+import com.proyect.mvp.domain.model.entities.PurchaseDetailStateEntity;
 import com.proyect.mvp.domain.repository.PurchaseDetailRepository;
 import com.proyect.mvp.dtos.create.PurchaseDetailCreateDTO;
 
@@ -22,17 +23,19 @@ public class PurchaseDetailService {
     }
 
     public Mono<PurchaseDetailEntity> createPurchaseDetail(UUID fkPurchase, PurchaseDetailCreateDTO purchaseDetailDto){
-        
-        
+        return purchaseDetailStateService.findByName("pending")
+                                  .flatMap(purchaseState ->{
         PurchaseDetailEntity purchaseDetail = PurchaseDetailEntity.builder()
                                                                 .fkProduct(purchaseDetailDto.getFkProduct())
                                                                 .fkPurchase(fkPurchase)
                                                                 .quantity(purchaseDetailDto.getQuantity())
                                                                 .unitPrice(purchaseDetailDto.getUnitPrice())
+                                                                .fkState(purchaseState.getIdPurchaseDetailState())
                                                                 .build();
         return purchaseDetailRepository.save(purchaseDetail)
                                 .thenReturn(purchaseDetail)
-                                .onErrorMap(error -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error Saving purchase detail", error));        
+                                .onErrorMap(error -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error Saving purchase detail", error));
+        });        
     }
 
     
