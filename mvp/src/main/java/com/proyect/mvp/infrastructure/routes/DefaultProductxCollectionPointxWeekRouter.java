@@ -35,7 +35,9 @@ public class DefaultProductxCollectionPointxWeekRouter {
 
     Mono<ServerResponse> getDefaultProductsxCpxWeek(ServerRequest request, DefaultProductxCollectionPointxWeekService defaultProductxCpService){
         UUID idUser = UUID.fromString(request.pathVariable("idUser"));
-        return ServerResponse.ok().bodyValue(defaultProductxCpService.getAllProductsForCpWithLevelPrice(idUser));
+        return defaultProductxCpService.getAllProductsForCpWithLevelPrice(idUser)
+            .collectList()
+            .flatMap(productList -> ServerResponse.ok().bodyValue(productList));
     }
 
 }
