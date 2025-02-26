@@ -40,7 +40,7 @@ public class ProductService {
                 });
     }
 
-    public Mono<ProductEntity> getProductById(UUID id) {
+    public Mono<ProductEntity> getProductByIdWithHistory(UUID id) {
         return productRepository.findById(id)
                 .flatMap(product -> {
                     return productHistoryService.getProductHistory(product.getIdProduct())
@@ -50,6 +50,10 @@ public class ProductService {
                                 return Mono.just(product);
                             });
                 });
+    }
+
+    public Mono<ProductEntity> getProductById(UUID id){
+        return productRepository.findById(id);
     }
 
 
