@@ -1,6 +1,26 @@
 # proyecto
-Notas: Ahora q migre a posgreSQL los UUID se pueden generar en la BD. Para despuees
-Como se crean los default_product_week queda pendiente.
+Notas: Ahora q migre a posgreSQL los UUID se pueden generar en la BD. Ir cambiandolos mientras se desarrolla
+
+
+
+# CU A Realizar
+## Registrar cambio de stock para un producto por parte del producer
+
+## Registrar una cuenta por parte del productor para recibir los pagos de las ventas
+
+## Registrar una venta del lado del productor 
+
+## Confirmar el pedido.
+
+Este CU pasaría el pedido a partially confirmed, realizando todos los pagos a los detalles y disminuyendo en stock los productos
+pero manteniendo la opcion de agregar mas detalles y confirmar de vuelta.
+
+## Finalizar el pedido
+
+Simplemente pasar el pedido a estado confirmed para q no se pueda editar mas y sea tenido en cuenta para la generacion del dia de entrega
+
+
+## Registrar los productos default en un determinado collection point en una determinada fecha.
 
 Deberia ser algo asi como 
 
@@ -8,67 +28,38 @@ a) si solamente hay un producto de ese tipo disponible q sea ese
 
 b) si la puntuacion de la semana pasada baja del 3.5, que se habilite la votacion por un nuevo producto
 
-1- Stock Movement  
+## Generar Neightboor Package
 
-2- Purchase - Purchase Detail
+Tomara todos los pedidos confirmados realizados en la semana, sumara los totales de productos por cada pedido para un
+collection pooint especifico y un dia especifico.
 
-3- Sale - Sale Detail
+Cada collection point tendrá un dia específico de entrega en el que se pacta siempre (siempre lunes/martes/miercoles/jueves/viernes).
+El dia siguiente a ese día específico se reciben ya pedidos.
 
-4- Neigbhorhood Package
+## Registrar pedido recibido
 
-Para los endpoints de pedido (purchase) y detalle de pedido (purchasedetail), te conviene seguir los patrones estándar de una API RESTful.
+cuando se recibe un pedido el user tiene q confirmar q lo recibio
 
-# API de Pedidos (`purchase`) y Detalles de Pedido (`purchasedetail`)
+## Registrar calificacion. 
 
-Esta API maneja la gestión de pedidos y sus detalles en un sistema de compras.
+para el user que recibio el producto calificar, opcionalmente los productos recibidos
 
----
+## Registrar votacion
 
-## 📌 **Endpoints para `Purchase` (Pedidos)**
+cuando la calificacion de un producto promedio en una entrega es menor a 3.5, se abre la opcion para q los usuarios del collection point voten del mismo standar product otro producto específico.
 
-Estos endpoints permiten gestionar los pedidos.
+Lunes -> Usuario recibe el pedido
 
-| Método  | Endpoint              | Descripción |
-|---------|-----------------------|-------------|
-| **POST**   | `/purchases`            | Crea un nuevo pedido. |
-| **GET**    | `/purchases`            | Obtiene la lista de pedidos. |
-| **GET**    | `/purchases/{id}`       | Obtiene un pedido específico. |
-| **PUT**    | `/purchases/{id}`       | Actualiza un pedido existente. |
-| **DELETE** | `/purchases/{id}`       | Elimina un pedido. |
+los dos primeros dias tiene tiempo para calificarlo
 
-✅ **Notas**:
-- Al crear un pedido (`POST`), no se incluyen los detalles de compra, solo información general del pedido.
-- Para obtener los detalles de un pedido, se puede usar `GET /purchases/{id}/details`.
+Miercoles-> se realizan las votaciones de los productos mal calificados
 
----
+un dia
 
-## 📌 **Endpoints para `PurchaseDetail` (Detalles del Pedido)**
+Jueves -> Se realizan los pedidos
 
-Estos endpoints permiten manejar los productos dentro de un pedido.
 
-| Método  | Endpoint                                  | Descripción |
-|---------|-------------------------------------------|-------------|
-| **POST**   | `/purchases/{purchaseId}/details`         | Agrega un ítem a un pedido. |
-| **GET**    | `/purchases/{purchaseId}/details`         | Obtiene todos los ítems de un pedido. |
-| **GET**    | `/purchases/{purchaseId}/details/{id}`    | Obtiene un ítem específico. |
-| **PUT**    | `/purchases/{purchaseId}/details/{id}`    | Actualiza un ítem de un pedido. |
-| **DELETE** | `/purchases/{purchaseId}/details/{id}`    | Elimina un ítem de un pedido. |
 
-✅ **Notas**:
-- Los detalles siempre están vinculados a un pedido (`purchase`).
-- Si permites modificar un pedido, es posible que necesites actualizar o eliminar detalles.
 
----
 
-## 🔄 **Flujo Completo de la API**
-
-1️⃣ **Crear un pedido vacío** → `POST /purchases`  
-2️⃣ **Agregar productos al pedido** → `POST /purchases/{id}/details`  
-para agregar productos al pedido deberia hacer un endpoint q me devuelva todos los default-product de un collectionPointSuscribed con el precio de acuerdo al nivel de la purchase
-
-3️⃣ **Consultar un pedido** → `GET /purchases/{id}`  
-4️⃣ **Ver los detalles de un pedido** → `GET /purchases/{id}/details`  
-5️⃣ **Editar o eliminar pedidos/detalles** (Opcional) → `PUT / DELETE`
-
-Con este diseño, la API sigue principios RESTful y permite gestionar pedidos y sus detalles de forma organizada. 🚀
 
