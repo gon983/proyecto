@@ -1,8 +1,11 @@
 # proyecto
 Notas: Ahora q migre a posgreSQL los UUID se pueden generar en la BD. Para despuees
 Como se crean los default_product_week queda pendiente.
+
 Deberia ser algo asi como 
+
 a) si solamente hay un producto de ese tipo disponible q sea ese
+
 b) si la puntuacion de la semana pasada baja del 3.5, que se habilite la votacion por un nuevo producto
 
 1- Stock Movement  
