@@ -5,7 +5,7 @@
 -- Dumped from database version 17.4
 -- Dumped by pg_dump version 17.4
 
--- Started on 2025-02-24 20:42:18
+-- Started on 2025-02-26 10:46:18
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -30,7 +30,7 @@ CREATE SCHEMA public;
 ALTER SCHEMA public OWNER TO pg_database_owner;
 
 --
--- TOC entry 6089 (class 0 OID 0)
+-- TOC entry 6090 (class 0 OID 0)
 -- Dependencies: 6
 -- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: pg_database_owner
 --
@@ -572,7 +572,7 @@ ALTER TABLE public.user_state OWNER TO postgres;
 --
 
 CREATE TABLE public.users (
-    id_user uuid NOT NULL,
+    id_user uuid DEFAULT gen_random_uuid() NOT NULL,
     username character varying(45) NOT NULL,
     email character varying(45) NOT NULL,
     created_at timestamp without time zone NOT NULL,
@@ -585,7 +585,7 @@ CREATE TABLE public.users (
     photo character varying(45),
     minimal_sale double precision DEFAULT 0,
     fk_role_one uuid NOT NULL,
-    fk_rol_two uuid,
+    fk_role_two uuid,
     fk_role_three uuid,
     fk_collection_point_suscribed uuid
 );
@@ -611,7 +611,7 @@ CREATE TABLE public.vote (
 ALTER TABLE public.vote OWNER TO postgres;
 
 --
--- TOC entry 6048 (class 0 OID 17479)
+-- TOC entry 6049 (class 0 OID 17479)
 -- Dependencies: 224
 -- Data for Name: category; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -621,7 +621,7 @@ INSERT INTO public.category VALUES ('0dcf68f8-8171-4320-a9ff-8a812ca45bf4', 'Ver
 
 
 --
--- TOC entry 6050 (class 0 OID 17491)
+-- TOC entry 6051 (class 0 OID 17491)
 -- Dependencies: 226
 -- Data for Name: city; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -632,7 +632,7 @@ INSERT INTO public.city VALUES ('29559450-d74c-45a0-83f4-cdfc0a55db7d', 'Rosario
 
 
 --
--- TOC entry 6057 (class 0 OID 17541)
+-- TOC entry 6058 (class 0 OID 17541)
 -- Dependencies: 233
 -- Data for Name: collection_point; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -641,7 +641,7 @@ INSERT INTO public.collection_point VALUES ('c446f03c-490c-4fe9-a63a-ad407c981c2
 
 
 --
--- TOC entry 6059 (class 0 OID 17591)
+-- TOC entry 6060 (class 0 OID 17591)
 -- Dependencies: 235
 -- Data for Name: collection_point_history; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -649,7 +649,7 @@ INSERT INTO public.collection_point VALUES ('c446f03c-490c-4fe9-a63a-ad407c981c2
 
 
 --
--- TOC entry 6060 (class 0 OID 17608)
+-- TOC entry 6061 (class 0 OID 17608)
 -- Dependencies: 236
 -- Data for Name: collection_point_payments; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -657,7 +657,7 @@ INSERT INTO public.collection_point VALUES ('c446f03c-490c-4fe9-a63a-ad407c981c2
 
 
 --
--- TOC entry 6056 (class 0 OID 17536)
+-- TOC entry 6057 (class 0 OID 17536)
 -- Dependencies: 232
 -- Data for Name: collection_point_state; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -667,7 +667,7 @@ INSERT INTO public.collection_point_state VALUES ('19a226ee-c0e4-4d78-9ddd-dc4d6
 
 
 --
--- TOC entry 6049 (class 0 OID 17484)
+-- TOC entry 6050 (class 0 OID 17484)
 -- Dependencies: 225
 -- Data for Name: country; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -682,7 +682,7 @@ INSERT INTO public.country VALUES ('ebb44d2a-cdda-4653-b465-cae942f2bab7', 'Colo
 
 
 --
--- TOC entry 6061 (class 0 OID 17618)
+-- TOC entry 6062 (class 0 OID 17618)
 -- Dependencies: 237
 -- Data for Name: default_donation; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -690,7 +690,7 @@ INSERT INTO public.country VALUES ('ebb44d2a-cdda-4653-b465-cae942f2bab7', 'Colo
 
 
 --
--- TOC entry 6064 (class 0 OID 17661)
+-- TOC entry 6065 (class 0 OID 17661)
 -- Dependencies: 240
 -- Data for Name: default_product_x_collection_point_x_week; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -698,7 +698,7 @@ INSERT INTO public.country VALUES ('ebb44d2a-cdda-4653-b465-cae942f2bab7', 'Colo
 
 
 --
--- TOC entry 6051 (class 0 OID 17501)
+-- TOC entry 6052 (class 0 OID 17501)
 -- Dependencies: 227
 -- Data for Name: locality; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -707,7 +707,7 @@ INSERT INTO public.locality VALUES ('10fbe8c3-0291-4bc7-a96a-7d10782b36ec', 'Cap
 
 
 --
--- TOC entry 6052 (class 0 OID 17511)
+-- TOC entry 6053 (class 0 OID 17511)
 -- Dependencies: 228
 -- Data for Name: neighborhood; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -716,7 +716,7 @@ INSERT INTO public.neighborhood VALUES ('23f4f7d4-7923-495d-85d0-27f34d932537', 
 
 
 --
--- TOC entry 6069 (class 0 OID 17723)
+-- TOC entry 6070 (class 0 OID 17723)
 -- Dependencies: 245
 -- Data for Name: neighborhood_package; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -724,7 +724,7 @@ INSERT INTO public.neighborhood VALUES ('23f4f7d4-7923-495d-85d0-27f34d932537', 
 
 
 --
--- TOC entry 6070 (class 0 OID 17738)
+-- TOC entry 6071 (class 0 OID 17738)
 -- Dependencies: 246
 -- Data for Name: neighborhood_package_history; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -732,7 +732,7 @@ INSERT INTO public.neighborhood VALUES ('23f4f7d4-7923-495d-85d0-27f34d932537', 
 
 
 --
--- TOC entry 6068 (class 0 OID 17718)
+-- TOC entry 6069 (class 0 OID 17718)
 -- Dependencies: 244
 -- Data for Name: neighborhood_package_state; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -740,7 +740,7 @@ INSERT INTO public.neighborhood VALUES ('23f4f7d4-7923-495d-85d0-27f34d932537', 
 
 
 --
--- TOC entry 6054 (class 0 OID 17526)
+-- TOC entry 6055 (class 0 OID 17526)
 -- Dependencies: 230
 -- Data for Name: ong; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -748,7 +748,7 @@ INSERT INTO public.neighborhood VALUES ('23f4f7d4-7923-495d-85d0-27f34d932537', 
 
 
 --
--- TOC entry 6055 (class 0 OID 17531)
+-- TOC entry 6056 (class 0 OID 17531)
 -- Dependencies: 231
 -- Data for Name: payment_method; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -756,16 +756,17 @@ INSERT INTO public.neighborhood VALUES ('23f4f7d4-7923-495d-85d0-27f34d932537', 
 
 
 --
--- TOC entry 6063 (class 0 OID 17639)
+-- TOC entry 6064 (class 0 OID 17639)
 -- Dependencies: 239
 -- Data for Name: product; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 INSERT INTO public.product VALUES ('1a6acd60-a74e-4724-96a8-6ad7359c2fd0', 'Tomate 1', 100.5, 10, 'https://example.com/producto.jpg', 'kg', 'b088c879-3fe7-4bcd-a6fc-89efb341c602', 25.99, '10fbe8c3-0291-4bc7-a96a-7d10782b36ec', 'a634e60f-7070-4f1b-bc22-9926952b5fff');
+INSERT INTO public.product VALUES ('eb12c24a-9948-4aaa-a6cc-cd57f359b4f6', 'Banana 1', 100.5, 10, 'https://example.com/producto.jpg', 'kg', 'b088c879-3fe7-4bcd-a6fc-89efb341c602', 25.99, '10fbe8c3-0291-4bc7-a96a-7d10782b36ec', '6ac6bc96-2a1b-4df2-abc2-ba78f96d96eb');
 
 
 --
--- TOC entry 6066 (class 0 OID 17688)
+-- TOC entry 6067 (class 0 OID 17688)
 -- Dependencies: 242
 -- Data for Name: product_history; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -773,7 +774,7 @@ INSERT INTO public.product VALUES ('1a6acd60-a74e-4724-96a8-6ad7359c2fd0', 'Toma
 
 
 --
--- TOC entry 6065 (class 0 OID 17681)
+-- TOC entry 6066 (class 0 OID 17681)
 -- Dependencies: 241
 -- Data for Name: product_state; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -781,31 +782,36 @@ INSERT INTO public.product VALUES ('1a6acd60-a74e-4724-96a8-6ad7359c2fd0', 'Toma
 
 
 --
--- TOC entry 6072 (class 0 OID 17760)
+-- TOC entry 6073 (class 0 OID 17760)
 -- Dependencies: 248
 -- Data for Name: purchase; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO public.purchase VALUES ('77b613f9-1984-4a2a-a0c5-6302167b0841', 'bfb6dbcc-9f06-4b7e-9754-28368ef642fe', 0, NULL, NULL, '2025-02-24 20:43:16.944691', NULL, '1', '11c4c9f4-d5ee-4866-a22e-e1eb824efafa');
+INSERT INTO public.purchase VALUES ('fda6c680-686c-4493-9dc2-14e9dca88b34', 'bfb6dbcc-9f06-4b7e-9754-28368ef642fe', 0, NULL, NULL, '2025-02-25 18:36:03.004606', NULL, '1', '11c4c9f4-d5ee-4866-a22e-e1eb824efafa');
 
 
 --
--- TOC entry 6075 (class 0 OID 17807)
+-- TOC entry 6076 (class 0 OID 17807)
 -- Dependencies: 251
 -- Data for Name: purchase_detail; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO public.purchase_detail VALUES ('c634fb7d-4b1a-436b-ac9a-5c3a4d36d013', '1a6acd60-a74e-4724-96a8-6ad7359c2fd0', 2, 'fda6c680-686c-4493-9dc2-14e9dca88b34', 300.7, '8a69aecf-7441-4e57-bbea-e91cbbfc7487', NULL, NULL, NULL, NULL);
+INSERT INTO public.purchase_detail VALUES ('7d38ee00-02ce-4514-b4a2-a677c8062354', 'eb12c24a-9948-4aaa-a6cc-cd57f359b4f6', 1, 'fda6c680-686c-4493-9dc2-14e9dca88b34', 100, '8a69aecf-7441-4e57-bbea-e91cbbfc7487', NULL, NULL, NULL, NULL);
 
 
 --
--- TOC entry 6074 (class 0 OID 17802)
+-- TOC entry 6075 (class 0 OID 17802)
 -- Dependencies: 250
 -- Data for Name: purchase_detail_state; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO public.purchase_detail_state VALUES ('8a69aecf-7441-4e57-bbea-e91cbbfc7487', 'pending');
 
 
 --
--- TOC entry 6076 (class 0 OID 17827)
+-- TOC entry 6077 (class 0 OID 17827)
 -- Dependencies: 252
 -- Data for Name: purchase_detail_state_history; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -813,7 +819,7 @@ INSERT INTO public.product VALUES ('1a6acd60-a74e-4724-96a8-6ad7359c2fd0', 'Toma
 
 
 --
--- TOC entry 6071 (class 0 OID 17755)
+-- TOC entry 6072 (class 0 OID 17755)
 -- Dependencies: 247
 -- Data for Name: purchase_state; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -822,7 +828,7 @@ INSERT INTO public.purchase_state VALUES ('11c4c9f4-d5ee-4866-a22e-e1eb824efafa'
 
 
 --
--- TOC entry 6073 (class 0 OID 17785)
+-- TOC entry 6074 (class 0 OID 17785)
 -- Dependencies: 249
 -- Data for Name: purchase_state_history; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -830,7 +836,7 @@ INSERT INTO public.purchase_state VALUES ('11c4c9f4-d5ee-4866-a22e-e1eb824efafa'
 
 
 --
--- TOC entry 6053 (class 0 OID 17521)
+-- TOC entry 6054 (class 0 OID 17521)
 -- Dependencies: 229
 -- Data for Name: role; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -841,7 +847,7 @@ INSERT INTO public.role VALUES ('98c1260b-885a-4b8a-a998-3bba99254ff4', 'consume
 
 
 --
--- TOC entry 6078 (class 0 OID 17849)
+-- TOC entry 6079 (class 0 OID 17849)
 -- Dependencies: 254
 -- Data for Name: sale; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -849,7 +855,7 @@ INSERT INTO public.role VALUES ('98c1260b-885a-4b8a-a998-3bba99254ff4', 'consume
 
 
 --
--- TOC entry 6079 (class 0 OID 17869)
+-- TOC entry 6080 (class 0 OID 17869)
 -- Dependencies: 255
 -- Data for Name: sale_detail; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -857,7 +863,7 @@ INSERT INTO public.role VALUES ('98c1260b-885a-4b8a-a998-3bba99254ff4', 'consume
 
 
 --
--- TOC entry 6080 (class 0 OID 17884)
+-- TOC entry 6081 (class 0 OID 17884)
 -- Dependencies: 256
 -- Data for Name: sale_history; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -865,7 +871,7 @@ INSERT INTO public.role VALUES ('98c1260b-885a-4b8a-a998-3bba99254ff4', 'consume
 
 
 --
--- TOC entry 6077 (class 0 OID 17844)
+-- TOC entry 6078 (class 0 OID 17844)
 -- Dependencies: 253
 -- Data for Name: sale_state; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -881,7 +887,7 @@ INSERT INTO public.role VALUES ('98c1260b-885a-4b8a-a998-3bba99254ff4', 'consume
 
 
 --
--- TOC entry 6062 (class 0 OID 17629)
+-- TOC entry 6063 (class 0 OID 17629)
 -- Dependencies: 238
 -- Data for Name: standar_product; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -891,7 +897,7 @@ INSERT INTO public.standar_product VALUES ('a634e60f-7070-4f1b-bc22-9926952b5fff
 
 
 --
--- TOC entry 6067 (class 0 OID 17705)
+-- TOC entry 6068 (class 0 OID 17705)
 -- Dependencies: 243
 -- Data for Name: stock_movement; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -899,7 +905,7 @@ INSERT INTO public.standar_product VALUES ('a634e60f-7070-4f1b-bc22-9926952b5fff
 
 
 --
--- TOC entry 6082 (class 0 OID 17906)
+-- TOC entry 6083 (class 0 OID 17906)
 -- Dependencies: 258
 -- Data for Name: user_history; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -907,7 +913,7 @@ INSERT INTO public.standar_product VALUES ('a634e60f-7070-4f1b-bc22-9926952b5fff
 
 
 --
--- TOC entry 6081 (class 0 OID 17901)
+-- TOC entry 6082 (class 0 OID 17901)
 -- Dependencies: 257
 -- Data for Name: user_state; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -915,18 +921,19 @@ INSERT INTO public.standar_product VALUES ('a634e60f-7070-4f1b-bc22-9926952b5fff
 
 
 --
--- TOC entry 6058 (class 0 OID 17553)
+-- TOC entry 6059 (class 0 OID 17553)
 -- Dependencies: 234
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 INSERT INTO public.users VALUES ('b088c879-3fe7-4bcd-a6fc-89efb341c602', 'juanperez', 'juan.perez@example.com', '2025-02-22 16:03:26.961483', 'Juan', 'ProductorDeTomates', 'DNI', '12345678', '23f4f7d4-7923-495d-85d0-27f34d932537', '+5491122334455', NULL, 0, '5c0e356c-ef1a-11ef-b668-52cf1c1a32ab', NULL, NULL, NULL);
 INSERT INTO public.users VALUES ('6982b8a2-2a9e-47a4-8df9-85f3482b16e2', 'rodrigo', 'rodrigo@example.com', '2025-02-22 16:12:39.413808', 'Rodrigo', 'Dueño Plaza', 'DNI', '88888888', '23f4f7d4-7923-495d-85d0-27f34d932537', '+5491129898', NULL, 0, '6b4492b9-1f7d-4ef6-b3bf-7a8c89e4fe83', NULL, NULL, NULL);
-INSERT INTO public.users VALUES ('bfb6dbcc-9f06-4b7e-9754-28368ef642fe', 'grego', 'gregorio.perez@example.com', '2025-02-24 19:59:42.157521', 'Gregorio', 'Consumidor', 'DNI', '12345558', '23f4f7d4-7923-495d-85d0-27f34d932537', '+549112233464', NULL, 0, '98c1260b-885a-4b8a-a998-3bba99254ff4', NULL, NULL, NULL);
+INSERT INTO public.users VALUES ('bfb6dbcc-9f06-4b7e-9754-28368ef642fe', 'grego', 'gregorio.perez@example.com', '2025-02-24 19:59:42.157521', 'Gregorio', 'Consumidor', 'DNI', '12345558', '23f4f7d4-7923-495d-85d0-27f34d932537', '+549112233464', NULL, NULL, '98c1260b-885a-4b8a-a998-3bba99254ff4', NULL, NULL, 'c446f03c-490c-4fe9-a63a-ad407c981c29');
+INSERT INTO public.users VALUES ('3bc2cac3-aadc-468c-9942-39fd2b7f2762', 'martin', 'martin.perez@example.com', '2025-02-26 10:38:59.743479', 'martin', 'cons', 'DNI', '12315558', '23f4f7d4-7923-495d-85d0-27f34d932537', '+549112233334', NULL, 0, '98c1260b-885a-4b8a-a998-3bba99254ff4', NULL, NULL, NULL);
 
 
 --
--- TOC entry 6083 (class 0 OID 17923)
+-- TOC entry 6084 (class 0 OID 17923)
 -- Dependencies: 259
 -- Data for Name: vote; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -934,7 +941,7 @@ INSERT INTO public.users VALUES ('bfb6dbcc-9f06-4b7e-9754-28368ef642fe', 'grego'
 
 
 --
--- TOC entry 5769 (class 2606 OID 17483)
+-- TOC entry 5770 (class 2606 OID 17483)
 -- Name: category category_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -943,7 +950,7 @@ ALTER TABLE ONLY public.category
 
 
 --
--- TOC entry 5775 (class 2606 OID 17495)
+-- TOC entry 5776 (class 2606 OID 17495)
 -- Name: city city_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -952,7 +959,7 @@ ALTER TABLE ONLY public.city
 
 
 --
--- TOC entry 5795 (class 2606 OID 17597)
+-- TOC entry 5796 (class 2606 OID 17597)
 -- Name: collection_point_history collection_point_history_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -961,7 +968,7 @@ ALTER TABLE ONLY public.collection_point_history
 
 
 --
--- TOC entry 5797 (class 2606 OID 17612)
+-- TOC entry 5798 (class 2606 OID 17612)
 -- Name: collection_point_payments collection_point_payments_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -970,7 +977,7 @@ ALTER TABLE ONLY public.collection_point_payments
 
 
 --
--- TOC entry 5789 (class 2606 OID 17547)
+-- TOC entry 5790 (class 2606 OID 17547)
 -- Name: collection_point collection_point_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -979,7 +986,7 @@ ALTER TABLE ONLY public.collection_point
 
 
 --
--- TOC entry 5787 (class 2606 OID 17540)
+-- TOC entry 5788 (class 2606 OID 17540)
 -- Name: collection_point_state collection_point_state_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -988,7 +995,7 @@ ALTER TABLE ONLY public.collection_point_state
 
 
 --
--- TOC entry 5771 (class 2606 OID 17490)
+-- TOC entry 5772 (class 2606 OID 17490)
 -- Name: country country_name_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -997,7 +1004,7 @@ ALTER TABLE ONLY public.country
 
 
 --
--- TOC entry 5773 (class 2606 OID 17488)
+-- TOC entry 5774 (class 2606 OID 17488)
 -- Name: country country_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1006,7 +1013,7 @@ ALTER TABLE ONLY public.country
 
 
 --
--- TOC entry 5799 (class 2606 OID 17623)
+-- TOC entry 5800 (class 2606 OID 17623)
 -- Name: default_donation default_donation_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1015,7 +1022,7 @@ ALTER TABLE ONLY public.default_donation
 
 
 --
--- TOC entry 5807 (class 2606 OID 17665)
+-- TOC entry 5808 (class 2606 OID 17665)
 -- Name: default_product_x_collection_point_x_week default_product_x_collection_point_x_week_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1024,7 +1031,7 @@ ALTER TABLE ONLY public.default_product_x_collection_point_x_week
 
 
 --
--- TOC entry 5777 (class 2606 OID 17505)
+-- TOC entry 5778 (class 2606 OID 17505)
 -- Name: locality locality_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1033,7 +1040,7 @@ ALTER TABLE ONLY public.locality
 
 
 --
--- TOC entry 5821 (class 2606 OID 17744)
+-- TOC entry 5822 (class 2606 OID 17744)
 -- Name: neighborhood_package_history neighborhood_package_history_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1042,7 +1049,7 @@ ALTER TABLE ONLY public.neighborhood_package_history
 
 
 --
--- TOC entry 5819 (class 2606 OID 17727)
+-- TOC entry 5820 (class 2606 OID 17727)
 -- Name: neighborhood_package neighborhood_package_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1051,7 +1058,7 @@ ALTER TABLE ONLY public.neighborhood_package
 
 
 --
--- TOC entry 5817 (class 2606 OID 17722)
+-- TOC entry 5818 (class 2606 OID 17722)
 -- Name: neighborhood_package_state neighborhood_package_state_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1060,7 +1067,7 @@ ALTER TABLE ONLY public.neighborhood_package_state
 
 
 --
--- TOC entry 5779 (class 2606 OID 17515)
+-- TOC entry 5780 (class 2606 OID 17515)
 -- Name: neighborhood neighborhood_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1069,7 +1076,7 @@ ALTER TABLE ONLY public.neighborhood
 
 
 --
--- TOC entry 5783 (class 2606 OID 17530)
+-- TOC entry 5784 (class 2606 OID 17530)
 -- Name: ong ong_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1078,7 +1085,7 @@ ALTER TABLE ONLY public.ong
 
 
 --
--- TOC entry 5785 (class 2606 OID 17535)
+-- TOC entry 5786 (class 2606 OID 17535)
 -- Name: payment_method payment_method_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1087,7 +1094,7 @@ ALTER TABLE ONLY public.payment_method
 
 
 --
--- TOC entry 5813 (class 2606 OID 17694)
+-- TOC entry 5814 (class 2606 OID 17694)
 -- Name: product_history product_history_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1096,7 +1103,7 @@ ALTER TABLE ONLY public.product_history
 
 
 --
--- TOC entry 5803 (class 2606 OID 17645)
+-- TOC entry 5804 (class 2606 OID 17645)
 -- Name: product product_name_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1105,7 +1112,7 @@ ALTER TABLE ONLY public.product
 
 
 --
--- TOC entry 5805 (class 2606 OID 17643)
+-- TOC entry 5806 (class 2606 OID 17643)
 -- Name: product product_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1114,7 +1121,7 @@ ALTER TABLE ONLY public.product
 
 
 --
--- TOC entry 5809 (class 2606 OID 17687)
+-- TOC entry 5810 (class 2606 OID 17687)
 -- Name: product_state product_state_name_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1123,7 +1130,7 @@ ALTER TABLE ONLY public.product_state
 
 
 --
--- TOC entry 5811 (class 2606 OID 17685)
+-- TOC entry 5812 (class 2606 OID 17685)
 -- Name: product_state product_state_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1132,7 +1139,7 @@ ALTER TABLE ONLY public.product_state
 
 
 --
--- TOC entry 5831 (class 2606 OID 17811)
+-- TOC entry 5832 (class 2606 OID 17811)
 -- Name: purchase_detail purchase_detail_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1141,7 +1148,7 @@ ALTER TABLE ONLY public.purchase_detail
 
 
 --
--- TOC entry 5833 (class 2606 OID 17833)
+-- TOC entry 5834 (class 2606 OID 17833)
 -- Name: purchase_detail_state_history purchase_detail_state_history_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1150,7 +1157,7 @@ ALTER TABLE ONLY public.purchase_detail_state_history
 
 
 --
--- TOC entry 5829 (class 2606 OID 17806)
+-- TOC entry 5830 (class 2606 OID 17806)
 -- Name: purchase_detail_state purchase_detail_state_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1159,7 +1166,7 @@ ALTER TABLE ONLY public.purchase_detail_state
 
 
 --
--- TOC entry 5825 (class 2606 OID 17764)
+-- TOC entry 5826 (class 2606 OID 17764)
 -- Name: purchase purchase_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1168,7 +1175,7 @@ ALTER TABLE ONLY public.purchase
 
 
 --
--- TOC entry 5827 (class 2606 OID 17791)
+-- TOC entry 5828 (class 2606 OID 17791)
 -- Name: purchase_state_history purchase_state_history_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1177,7 +1184,7 @@ ALTER TABLE ONLY public.purchase_state_history
 
 
 --
--- TOC entry 5823 (class 2606 OID 17759)
+-- TOC entry 5824 (class 2606 OID 17759)
 -- Name: purchase_state purchase_state_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1186,7 +1193,7 @@ ALTER TABLE ONLY public.purchase_state
 
 
 --
--- TOC entry 5781 (class 2606 OID 17525)
+-- TOC entry 5782 (class 2606 OID 17525)
 -- Name: role role_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1195,7 +1202,7 @@ ALTER TABLE ONLY public.role
 
 
 --
--- TOC entry 5839 (class 2606 OID 17873)
+-- TOC entry 5840 (class 2606 OID 17873)
 -- Name: sale_detail sale_detail_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1204,7 +1211,7 @@ ALTER TABLE ONLY public.sale_detail
 
 
 --
--- TOC entry 5841 (class 2606 OID 17890)
+-- TOC entry 5842 (class 2606 OID 17890)
 -- Name: sale_history sale_history_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1213,7 +1220,7 @@ ALTER TABLE ONLY public.sale_history
 
 
 --
--- TOC entry 5837 (class 2606 OID 17853)
+-- TOC entry 5838 (class 2606 OID 17853)
 -- Name: sale sale_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1222,7 +1229,7 @@ ALTER TABLE ONLY public.sale
 
 
 --
--- TOC entry 5835 (class 2606 OID 17848)
+-- TOC entry 5836 (class 2606 OID 17848)
 -- Name: sale_state sale_state_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1231,7 +1238,7 @@ ALTER TABLE ONLY public.sale_state
 
 
 --
--- TOC entry 5801 (class 2606 OID 17633)
+-- TOC entry 5802 (class 2606 OID 17633)
 -- Name: standar_product standar_product_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1240,7 +1247,7 @@ ALTER TABLE ONLY public.standar_product
 
 
 --
--- TOC entry 5815 (class 2606 OID 17712)
+-- TOC entry 5816 (class 2606 OID 17712)
 -- Name: stock_movement stock_movement_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1249,7 +1256,7 @@ ALTER TABLE ONLY public.stock_movement
 
 
 --
--- TOC entry 5791 (class 2606 OID 17560)
+-- TOC entry 5792 (class 2606 OID 17560)
 -- Name: users user_email_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1258,7 +1265,7 @@ ALTER TABLE ONLY public.users
 
 
 --
--- TOC entry 5845 (class 2606 OID 17912)
+-- TOC entry 5846 (class 2606 OID 17912)
 -- Name: user_history user_history_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1267,7 +1274,7 @@ ALTER TABLE ONLY public.user_history
 
 
 --
--- TOC entry 5793 (class 2606 OID 17558)
+-- TOC entry 5794 (class 2606 OID 17558)
 -- Name: users user_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1276,7 +1283,7 @@ ALTER TABLE ONLY public.users
 
 
 --
--- TOC entry 5843 (class 2606 OID 17905)
+-- TOC entry 5844 (class 2606 OID 17905)
 -- Name: user_state user_state_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1285,7 +1292,7 @@ ALTER TABLE ONLY public.user_state
 
 
 --
--- TOC entry 5847 (class 2606 OID 17929)
+-- TOC entry 5848 (class 2606 OID 17929)
 -- Name: vote vote_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1294,7 +1301,7 @@ ALTER TABLE ONLY public.vote
 
 
 --
--- TOC entry 5848 (class 2606 OID 17496)
+-- TOC entry 5849 (class 2606 OID 17496)
 -- Name: city city_fk_country_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1303,7 +1310,7 @@ ALTER TABLE ONLY public.city
 
 
 --
--- TOC entry 5851 (class 2606 OID 17548)
+-- TOC entry 5852 (class 2606 OID 17548)
 -- Name: collection_point collection_point_fk_neighborhood_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1312,7 +1319,7 @@ ALTER TABLE ONLY public.collection_point
 
 
 --
--- TOC entry 5858 (class 2606 OID 17598)
+-- TOC entry 5859 (class 2606 OID 17598)
 -- Name: collection_point_history collection_point_history_fk_collection_point_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1321,7 +1328,7 @@ ALTER TABLE ONLY public.collection_point_history
 
 
 --
--- TOC entry 5859 (class 2606 OID 17603)
+-- TOC entry 5860 (class 2606 OID 17603)
 -- Name: collection_point_history collection_point_history_fk_collection_point_state_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1330,7 +1337,7 @@ ALTER TABLE ONLY public.collection_point_history
 
 
 --
--- TOC entry 5860 (class 2606 OID 17613)
+-- TOC entry 5861 (class 2606 OID 17613)
 -- Name: collection_point_payments collection_point_payments_fk_collection_point_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1339,7 +1346,7 @@ ALTER TABLE ONLY public.collection_point_payments
 
 
 --
--- TOC entry 5861 (class 2606 OID 17624)
+-- TOC entry 5862 (class 2606 OID 17624)
 -- Name: default_donation default_donation_fk_organization_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1348,7 +1355,7 @@ ALTER TABLE ONLY public.default_donation
 
 
 --
--- TOC entry 5866 (class 2606 OID 17666)
+-- TOC entry 5867 (class 2606 OID 17666)
 -- Name: default_product_x_collection_point_x_week default_product_x_collection_point_x_w_fk_collection_point_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1357,7 +1364,7 @@ ALTER TABLE ONLY public.default_product_x_collection_point_x_week
 
 
 --
--- TOC entry 5867 (class 2606 OID 17676)
+-- TOC entry 5868 (class 2606 OID 17676)
 -- Name: default_product_x_collection_point_x_week default_product_x_collection_point_x_we_fk_standar_product_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1366,7 +1373,7 @@ ALTER TABLE ONLY public.default_product_x_collection_point_x_week
 
 
 --
--- TOC entry 5868 (class 2606 OID 17671)
+-- TOC entry 5869 (class 2606 OID 17671)
 -- Name: default_product_x_collection_point_x_week default_product_x_collection_point_x_week_fk_product_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1375,7 +1382,7 @@ ALTER TABLE ONLY public.default_product_x_collection_point_x_week
 
 
 --
--- TOC entry 5852 (class 2606 OID 17586)
+-- TOC entry 5853 (class 2606 OID 17586)
 -- Name: collection_point fk_owner_collection_point; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1384,7 +1391,7 @@ ALTER TABLE ONLY public.collection_point
 
 
 --
--- TOC entry 5849 (class 2606 OID 17506)
+-- TOC entry 5850 (class 2606 OID 17506)
 -- Name: locality locality_fk_city_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1393,7 +1400,7 @@ ALTER TABLE ONLY public.locality
 
 
 --
--- TOC entry 5850 (class 2606 OID 17516)
+-- TOC entry 5851 (class 2606 OID 17516)
 -- Name: neighborhood neighborhood_fk_locality_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1402,7 +1409,7 @@ ALTER TABLE ONLY public.neighborhood
 
 
 --
--- TOC entry 5872 (class 2606 OID 17733)
+-- TOC entry 5873 (class 2606 OID 17733)
 -- Name: neighborhood_package neighborhood_package_fk_collection_point_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1411,7 +1418,7 @@ ALTER TABLE ONLY public.neighborhood_package
 
 
 --
--- TOC entry 5873 (class 2606 OID 17728)
+-- TOC entry 5874 (class 2606 OID 17728)
 -- Name: neighborhood_package neighborhood_package_fk_in_charge_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1420,7 +1427,7 @@ ALTER TABLE ONLY public.neighborhood_package
 
 
 --
--- TOC entry 5874 (class 2606 OID 17745)
+-- TOC entry 5875 (class 2606 OID 17745)
 -- Name: neighborhood_package_history neighborhood_package_history_fk_neighborhood_package_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1429,7 +1436,7 @@ ALTER TABLE ONLY public.neighborhood_package_history
 
 
 --
--- TOC entry 5875 (class 2606 OID 17750)
+-- TOC entry 5876 (class 2606 OID 17750)
 -- Name: neighborhood_package_history neighborhood_package_history_fk_neighborhood_package_state_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1438,7 +1445,7 @@ ALTER TABLE ONLY public.neighborhood_package_history
 
 
 --
--- TOC entry 5863 (class 2606 OID 17651)
+-- TOC entry 5864 (class 2606 OID 17651)
 -- Name: product product_fk_locality_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1447,7 +1454,7 @@ ALTER TABLE ONLY public.product
 
 
 --
--- TOC entry 5864 (class 2606 OID 17646)
+-- TOC entry 5865 (class 2606 OID 17646)
 -- Name: product product_fk_productor_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1456,7 +1463,7 @@ ALTER TABLE ONLY public.product
 
 
 --
--- TOC entry 5865 (class 2606 OID 17656)
+-- TOC entry 5866 (class 2606 OID 17656)
 -- Name: product product_fk_standar_product_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1465,7 +1472,7 @@ ALTER TABLE ONLY public.product
 
 
 --
--- TOC entry 5869 (class 2606 OID 17695)
+-- TOC entry 5870 (class 2606 OID 17695)
 -- Name: product_history product_history_fk_product_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1474,7 +1481,7 @@ ALTER TABLE ONLY public.product_history
 
 
 --
--- TOC entry 5870 (class 2606 OID 17700)
+-- TOC entry 5871 (class 2606 OID 17700)
 -- Name: product_history product_history_fk_product_state_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1483,7 +1490,7 @@ ALTER TABLE ONLY public.product_history
 
 
 --
--- TOC entry 5882 (class 2606 OID 17812)
+-- TOC entry 5883 (class 2606 OID 17812)
 -- Name: purchase_detail purchase_detail_fk_product_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1492,7 +1499,7 @@ ALTER TABLE ONLY public.purchase_detail
 
 
 --
--- TOC entry 5883 (class 2606 OID 17817)
+-- TOC entry 5884 (class 2606 OID 17817)
 -- Name: purchase_detail purchase_detail_fk_purchase_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1501,7 +1508,7 @@ ALTER TABLE ONLY public.purchase_detail
 
 
 --
--- TOC entry 5884 (class 2606 OID 17822)
+-- TOC entry 5885 (class 2606 OID 17822)
 -- Name: purchase_detail purchase_detail_fk_state_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1510,7 +1517,7 @@ ALTER TABLE ONLY public.purchase_detail
 
 
 --
--- TOC entry 5885 (class 2606 OID 17834)
+-- TOC entry 5886 (class 2606 OID 17834)
 -- Name: purchase_detail_state_history purchase_detail_state_history_fk_purchase_detail_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1519,7 +1526,7 @@ ALTER TABLE ONLY public.purchase_detail_state_history
 
 
 --
--- TOC entry 5886 (class 2606 OID 17839)
+-- TOC entry 5887 (class 2606 OID 17839)
 -- Name: purchase_detail_state_history purchase_detail_state_history_fk_purchase_detail_state_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1528,7 +1535,7 @@ ALTER TABLE ONLY public.purchase_detail_state_history
 
 
 --
--- TOC entry 5876 (class 2606 OID 17780)
+-- TOC entry 5877 (class 2606 OID 17780)
 -- Name: purchase purchase_fk_current_state_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1537,7 +1544,7 @@ ALTER TABLE ONLY public.purchase
 
 
 --
--- TOC entry 5877 (class 2606 OID 17770)
+-- TOC entry 5878 (class 2606 OID 17770)
 -- Name: purchase purchase_fk_neighborhood_package_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1546,7 +1553,7 @@ ALTER TABLE ONLY public.purchase
 
 
 --
--- TOC entry 5878 (class 2606 OID 17775)
+-- TOC entry 5879 (class 2606 OID 17775)
 -- Name: purchase purchase_fk_payment_method_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1555,7 +1562,7 @@ ALTER TABLE ONLY public.purchase
 
 
 --
--- TOC entry 5879 (class 2606 OID 17765)
+-- TOC entry 5880 (class 2606 OID 17765)
 -- Name: purchase purchase_fk_user_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1564,7 +1571,7 @@ ALTER TABLE ONLY public.purchase
 
 
 --
--- TOC entry 5880 (class 2606 OID 17797)
+-- TOC entry 5881 (class 2606 OID 17797)
 -- Name: purchase_state_history purchase_state_history_fk_purchase_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1573,7 +1580,7 @@ ALTER TABLE ONLY public.purchase_state_history
 
 
 --
--- TOC entry 5881 (class 2606 OID 17792)
+-- TOC entry 5882 (class 2606 OID 17792)
 -- Name: purchase_state_history purchase_state_history_fk_purchase_state_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1582,7 +1589,7 @@ ALTER TABLE ONLY public.purchase_state_history
 
 
 --
--- TOC entry 5890 (class 2606 OID 17874)
+-- TOC entry 5891 (class 2606 OID 17874)
 -- Name: sale_detail sale_detail_fk_product_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1591,7 +1598,7 @@ ALTER TABLE ONLY public.sale_detail
 
 
 --
--- TOC entry 5891 (class 2606 OID 17879)
+-- TOC entry 5892 (class 2606 OID 17879)
 -- Name: sale_detail sale_detail_fk_sale_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1600,7 +1607,7 @@ ALTER TABLE ONLY public.sale_detail
 
 
 --
--- TOC entry 5887 (class 2606 OID 17859)
+-- TOC entry 5888 (class 2606 OID 17859)
 -- Name: sale sale_fk_deliver_guy_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1609,7 +1616,7 @@ ALTER TABLE ONLY public.sale
 
 
 --
--- TOC entry 5888 (class 2606 OID 17864)
+-- TOC entry 5889 (class 2606 OID 17864)
 -- Name: sale sale_fk_payment_method_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1618,7 +1625,7 @@ ALTER TABLE ONLY public.sale
 
 
 --
--- TOC entry 5889 (class 2606 OID 17854)
+-- TOC entry 5890 (class 2606 OID 17854)
 -- Name: sale sale_fk_productor_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1627,7 +1634,7 @@ ALTER TABLE ONLY public.sale
 
 
 --
--- TOC entry 5892 (class 2606 OID 17891)
+-- TOC entry 5893 (class 2606 OID 17891)
 -- Name: sale_history sale_history_fk_sale_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1636,7 +1643,7 @@ ALTER TABLE ONLY public.sale_history
 
 
 --
--- TOC entry 5893 (class 2606 OID 17896)
+-- TOC entry 5894 (class 2606 OID 17896)
 -- Name: sale_history sale_history_fk_sale_state_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1645,7 +1652,7 @@ ALTER TABLE ONLY public.sale_history
 
 
 --
--- TOC entry 5862 (class 2606 OID 17634)
+-- TOC entry 5863 (class 2606 OID 17634)
 -- Name: standar_product standar_product_fk_category_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1654,7 +1661,7 @@ ALTER TABLE ONLY public.standar_product
 
 
 --
--- TOC entry 5871 (class 2606 OID 17713)
+-- TOC entry 5872 (class 2606 OID 17713)
 -- Name: stock_movement stock_movement_fk_product_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1663,7 +1670,7 @@ ALTER TABLE ONLY public.stock_movement
 
 
 --
--- TOC entry 5853 (class 2606 OID 17581)
+-- TOC entry 5854 (class 2606 OID 17581)
 -- Name: users user_fk_collection_point_suscribed_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1672,7 +1679,7 @@ ALTER TABLE ONLY public.users
 
 
 --
--- TOC entry 5854 (class 2606 OID 17561)
+-- TOC entry 5855 (class 2606 OID 17561)
 -- Name: users user_fk_neighborhood_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1681,16 +1688,16 @@ ALTER TABLE ONLY public.users
 
 
 --
--- TOC entry 5855 (class 2606 OID 17571)
+-- TOC entry 5856 (class 2606 OID 17571)
 -- Name: users user_fk_rol_two_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.users
-    ADD CONSTRAINT user_fk_rol_two_fkey FOREIGN KEY (fk_rol_two) REFERENCES public.role(id_role);
+    ADD CONSTRAINT user_fk_rol_two_fkey FOREIGN KEY (fk_role_two) REFERENCES public.role(id_role);
 
 
 --
--- TOC entry 5856 (class 2606 OID 17566)
+-- TOC entry 5857 (class 2606 OID 17566)
 -- Name: users user_fk_role_one_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1699,7 +1706,7 @@ ALTER TABLE ONLY public.users
 
 
 --
--- TOC entry 5857 (class 2606 OID 17576)
+-- TOC entry 5858 (class 2606 OID 17576)
 -- Name: users user_fk_role_three_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1708,7 +1715,7 @@ ALTER TABLE ONLY public.users
 
 
 --
--- TOC entry 5894 (class 2606 OID 17913)
+-- TOC entry 5895 (class 2606 OID 17913)
 -- Name: user_history user_history_fk_user_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1717,7 +1724,7 @@ ALTER TABLE ONLY public.user_history
 
 
 --
--- TOC entry 5895 (class 2606 OID 17918)
+-- TOC entry 5896 (class 2606 OID 17918)
 -- Name: user_history user_history_fk_user_state_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1726,7 +1733,7 @@ ALTER TABLE ONLY public.user_history
 
 
 --
--- TOC entry 5896 (class 2606 OID 17930)
+-- TOC entry 5897 (class 2606 OID 17930)
 -- Name: vote vote_fk_product_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1735,7 +1742,7 @@ ALTER TABLE ONLY public.vote
 
 
 --
--- TOC entry 5897 (class 2606 OID 17935)
+-- TOC entry 5898 (class 2606 OID 17935)
 -- Name: vote vote_fk_user_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1743,7 +1750,7 @@ ALTER TABLE ONLY public.vote
     ADD CONSTRAINT vote_fk_user_fkey FOREIGN KEY (fk_user) REFERENCES public.users(id_user);
 
 
--- Completed on 2025-02-24 20:42:18
+-- Completed on 2025-02-26 10:46:18
 
 --
 -- PostgreSQL database dump complete

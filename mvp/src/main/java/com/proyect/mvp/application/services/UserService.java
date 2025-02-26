@@ -33,7 +33,6 @@ public class UserService {
 
     public Mono<UserEntity> saveNewUser(UserCreateDTO userDto) {
         UserEntity userEntity = UserEntity.builder()
-                .idUser(UUID.randomUUID())
                 .username(userDto.getUsername())
                 .email(userDto.getEmail())
                 .createdAt(LocalDateTime.now())
@@ -46,7 +45,7 @@ public class UserService {
                 .roleOne(userDto.getRoleOne())
                 .fkCollectionPointSuscribed(userDto.getFkCollectionPointSuscribed())
                 .build();
-        return userRepository.insertUser(userEntity)
+        return userRepository.save(userEntity)
                 .thenReturn(userEntity)
                 .onErrorMap(error -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error saving user", error));
     }
