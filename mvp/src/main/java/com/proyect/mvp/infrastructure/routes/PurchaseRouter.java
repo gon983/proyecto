@@ -21,7 +21,8 @@ public class PurchaseRouter {
 
     @Bean
     public RouterFunction<ServerResponse> purchaseRoutes(PurchaseService purchaseService) {
-        return route(POST("/purchases"), request-> createPurchase(request, purchaseService));
+        return route(POST("/purchases"), request-> createPurchase(request, purchaseService))
+                .andRoute(GET("/purchases/{idPurchase}"), request-> getPurchaseWithDetails(request, purchaseService));
 
     }
 
@@ -29,6 +30,14 @@ public class PurchaseRouter {
         return request.bodyToMono(PurchaseCreateDTO.class)
                 .flatMap(purchase -> purchaseService.createPurchase(purchase))
                 .flatMap(savedPurchase -> ServerResponse.ok().bodyValue(savedPurchase));
+    }
+
+    private Mono<ServerResponse> getPurchaseWithDetails(ServerRequest request, PurchaseService purchaseService){
+        UUID idPurchase = UUID.fromString(request.pathVariable("idPurchase"));
+        return ServerResponse.ok().body(purchaseService.getPurchaseWithDetails(idPurchase));
+        
+         
+        
     }
     
 }

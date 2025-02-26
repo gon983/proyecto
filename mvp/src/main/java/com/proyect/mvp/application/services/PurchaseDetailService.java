@@ -11,6 +11,7 @@ import com.proyect.mvp.domain.model.entities.PurchaseDetailStateEntity;
 import com.proyect.mvp.domain.repository.PurchaseDetailRepository;
 import com.proyect.mvp.dtos.create.PurchaseDetailCreateDTO;
 
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 @Service
 public class PurchaseDetailService {
@@ -36,6 +37,11 @@ public class PurchaseDetailService {
                                 .thenReturn(purchaseDetail)
                                 .onErrorMap(error -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error Saving purchase detail", error));
         });        
+    }
+
+    public Flux<PurchaseDetailEntity> getDetailsFromPurchase(UUID idPurchase){
+        return purchaseDetailRepository.findAllByFkPurchase(idPurchase);
+
     }
 
     

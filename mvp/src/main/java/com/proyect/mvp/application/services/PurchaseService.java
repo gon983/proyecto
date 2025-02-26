@@ -1,6 +1,7 @@
 package com.proyect.mvp.application.services;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -15,10 +16,12 @@ import reactor.core.publisher.Mono;
 public class PurchaseService {
     private final PurchaseRepository purchaseRepository;
     private final PurchaseStateService purchaseStateService;
+    private final PurchaseDetailService purchaseDetailService;
 
-    public PurchaseService(PurchaseRepository purchaseRepository, PurchaseStateService purchaseStateService) {
+    public PurchaseService(PurchaseRepository purchaseRepository, PurchaseStateService purchaseStateService, PurchaseDetailService purchaseDetailService) {
         this.purchaseRepository = purchaseRepository;
         this.purchaseStateService = purchaseStateService;
+        this.purchaseDetailService = purchaseDetailService;
     }
 
     public Mono<PurchaseEntity> createPurchase(PurchaseCreateDTO purchaseDto) {
@@ -34,6 +37,17 @@ public class PurchaseService {
                 return purchaseRepository.save(purchase); // Guardar compra
             });
     }
-    
-    
+
+    public Mono<PurchaseEntity> getPurchaseWithDetails(UUID idPurchase){
+        return purchaseRepository.findById(idPurchase)
+                                .flatMap(
+                                   purchase -> {
+                                        return purchaseDetailService.getDetailsFromPurchase(idPurchase)
+                                           .collectList()
+                                           .map(details -> {
+                                               purchase.addDetails(details);
+                                               return purchase;
+                                           });
+                                   });
+    }
 }

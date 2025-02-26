@@ -1,5 +1,6 @@
 package com.proyect.mvp.domain.model.entities;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import org.springframework.data.annotation.Id;
@@ -45,8 +46,12 @@ public class PurchaseEntity {
     private String level;
 
     @Transient
-    private Set<PurchaseDetailEntity> details;
+    private List<PurchaseDetailEntity> details;
 
     @Column("fk_current_state")
     private UUID fkCurrentState;
+
+    public void addDetails(List<PurchaseDetailEntity> details){
+        this.details = details;
+    }
 }

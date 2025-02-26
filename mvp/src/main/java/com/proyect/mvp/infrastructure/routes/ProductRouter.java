@@ -31,6 +31,9 @@ public class ProductRouter {
                         req -> req.bodyToMono(ProductUpdateDTO.class)
                                 .flatMap(productService::updateProduct)
                                 .flatMap(product -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).bodyValue(product)))
+                .GET("/products", 
+                        req -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON)
+                                                .body(productService.getAllProducts(),ProductEntity.class))                
                 .build();
     }
 }
