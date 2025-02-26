@@ -32,12 +32,11 @@ public class PurchaseRouter {
                 .flatMap(savedPurchase -> ServerResponse.ok().bodyValue(savedPurchase));
     }
 
-    private Mono<ServerResponse> getPurchaseWithDetails(ServerRequest request, PurchaseService purchaseService){
+    private Mono<ServerResponse> getPurchaseWithDetails(ServerRequest request, PurchaseService purchaseService) {
         UUID idPurchase = UUID.fromString(request.pathVariable("idPurchase"));
-        return ServerResponse.ok().body(purchaseService.getPurchaseWithDetails(idPurchase));
-        
-         
-        
+        return purchaseService.getPurchaseWithDetails(idPurchase)
+                .flatMap(purchase -> ServerResponse.ok().bodyValue(purchase))
+                .switchIfEmpty(ServerResponse.notFound().build());
     }
     
 }
