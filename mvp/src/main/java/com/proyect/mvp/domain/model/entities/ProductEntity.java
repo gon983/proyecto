@@ -66,4 +66,12 @@ public class ProductEntity {
         MakePrice strategy = MakePriceFactory.getStrategy(level);
         strategy.makePrice(this);
 }
+
+    public void setStock(double newStock){
+        this.stock = newStock;
+        if(newStock< this.alertStock){
+            // QUE HAGA ALGO
+        }
+    }
+
 }

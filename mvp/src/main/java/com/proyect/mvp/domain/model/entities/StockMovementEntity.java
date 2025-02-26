@@ -1,4 +1,6 @@
 package com.proyect.mvp.domain.model.entities;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
@@ -6,11 +8,14 @@ import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.data.relational.core.mapping.Column;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 
 @Table( "stock_movement")
 @Getter
+@AllArgsConstructor
+@Builder
 @NoArgsConstructor
 public class StockMovementEntity {
 
@@ -21,8 +26,9 @@ public class StockMovementEntity {
 
     @Column("fk_product")
     private UUID fkProduct;
-    @Transient
-    private ProductEntity  product;
+
+    @Column("fk_user")
+    private UUID fkUser;
 
     @Column( "quantity")
     private double quantity;
@@ -32,7 +38,7 @@ public class StockMovementEntity {
     private StockMovementTypeEnum  type; 
 
     @Column( "date")
-    private LocalDate date; 
+    private LocalDateTime date = LocalDateTime.now(); 
 
     @Column( "coment")
     private String comment; 
