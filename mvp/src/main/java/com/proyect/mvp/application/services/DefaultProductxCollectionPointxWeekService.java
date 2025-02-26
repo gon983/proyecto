@@ -17,11 +17,12 @@ import reactor.core.publisher.Mono;
 public class DefaultProductxCollectionPointxWeekService {
     private final DefaultProductxCollectionPointxWeekRepository pxCpRepository;
     private final ProductService productService;
+    private final UserService userService;
 
-    public DefaultProductxCollectionPointxWeekService(DefaultProductxCollectionPointxWeekRepository pxCpRepository, ProductService productService){
+    public DefaultProductxCollectionPointxWeekService(DefaultProductxCollectionPointxWeekRepository pxCpRepository, ProductService productService, UserService userService){
         this.pxCpRepository = pxCpRepository;
         this.productService = productService;
-
+        this.userService = userService;
     }
 
     public Flux<DefaultProductxCollectionPointxWeekEntity> findAllFromCollectionPointAndDate(UUID fkCollectionPoint){
@@ -30,10 +31,21 @@ public class DefaultProductxCollectionPointxWeekService {
     } 
 
 
-    public Flux<ProductEntity> getAllProductsForCpWithLevelPrice(UUID fkCollectionPoint) {
-        return pxCpRepository.findAllByFkCollectionPoint(fkCollectionPoint)
-                .flatMap(defaultProductxCp -> productService.getProductById(defaultProductxCp.getFkProduct()));
+    public Flux<ProductEntity> getAllProductsForCpWithLevelPrice(UUID idUser) {
+    return userService.getUserById(idUser)
+            .flatMapMany(user -> 
+                pxCpRepository.findAllByFkCollectionPoint(user.getFkCollectionPointSuscribed())
+                    .flatMap(defaultProductxCp -> 
+                        productService.getProductById(defaultProductxCp.getFkProduct())
+                            .map(product -> {
+                                product.calculatePrice(user.getLevel()); // Ahora user está disponible
+                                return product;
+                            })
+                    )
+            );
     }
+
+    
 
     public Mono<DefaultProductxCollectionPointxWeekEntity> createDefaultProductxCollectionPointxWeek(DefaultProductxCollectionPointxWeekCreateDTO defaultProductxCpDto){
         DefaultProductxCollectionPointxWeekEntity defaultProductxCp = 

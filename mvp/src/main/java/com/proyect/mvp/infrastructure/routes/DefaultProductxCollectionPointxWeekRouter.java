@@ -15,12 +15,15 @@ import reactor.core.publisher.Mono;
 import static org.springframework.web.reactive.function.server.RequestPredicates.*;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
+import java.util.UUID;
+
 @Configuration
 public class DefaultProductxCollectionPointxWeekRouter {
 
     @Bean
     RouterFunction<ServerResponse> defaultProductxCpRoutes(DefaultProductxCollectionPointxWeekService defaultProductxCpService){
-    return route(POST("/defaultProductsxCp"), request -> createDefaultProductxCp(request, defaultProductxCpService));
+    return route(POST("/defaultProductsxCp"), request -> createDefaultProductxCp(request, defaultProductxCpService))
+            .andRoute(GET("/defaultProductsxCp/{idUser}"), request -> getDefaultProductsxCpxWeek(request, defaultProductxCpService));
 
 }
 
@@ -28,6 +31,11 @@ public class DefaultProductxCollectionPointxWeekRouter {
         return request.bodyToMono(DefaultProductxCollectionPointxWeekCreateDTO.class)
                        .flatMap(dto -> defaultProductxCpService.createDefaultProductxCollectionPointxWeek(dto))
                        .flatMap(saved -> ServerResponse.ok().bodyValue(saved));
+    }
+
+    Mono<ServerResponse> getDefaultProductsxCpxWeek(ServerRequest request, DefaultProductxCollectionPointxWeekService defaultProductxCpService){
+        UUID idUser = UUID.fromString(request.pathVariable("idUser"));
+        return ServerResponse.ok().bodyValue(defaultProductxCpService.getAllProductsForCpWithLevelPrice(idUser));
     }
 
 }

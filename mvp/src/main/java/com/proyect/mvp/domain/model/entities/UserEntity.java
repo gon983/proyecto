@@ -54,6 +54,9 @@ public class UserEntity {
 
     @Column("fk_role_one")
     private UUID roleOne;
+
+    @Column("level")
+    private int level;
     
 
     // Hasta aca los campos obligatorios
