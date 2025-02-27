@@ -40,6 +40,7 @@ public class StockMovementService {
                                                         .fkProduct(dto.getFkProduct())
                                                         .fkUser(userId)
                                                         .type(dto.getType())
+                                                        .quantity(dto.getQuantity())
                                                         .date(LocalDateTime.now())
                                                         .comment(dto.getComment())
                                                         .build();
