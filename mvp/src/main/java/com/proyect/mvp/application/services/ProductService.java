@@ -56,6 +56,11 @@ public class ProductService {
         return productRepository.findById(id);
     }
 
+    public Mono<Void> updateStock(UUID idProduct, double newStock){
+        return productRepository.updateStock(idProduct, newStock);
+
+    }
+
 
     public Mono<ProductEntity> createProduct(ProductCreateDTO productDTO) {
         ProductEntity product = ProductEntity.builder()

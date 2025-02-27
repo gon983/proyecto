@@ -43,8 +43,8 @@ public class StockMovementService {
                                                         .date(LocalDateTime.now())
                                                         .comment(dto.getComment())
                                                         .build();
-                                    product.setStock(newStock);
-
+                                    
+                                    productService.updateStock(product.getIdProduct(), newStock);
                                     return stockMovementRepository.save(movement);
 
                                 })
