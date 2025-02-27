@@ -7,16 +7,721 @@
 	},
 	"item": [
 		{
-			"name": "country",
+			"name": "Pais hasta Barrio",
 			"item": [
 				{
+					"name": "neighborhoods",
+					"item": [
+						{
+							"name": "neighborhood",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"localityId\":\"10fbe8c3-0291-4bc7-a96a-7d10782b36ec\",\r\n    \"name\":\"Barrio Jardin\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/neighborhoods",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"neighborhoods"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "neighborhoods",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "localities",
+					"item": [
+						{
+							"name": "locality",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\":\"Capital\",\r\n    \"cityId\":\"602ec196-d4d7-4194-a660-9b4afc9a07ea\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/localities",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"localities"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "locality",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\":\"Capital\",\r\n    \"cityId\":\"602ec196-d4d7-4194-a660-9b4afc9a07ea\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/localities",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"localities"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "locality id",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\":\"Capital\",\r\n    \"cityId\":\"602ec196-d4d7-4194-a660-9b4afc9a07ea\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/localities/10fbe8c3-0291-4bc7-a96a-7d10782b36ec",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"localities",
+										"10fbe8c3-0291-4bc7-a96a-7d10782b36ec"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "city",
+					"item": [
+						{
+							"name": "city",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"CABA\",\r\n    \"countryId\": \"6a9fe61b-be17-4821-a4a3-71fa282e9289\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/cities",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"cities"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "city",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"CABA\",\r\n    \"countryId\": \"6a9fe61b-be17-4821-a4a3-71fa282e9289\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/cities",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"cities"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "city id",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						}
+					]
+				},
+				{
 					"name": "country",
+					"item": [
+						{
+							"name": "country",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\":\"Argentina\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/countries",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"countries"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "country id",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\":\"Chile\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/countries/6a79ddc2-60e2-4be4-9b11-dcc7a894c4af",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"countries",
+										"6a79ddc2-60e2-4be4-9b11-dcc7a894c4af"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "country id",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\":\"Chile\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/countries/6a79ddc2-60e2-4be4-9b11-dcc7a894c4af",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"countries",
+										"6a79ddc2-60e2-4be4-9b11-dcc7a894c4af"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "countries",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Estados",
+			"item": [
+				{
+					"name": "CollectionPointState",
+					"item": [
+						{
+							"name": "colllectionPointState",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\":\"pending\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/collectionPointStates",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"collectionPointStates"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "colllectionPointState Copy",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\":\"pending\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/collectionPointStates",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"collectionPointStates"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Purchase",
+					"item": [
+						{
+							"name": "get purchaseState",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						},
+						{
+							"name": "post purchaseState Copy",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\":\"pending\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/purchaseStates",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"purchaseStates"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get purchaseDetailStates",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						},
+						{
+							"name": "post purchaseDetailStates",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"pending\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/purchaseDetailStates",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"purchaseDetailStates"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Product",
+			"item": [
+				{
+					"name": "Category",
+					"item": [
+						{
+							"name": "post category",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\":\"Frutas\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/categories",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"categories"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get category",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\":\"Frutas\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/categories",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"categories"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Standar Product",
+					"item": [
+						{
+							"name": "post standarProduct",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Banana\",\r\n    \"fkCategory\": \"097ef14d-26c5-4b3a-a113-25e78afb7f69\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/standarProducts",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"standarProducts"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get standarProduct Copy",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Banana\",\r\n    \"fkCategory\": \"097ef14d-26c5-4b3a-a113-25e78afb7f69\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/standarProducts",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"standarProducts"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "DefaultProductxCollectionpoint",
+					"item": [
+						{
+							"name": "crear producto default",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"fkCollectionPoint\":\"\",\r\n  \"fkProduct\": \"\",\r\n  \"fkStandarProduct\":\"\"\r\n\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/defaultProductsxCp",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"defaultProductsxCp"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "crear producto default Copy",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"fkCollectionPoint\":\"\",\r\n  \"fkProduct\": \"\",\r\n  \"fkStandarProduct\":\"\"\r\n\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/defaultProductsxCp",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"defaultProductsxCp"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "StockMovement",
+					"item": [
+						{
+							"name": "agregar stock",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"fkProduct\":\"\",\r\n    \"quantity\":100,\r\n    \"type\":\"MORE\",\r\n    \"comment\": \"sin comentarios\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/stockMovement",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"stockMovement"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "post product",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/products",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get product",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/products",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "post CP owner",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\":\"Argentina\"\r\n}",
+							"raw": "{\r\n  \"username\": \"juanperez\",\r\n  \"email\": \"juan.perez@example.com\",\r\n  \"firstName\": \"Juan\",\r\n  \"lastName\": \"ProductorDeTomates\",\r\n  \"documentType\": \"DNI\",\r\n  \"documentNumber\": \"12345678\",\r\n  \"fkNeighborhood\": \"23f4f7d4-7923-495d-85d0-27f34d932537\",\r\n  \"phone\": \"+5491122334455\",\r\n  \"photo\": \"https://example.com/profile.jpg\",\r\n  \"roleOne\": \"5c0e356c-ef1a-11ef-b668-52cf1c1a32ab\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -24,27 +729,51 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/countries",
-							"protocol": "http",
+							"raw": "{{base_url}}/users",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "8080",
 							"path": [
-								"countries"
+								"users"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "country id",
+					"name": "post consumer",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"grego\",\r\n  \"email\": \"gregorio.perez@example.com\",\r\n  \"firstName\": \"Gregorio\",\r\n  \"lastName\": \"Consumidor\",\r\n  \"documentType\": \"DNI\",\r\n  \"documentNumber\": \"12345558\",\r\n  \"fkNeighborhood\": \"23f4f7d4-7923-495d-85d0-27f34d932537\",\r\n  \"phone\": \"+549112233464\",\r\n  \"photo\": \"https://example.com/profile.jpg\",\r\n  \"roleOne\": \"98c1260b-885a-4b8a-a998-3bba99254ff4\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "put consumer",
 					"request": {
 						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\":\"Chile\"\r\n}",
+							"raw": "{\r\n  \"username\": \"juanperez\",\r\n  \"email\": \"juan.perez@example.com\",\r\n  \"firstName\": \"Juan\",\r\n  \"lastName\": \"ProductorDeTomates\",\r\n  \"documentType\": \"DNI\",\r\n  \"documentNumber\": \"12345678\",\r\n  \"fkNeighborhood\": \"23f4f7d4-7923-495d-85d0-27f34d932537\",\r\n  \"phone\": \"+5491122334455\",\r\n  \"photo\": \"https://example.com/profile.jpg\",\r\n  \"roleOne\": \"5c0e356c-ef1a-11ef-b668-52cf1c1a32ab\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -52,22 +781,45 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/countries/6a79ddc2-60e2-4be4-9b11-dcc7a894c4af",
-							"protocol": "http",
+							"raw": "{{base_url}}/users",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "8080",
 							"path": [
-								"countries",
-								"6a79ddc2-60e2-4be4-9b11-dcc7a894c4af"
+								"users"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "country id",
+					"name": "post productor",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"juanperez\",\r\n  \"email\": \"juan.perez@example.com\",\r\n  \"firstName\": \"Juan\",\r\n  \"lastName\": \"ProductorDeTomates\",\r\n  \"documentType\": \"DNI\",\r\n  \"documentNumber\": \"12345678\",\r\n  \"fkNeighborhood\": \"23f4f7d4-7923-495d-85d0-27f34d932537\",\r\n  \"phone\": \"+5491122334455\",\r\n  \"photo\": \"https://example.com/profile.jpg\",\r\n  \"roleOne\": \"5c0e356c-ef1a-11ef-b668-52cf1c1a32ab\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get users",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -76,7 +828,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\":\"Chile\"\r\n}",
+							"raw": "{\r\n  \"username\": \"juanperez\",\r\n  \"email\": \"juan.perez@example.com\",\r\n  \"firstName\": \"Juan\",\r\n  \"lastName\": \"ProductorDeTomates\",\r\n  \"documentType\": \"DNI\",\r\n  \"documentNumber\": \"12345678\",\r\n  \"fkNeighborhood\": \"23f4f7d4-7923-495d-85d0-27f34d932537\",\r\n  \"phone\": \"+5491122334455\",\r\n  \"photo\": \"https://example.com/profile.jpg\",\r\n  \"roleOne\": \"5c0e356c-ef1a-11ef-b668-52cf1c1a32ab\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -84,195 +836,115 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/countries/6a79ddc2-60e2-4be4-9b11-dcc7a894c4af",
-							"protocol": "http",
+							"raw": "{{base_url}}/users",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "8080",
 							"path": [
-								"countries",
-								"6a79ddc2-60e2-4be4-9b11-dcc7a894c4af"
+								"users"
 							]
 						}
-					},
-					"response": []
-				},
-				{
-					"name": "countries",
-					"request": {
-						"method": "GET",
-						"header": []
 					},
 					"response": []
 				}
 			]
 		},
 		{
-			"name": "city",
+			"name": "Purchase",
 			"item": [
 				{
-					"name": "city",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"CABA\",\r\n    \"countryId\": \"6a9fe61b-be17-4821-a4a3-71fa282e9289\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
+					"name": "Flujo",
+					"item": [
+						{
+							"name": "1. Crear un pedido vacio",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"fkUser\": \"bfb6dbcc-9f06-4b7e-9754-28368ef642fe\",\r\n    \"level\": \"1\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/purchases",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"purchases"
+									]
 								}
-							}
+							},
+							"response": []
 						},
-						"url": {
-							"raw": "http://localhost:8080/cities",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"cities"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "city",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"CABA\",\r\n    \"countryId\": \"6a9fe61b-be17-4821-a4a3-71fa282e9289\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
+						{
+							"name": "2.Ver los productos default week para el cp suscribed",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/productsCp",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"productsCp"
+									]
 								}
-							}
+							},
+							"response": []
 						},
-						"url": {
-							"raw": "http://localhost:8080/cities",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"cities"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "city id",
-					"request": {
-						"method": "GET",
-						"header": []
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "localities",
-			"item": [
-				{
-					"name": "locality",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"name\":\"Capital\",\r\n    \"cityId\":\"602ec196-d4d7-4194-a660-9b4afc9a07ea\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
+						{
+							"name": "3.Agregarle detalles a ese pedido",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"fkProduct\": \"1a6acd60-a74e-4724-96a8-6ad7359c2fd0\",\r\n    \"quantity\":2.0,\r\n    \"unitPrice\": 300.7\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/purchases/fda6c680-686c-4493-9dc2-14e9dca88b34/details",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"purchases",
+										"fda6c680-686c-4493-9dc2-14e9dca88b34",
+										"details"
+									]
 								}
-							}
+							},
+							"response": []
 						},
-						"url": {
-							"raw": "http://localhost:8080/localities",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"localities"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "locality",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"name\":\"Capital\",\r\n    \"cityId\":\"602ec196-d4d7-4194-a660-9b4afc9a07ea\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
+						{
+							"name": "4. Ver el pedido junto con sus detalles",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/purchases/fda6c680-686c-4493-9dc2-14e9dca88b34",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"purchases",
+										"fda6c680-686c-4493-9dc2-14e9dca88b34"
+									]
 								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8080/localities",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"localities"
-							]
+							},
+							"response": []
 						}
-					},
-					"response": []
-				},
-				{
-					"name": "locality id",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"name\":\"Capital\",\r\n    \"cityId\":\"602ec196-d4d7-4194-a660-9b4afc9a07ea\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8080/localities/10fbe8c3-0291-4bc7-a96a-7d10782b36ec",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"localities",
-								"10fbe8c3-0291-4bc7-a96a-7d10782b36ec"
-							]
-						}
-					},
-					"response": []
+					]
 				}
 			]
 		}
