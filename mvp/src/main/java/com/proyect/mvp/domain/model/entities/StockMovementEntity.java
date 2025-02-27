@@ -7,6 +7,7 @@ import org.springframework.data.annotation.Transient;
 import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.data.relational.core.mapping.Column;
 
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -22,7 +23,7 @@ public class StockMovementEntity {
     @Id
     
     @Column( "id_stock_movement")
-    private String idStockMovement;
+    private UUID idStockMovement;
 
     @Column("fk_product")
     private UUID fkProduct;
@@ -34,13 +35,13 @@ public class StockMovementEntity {
     private double quantity;
 
     
-    @Column( "type")
-    private StockMovementTypeEnum  type; 
+    @Column("type")
+    private StockMovementTypeEnum type;
 
     @Column( "date")
-    private LocalDateTime date = LocalDateTime.now(); 
+    private LocalDateTime date; 
 
-    @Column( "coment")
+    @Column( "comment")
     private String comment; 
 }
 

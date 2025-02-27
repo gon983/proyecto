@@ -24,13 +24,14 @@ public class StockMovementRouter {
 
     }
 
-    Mono<ServerResponse> createStockMovement(ServerRequest request, StockMovementService stockMovementService){
+    Mono<ServerResponse> createStockMovement(ServerRequest request, StockMovementService stockMovementService) {
         UUID idUser = UUID.fromString(request.pathVariable("idUser"));
         return request.bodyToMono(StockMovementCreateDTO.class)
-                      .flatMap(dto -> {return ServerResponse.ok().bodyValue(stockMovementService.registerMovement(idUser, dto));}
-                      );
-        
+            .flatMap(dto -> stockMovementService.registerMovement(idUser, dto) // No usar bodyValue con Mono<Void>
+                .then(ServerResponse.noContent().build()) // ✅ Responde con 204 No Content
+            );
     }
+    
 
 
     

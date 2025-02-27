@@ -1,5 +1,6 @@
 package com.proyect.mvp.application.services;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.springframework.r2dbc.connection.R2dbcTransactionManager;
@@ -39,6 +40,7 @@ public class StockMovementService {
                                                         .fkProduct(dto.getFkProduct())
                                                         .fkUser(userId)
                                                         .type(dto.getType())
+                                                        .date(LocalDateTime.now())
                                                         .comment(dto.getComment())
                                                         .build();
                                     product.setStock(newStock);
@@ -48,6 +50,7 @@ public class StockMovementService {
                                 })
                                 .as(transactionalOperator::transactional)
                                 .then();
+                                
 
 
     }
