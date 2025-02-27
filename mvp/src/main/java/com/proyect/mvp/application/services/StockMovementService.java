@@ -45,8 +45,9 @@ public class StockMovementService {
                                                         .comment(dto.getComment())
                                                         .build();
                                     
-                                    productService.updateStock(product.getIdProduct(), newStock);
-                                    return stockMovementRepository.save(movement);
+                                    return productService.updateStock(product.getIdProduct(), newStock)
+                                                        .then(stockMovementRepository.save(movement))
+                                                        .then();
 
                                 })
                                 .as(transactionalOperator::transactional)

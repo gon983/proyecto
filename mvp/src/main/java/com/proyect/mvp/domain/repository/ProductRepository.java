@@ -16,9 +16,9 @@ import java.util.UUID;
 public interface ProductRepository extends R2dbcRepository<ProductEntity, UUID> {
 
     Flux<ProductEntity> findByFkProductor(UUID fkProductor);
-    
-    @Query("UPDATE product SET stock = :newStock WHERE id_product = :idProduct")
-    Mono<Void> updateStock(@Param("idProduct") UUID idProduct, @Param("newStock") double newStock);  
+
+    @Query("UPDATE product SET stock = $2 WHERE id_product = $1")
+    Mono<Void> updateStock(UUID idProduct, double newStock); 
 
     Mono<ProductEntity> findById(UUID id); // Para el método update alternativo
 }
