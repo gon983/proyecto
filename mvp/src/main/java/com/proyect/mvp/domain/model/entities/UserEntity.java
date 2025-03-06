@@ -1,55 +1,62 @@
 package com.proyect.mvp.domain.model.entities;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;import org.springframework.data.annotation.Id;
+import lombok.NoArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.lang.Nullable;
 import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.annotation.Transient; // Import correcto para Spring Data R2DBC
+
+import com.proyect.mvp.application.services.EncryptionService;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Builder
 @AllArgsConstructor
-@Table( "users") 
+@Table("users") 
 @Getter
 @NoArgsConstructor
 public class UserEntity {
 
     @Id
-    @Column( "id_user")
+    @Column("id_user")
     private UUID idUser;
 
-    @Column( "username")
+    @Column("username")
     private String username;
 
-    @Column( "email")
+    @Column("email")
     private String email;
 
-    @Column( "created_at")
+    @Column("created_at")
     private LocalDateTime createdAt;
 
-    @Column( "first_name")
+    @Column("first_name")
     private String firstName;
 
-    @Column( "last_name")
+    @Column("last_name")
     private String lastName;
 
-    @Column( "document_type")
+    @Column("document_type")
     private String documentType;
 
-    @Column( "document_number")
+    @Column("document_number")
     private String documentNumber;
 
-    
     @Column("fk_neighborhood")
     private UUID fkNeighborhood;
 
-    @Column( "phone")
+    @Column("phone")
     private String phone;
+
     @Nullable
-    @Column( "photo")
+    @Column("photo")
     private String photo;
 
     @Column("fk_role_one")
@@ -57,21 +64,55 @@ public class UserEntity {
 
     @Column("level")
     private int level;
-    
 
-    // Hasta aca los campos obligatorios
+    // Campos opcionales
     @Nullable
     @Column("fk_collection_point_suscribed")
     private UUID fkCollectionPointSuscribed;
+    
     @Nullable
     @Column("fk_role_two")
     private UUID roleTwo;
+    
     @Nullable
     @Column("fk_role_three")
     private UUID roleThree;
+    
     @Nullable
     @Column("minimal_sale")
     private Double minimalSale;
-    
 
+    @Column("mp_public_key_encrypted")
+    private String mpPublicKeyEncrypted;
+
+    @Column("mp_access_token_encrypted")
+    private String mpAccessTokenEncrypted;
+
+    @Transient
+    private String mpPublicKey;
+
+    @Transient
+    private String mpAccessToken;
+
+    @Autowired
+    private transient EncryptionService encryptionService;
+
+    // Métodos para manejar la encriptación manualmente
+    public void encryptCredentials() {
+        if (mpPublicKey != null) {
+            this.mpPublicKeyEncrypted = encryptionService.encrypt(mpPublicKey);
+        }
+        if (mpAccessToken != null) {
+            this.mpAccessTokenEncrypted = encryptionService.encrypt(mpAccessToken);
+        }
+    }
+
+    public void decryptCredentials() {
+        if (mpPublicKeyEncrypted != null) {
+            this.mpPublicKey = encryptionService.decrypt(mpPublicKeyEncrypted);
+        }
+        if (mpAccessTokenEncrypted != null) {
+            this.mpAccessToken = encryptionService.decrypt(mpAccessTokenEncrypted);
+        }
+    }
 }
