@@ -1,8 +1,9 @@
 package com.proyect.mvp.infrastructure.routes;
 
 import com.proyect.mvp.application.services.NeighborhoodPackageStateService;
+import com.proyect.mvp.domain.model.dtos.create.NeighborhoodPackageStateCreateDTO;
 import com.proyect.mvp.domain.model.entities.NeighborhoodPackageStateEntity;
-import com.proyect.mvp.dtos.create.NeighborhoodPackageStateCreateDTO;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.server.RouterFunction;

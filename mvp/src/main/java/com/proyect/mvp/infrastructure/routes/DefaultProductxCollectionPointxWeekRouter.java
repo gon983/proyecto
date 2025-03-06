@@ -7,8 +7,8 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
 import com.proyect.mvp.application.services.DefaultProductxCollectionPointxWeekService;
+import com.proyect.mvp.domain.model.dtos.create.DefaultProductxCollectionPointxWeekCreateDTO;
 import com.proyect.mvp.domain.model.entities.DefaultProductxCollectionPointxWeekEntity;
-import com.proyect.mvp.dtos.create.DefaultProductxCollectionPointxWeekCreateDTO;
 
 import reactor.core.publisher.Mono;
 

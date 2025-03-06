@@ -1,8 +1,9 @@
 package com.proyect.mvp.infrastructure.routes;
 
 import com.proyect.mvp.application.services.PurchaseStateService;
+import com.proyect.mvp.domain.model.dtos.create.PurchaseStateCreateDTO;
 import com.proyect.mvp.domain.model.entities.PurchaseStateEntity;
-import com.proyect.mvp.dtos.create.PurchaseStateCreateDTO;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.server.RouterFunction;

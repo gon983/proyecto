@@ -1,8 +1,9 @@
 package com.proyect.mvp.application.services;
 
+import com.proyect.mvp.domain.model.dtos.create.NeighborhoodPackageStateCreateDTO;
 import com.proyect.mvp.domain.model.entities.NeighborhoodPackageStateEntity;
 import com.proyect.mvp.domain.repository.NeighborhoodPackageStateRepository;
-import com.proyect.mvp.dtos.create.NeighborhoodPackageStateCreateDTO;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;

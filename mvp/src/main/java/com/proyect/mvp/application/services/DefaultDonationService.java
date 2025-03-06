@@ -2,10 +2,10 @@ package com.proyect.mvp.application.services;
 
 
 
+import com.proyect.mvp.domain.model.dtos.create.DefaultDonationCreateDTO;
+import com.proyect.mvp.domain.model.dtos.update.DefaultDonationUpdateDTO;
 import com.proyect.mvp.domain.model.entities.DefaultDonationEntity;
 import com.proyect.mvp.domain.repository.DefaultDonationRepository;
-import com.proyect.mvp.dtos.create.DefaultDonationCreateDTO;
-import com.proyect.mvp.dtos.update.DefaultDonationUpdateDTO;
 
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;

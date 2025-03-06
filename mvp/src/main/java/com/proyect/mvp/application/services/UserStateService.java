@@ -1,8 +1,9 @@
 package com.proyect.mvp.application.services;
 
+import com.proyect.mvp.domain.model.dtos.create.UserStateCreateDTO;
 import com.proyect.mvp.domain.model.entities.UserStateEntity;
 import com.proyect.mvp.domain.repository.UserStateRepository;
-import com.proyect.mvp.dtos.create.UserStateCreateDTO;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;

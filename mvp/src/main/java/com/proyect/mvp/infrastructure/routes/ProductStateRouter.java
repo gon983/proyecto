@@ -1,8 +1,9 @@
 package com.proyect.mvp.infrastructure.routes;
 
 import com.proyect.mvp.application.services.ProductStateService;
+import com.proyect.mvp.domain.model.dtos.create.ProductStateCreateDTO;
 import com.proyect.mvp.domain.model.entities.ProductStateEntity;
-import com.proyect.mvp.dtos.create.ProductStateCreateDTO;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.server.RouterFunction;

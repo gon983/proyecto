@@ -8,8 +8,8 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
 import com.proyect.mvp.application.services.StandarProductService;
+import com.proyect.mvp.domain.model.dtos.create.StandarProductCreateDTO;
 import com.proyect.mvp.domain.model.entities.StandarProductEntity;
-import com.proyect.mvp.dtos.create.StandarProductCreateDTO;
 
 import reactor.core.publisher.Mono;
 

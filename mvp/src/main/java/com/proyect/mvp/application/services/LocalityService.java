@@ -1,8 +1,9 @@
 package com.proyect.mvp.application.services;
 
+import com.proyect.mvp.domain.model.dtos.create.LocalityCreateDTO;
 import com.proyect.mvp.domain.model.entities.LocalityEntity;
 import com.proyect.mvp.domain.repository.LocalityRepository;
-import com.proyect.mvp.dtos.create.LocalityCreateDTO;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;

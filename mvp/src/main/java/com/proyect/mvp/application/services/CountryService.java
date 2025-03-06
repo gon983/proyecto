@@ -1,10 +1,10 @@
 package com.proyect.mvp.application.services;
 
+import com.proyect.mvp.domain.model.dtos.create.CountryCreateDTO;
+import com.proyect.mvp.domain.model.dtos.update.CountryUpdateDTO;
 import com.proyect.mvp.domain.model.entities.CountryEntity;
 import com.proyect.mvp.domain.repository.CityRepository;
 import com.proyect.mvp.domain.repository.CountryRepository;
-import com.proyect.mvp.dtos.create.CountryCreateDTO;
-import com.proyect.mvp.dtos.update.CountryUpdateDTO;
 
 import lombok.Builder;
 import org.springframework.http.HttpStatus;

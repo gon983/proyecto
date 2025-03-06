@@ -9,7 +9,7 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
 import com.proyect.mvp.application.services.PurchaseService;
-import com.proyect.mvp.dtos.create.PurchaseCreateDTO;
+import com.proyect.mvp.domain.model.dtos.create.PurchaseCreateDTO;
 
 import reactor.core.publisher.Mono;
 

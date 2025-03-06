@@ -1,9 +1,9 @@
 package com.proyect.mvp.application.services;
 
+import com.proyect.mvp.domain.model.dtos.create.CollectionPointCreateDTO;
+import com.proyect.mvp.domain.model.dtos.update.CollectionPointUpdateDTO;
 import com.proyect.mvp.domain.model.entities.CollectionPointEntity;
 import com.proyect.mvp.domain.model.entities.CollectionPointHistoryEntity;
-import com.proyect.mvp.dtos.create.CollectionPointCreateDTO;
-import com.proyect.mvp.dtos.update.CollectionPointUpdateDTO;
 import com.proyect.mvp.infrastructure.config.converters.SpatialConverter;
 import com.proyect.mvp.domain.repository.CollectionPointHistoryRepository;
 import com.proyect.mvp.domain.repository.CollectionPointRepository;

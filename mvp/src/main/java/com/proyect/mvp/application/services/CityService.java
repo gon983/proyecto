@@ -1,8 +1,8 @@
 package com.proyect.mvp.application.services;
 
+import com.proyect.mvp.domain.model.dtos.create.CityCreateDTO;
 import com.proyect.mvp.domain.model.entities.CityEntity;
 import com.proyect.mvp.domain.repository.CityRepository;
-import com.proyect.mvp.dtos.create.CityCreateDTO;
 
 import lombok.Builder;
 import org.springframework.http.HttpStatus;

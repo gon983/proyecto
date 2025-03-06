@@ -5,10 +5,10 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import com.proyect.mvp.domain.model.dtos.create.PurchaseCreateDTO;
 import com.proyect.mvp.domain.model.entities.PurchaseEntity;
 import com.proyect.mvp.domain.model.entities.PurchaseStateEntity;
 import com.proyect.mvp.domain.repository.PurchaseRepository;
-import com.proyect.mvp.dtos.create.PurchaseCreateDTO;
 
 import reactor.core.publisher.Mono;
 

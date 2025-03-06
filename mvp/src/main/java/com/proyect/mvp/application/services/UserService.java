@@ -1,9 +1,9 @@
 package com.proyect.mvp.application.services;
 
+import com.proyect.mvp.domain.model.dtos.create.UserCreateDTO;
+import com.proyect.mvp.domain.model.dtos.update.UserUpdateDTO;
 import com.proyect.mvp.domain.model.entities.UserEntity;
 import com.proyect.mvp.domain.repository.UserRepository;
-import com.proyect.mvp.dtos.create.UserCreateDTO;
-import com.proyect.mvp.dtos.update.UserUpdateDTO;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -17,9 +17,11 @@ import java.util.UUID;
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final EncryptionService encryptionService;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, EncryptionService encryptionService) {
         this.userRepository = userRepository;
+        this.encryptionService = encryptionService;
     }
 
     public Flux<UserEntity> getAllUsers() {
@@ -66,12 +68,18 @@ public class UserService {
                             .phone(userDto.getPhone())
                             .roleOne(userDto.getRoleOne())
                             .fkCollectionPointSuscribed(userDto.getFkCollectionPointSuscribed())
+                            .mpAccessTokenEncrypted(encryptionService.encrypt(userDto.getMpAccessToken()))
+                            .mpPublicKeyEncrypted(encryptionService.encrypt(userDto.getMpPublicKey()))
                             .build();
                     
+
                     return userRepository.save(userEntity); // Retornar el nuevo usuario guardado
                 })
                 .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)));
     }
+
+
+
     
 }
 

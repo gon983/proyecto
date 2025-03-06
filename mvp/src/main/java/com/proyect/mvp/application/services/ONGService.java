@@ -1,7 +1,7 @@
 package com.proyect.mvp.application.services;
 
-import com.proyect.mvp.dtos.create.ONGCreateDTO;
-import com.proyect.mvp.dtos.update.ONGUpdateDTO;
+import com.proyect.mvp.domain.model.dtos.create.ONGCreateDTO;
+import com.proyect.mvp.domain.model.dtos.update.ONGUpdateDTO;
 import com.proyect.mvp.domain.model.entities.ONGEntity;
 import com.proyect.mvp.domain.repository.ONGRepository;
 

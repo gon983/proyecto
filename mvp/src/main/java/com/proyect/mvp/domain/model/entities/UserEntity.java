@@ -94,25 +94,7 @@ public class UserEntity {
     @Transient
     private String mpAccessToken;
 
-    @Autowired
-    private transient EncryptionService encryptionService;
+    
 
-    // Métodos para manejar la encriptación manualmente
-    public void encryptCredentials() {
-        if (mpPublicKey != null) {
-            this.mpPublicKeyEncrypted = encryptionService.encrypt(mpPublicKey);
-        }
-        if (mpAccessToken != null) {
-            this.mpAccessTokenEncrypted = encryptionService.encrypt(mpAccessToken);
-        }
-    }
-
-    public void decryptCredentials() {
-        if (mpPublicKeyEncrypted != null) {
-            this.mpPublicKey = encryptionService.decrypt(mpPublicKeyEncrypted);
-        }
-        if (mpAccessTokenEncrypted != null) {
-            this.mpAccessToken = encryptionService.decrypt(mpAccessTokenEncrypted);
-        }
-    }
+ 
 }

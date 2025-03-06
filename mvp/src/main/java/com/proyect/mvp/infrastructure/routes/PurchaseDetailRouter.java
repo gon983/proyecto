@@ -13,7 +13,7 @@ import static org.springframework.web.reactive.function.server.RequestPredicates
  
 
 import com.proyect.mvp.application.services.PurchaseDetailService;
-import com.proyect.mvp.dtos.create.PurchaseDetailCreateDTO;
+import com.proyect.mvp.domain.model.dtos.create.PurchaseDetailCreateDTO;
 
 import reactor.core.publisher.Mono;
 

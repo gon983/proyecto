@@ -1,8 +1,9 @@
 package com.proyect.mvp.application.services;
 
+import com.proyect.mvp.domain.model.dtos.create.PurchaseDetailStateCreateDTO;
 import com.proyect.mvp.domain.model.entities.PurchaseDetailStateEntity;
 import com.proyect.mvp.domain.repository.PurchaseDetailStateRepository;
-import com.proyect.mvp.dtos.create.PurchaseDetailStateCreateDTO;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;

@@ -3,9 +3,10 @@ package com.proyect.mvp.infrastructure.routes;
 
 
 import com.proyect.mvp.application.services.UserService;
+import com.proyect.mvp.domain.model.dtos.create.UserCreateDTO;
+import com.proyect.mvp.domain.model.dtos.update.UserUpdateDTO;
 import com.proyect.mvp.domain.model.entities.UserEntity;
-import com.proyect.mvp.dtos.create.UserCreateDTO;
-import com.proyect.mvp.dtos.update.UserUpdateDTO;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;

@@ -1,0 +1,19 @@
+package com.proyect.mvp.domain.model.dtos.create;
+
+import java.util.UUID;
+
+
+import lombok.Getter;
+
+@Getter
+public class ProductCreateDTO {
+    private String name;
+    private double stock;
+    private double alertStock;
+    private String photo;
+    private String unitMeasurement;
+    private UUID fkProductor;
+    private double unity_price;
+    private UUID fkLocality;
+    private UUID fkStandarProduct;
+}

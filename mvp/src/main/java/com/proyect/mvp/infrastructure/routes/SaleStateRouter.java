@@ -1,8 +1,9 @@
 package com.proyect.mvp.infrastructure.routes;
 
 import com.proyect.mvp.application.services.SaleStateService;
+import com.proyect.mvp.domain.model.dtos.create.SaleStateCreateDTO;
 import com.proyect.mvp.domain.model.entities.SaleStateEntity;
-import com.proyect.mvp.dtos.create.SaleStateCreateDTO;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.server.RouterFunction;

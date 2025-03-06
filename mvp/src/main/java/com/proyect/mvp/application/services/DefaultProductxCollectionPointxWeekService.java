@@ -5,10 +5,10 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import com.proyect.mvp.domain.model.dtos.create.DefaultProductxCollectionPointxWeekCreateDTO;
 import com.proyect.mvp.domain.model.entities.DefaultProductxCollectionPointxWeekEntity;
 import com.proyect.mvp.domain.model.entities.ProductEntity;
 import com.proyect.mvp.domain.repository.DefaultProductxCollectionPointxWeekRepository;
-import com.proyect.mvp.dtos.create.DefaultProductxCollectionPointxWeekCreateDTO;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;

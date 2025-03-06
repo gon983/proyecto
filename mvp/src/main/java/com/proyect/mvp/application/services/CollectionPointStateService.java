@@ -1,8 +1,9 @@
 package com.proyect.mvp.application.services;
 
+import com.proyect.mvp.domain.model.dtos.create.CollectionPointStateCreateDTO;
 import com.proyect.mvp.domain.model.entities.CollectionPointStateEntity;
 import com.proyect.mvp.domain.repository.CollectionPointStateRepository;
-import com.proyect.mvp.dtos.create.CollectionPointStateCreateDTO;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;

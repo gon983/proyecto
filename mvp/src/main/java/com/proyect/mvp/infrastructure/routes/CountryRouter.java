@@ -1,9 +1,9 @@
 package com.proyect.mvp.infrastructure.routes;
 
 import com.proyect.mvp.application.services.CountryService;
+import com.proyect.mvp.domain.model.dtos.create.CountryCreateDTO;
+import com.proyect.mvp.domain.model.dtos.update.CountryUpdateDTO;
 import com.proyect.mvp.domain.model.entities.CountryEntity;
-import com.proyect.mvp.dtos.create.CountryCreateDTO;
-import com.proyect.mvp.dtos.update.CountryUpdateDTO;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

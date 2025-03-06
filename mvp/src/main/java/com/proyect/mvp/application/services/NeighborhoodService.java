@@ -1,8 +1,9 @@
 package com.proyect.mvp.application.services;
 
+import com.proyect.mvp.domain.model.dtos.create.NeighborhoodCreateDTO;
 import com.proyect.mvp.domain.model.entities.NeighborhoodEntity;
 import com.proyect.mvp.domain.repository.NeighborhoodRepository;
-import com.proyect.mvp.dtos.create.NeighborhoodCreateDTO;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
