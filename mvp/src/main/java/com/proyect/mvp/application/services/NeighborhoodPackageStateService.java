@@ -1,6 +1,6 @@
 package com.proyect.mvp.application.services;
 
-import com.proyect.mvp.domain.model.dtos.create.NeighborhoodPackageStateCreateDTO;
+import com.proyect.mvp.application.dtos.create.NeighborhoodPackageStateCreateDTO;
 import com.proyect.mvp.domain.model.entities.NeighborhoodPackageStateEntity;
 import com.proyect.mvp.domain.repository.NeighborhoodPackageStateRepository;
 

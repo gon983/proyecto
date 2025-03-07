@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.proyect.mvp.domain.model.dtos.create.CategoryCreateDTO;
+import com.proyect.mvp.application.dtos.create.CategoryCreateDTO;
 import com.proyect.mvp.domain.model.entities.CategoryEntity;
 import com.proyect.mvp.domain.repository.CategoryRepository;
 

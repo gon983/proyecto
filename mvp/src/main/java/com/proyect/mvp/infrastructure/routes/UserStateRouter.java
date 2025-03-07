@@ -1,7 +1,7 @@
 package com.proyect.mvp.infrastructure.routes;
 
+import com.proyect.mvp.application.dtos.create.UserStateCreateDTO;
 import com.proyect.mvp.application.services.UserStateService;
-import com.proyect.mvp.domain.model.dtos.create.UserStateCreateDTO;
 import com.proyect.mvp.domain.model.entities.UserStateEntity;
 
 import org.springframework.context.annotation.Bean;

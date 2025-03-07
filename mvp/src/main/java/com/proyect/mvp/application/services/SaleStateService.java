@@ -1,6 +1,6 @@
 package com.proyect.mvp.application.services;
 
-import com.proyect.mvp.domain.model.dtos.create.SaleStateCreateDTO;
+import com.proyect.mvp.application.dtos.create.SaleStateCreateDTO;
 import com.proyect.mvp.domain.model.entities.SaleStateEntity;
 import com.proyect.mvp.domain.repository.SaleStateRepository;
 

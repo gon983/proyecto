@@ -1,7 +1,7 @@
 package com.proyect.mvp.infrastructure.routes;
 
+import com.proyect.mvp.application.dtos.create.LocalityCreateDTO;
 import com.proyect.mvp.application.services.LocalityService;
-import com.proyect.mvp.domain.model.dtos.create.LocalityCreateDTO;
 import com.proyect.mvp.domain.model.entities.LocalityEntity;
 
 import org.springframework.context.annotation.Bean;

@@ -1,7 +1,7 @@
 package com.proyect.mvp.infrastructure.routes;
 
+import com.proyect.mvp.application.dtos.create.CityCreateDTO;
 import com.proyect.mvp.application.services.CityService;
-import com.proyect.mvp.domain.model.dtos.create.CityCreateDTO;
 import com.proyect.mvp.domain.model.entities.CityEntity;
 
 import org.springframework.context.annotation.Bean;

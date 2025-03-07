@@ -1,7 +1,7 @@
 package com.proyect.mvp.application.services;
 
-import com.proyect.mvp.domain.model.dtos.create.CountryCreateDTO;
-import com.proyect.mvp.domain.model.dtos.update.CountryUpdateDTO;
+import com.proyect.mvp.application.dtos.create.CountryCreateDTO;
+import com.proyect.mvp.application.dtos.update.CountryUpdateDTO;
 import com.proyect.mvp.domain.model.entities.CountryEntity;
 import com.proyect.mvp.domain.repository.CityRepository;
 import com.proyect.mvp.domain.repository.CountryRepository;

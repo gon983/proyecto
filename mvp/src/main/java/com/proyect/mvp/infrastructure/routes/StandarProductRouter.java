@@ -7,8 +7,8 @@ import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
+import com.proyect.mvp.application.dtos.create.StandarProductCreateDTO;
 import com.proyect.mvp.application.services.StandarProductService;
-import com.proyect.mvp.domain.model.dtos.create.StandarProductCreateDTO;
 import com.proyect.mvp.domain.model.entities.StandarProductEntity;
 
 import reactor.core.publisher.Mono;

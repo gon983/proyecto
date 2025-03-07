@@ -1,6 +1,6 @@
 package com.proyect.mvp.application.services;
 
-import com.proyect.mvp.domain.model.dtos.create.PurchaseDetailStateCreateDTO;
+import com.proyect.mvp.application.dtos.create.PurchaseDetailStateCreateDTO;
 import com.proyect.mvp.domain.model.entities.PurchaseDetailStateEntity;
 import com.proyect.mvp.domain.repository.PurchaseDetailStateRepository;
 

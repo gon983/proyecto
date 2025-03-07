@@ -10,9 +10,9 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import static org.springframework.web.reactive.function.server.RequestPredicates.*;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
+import com.proyect.mvp.application.dtos.create.ProductCreateDTO;
+import com.proyect.mvp.application.dtos.update.ProductUpdateDTO;
 import com.proyect.mvp.application.services.ProductService;
-import com.proyect.mvp.domain.model.dtos.create.ProductCreateDTO;
-import com.proyect.mvp.domain.model.dtos.update.ProductUpdateDTO;
 import com.proyect.mvp.domain.model.entities.ProductEntity;
 
 import reactor.core.publisher.Mono;

@@ -10,10 +10,9 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 import java.util.UUID;
 
 import static org.springframework.web.reactive.function.server.RequestPredicates.*;
- 
 
+import com.proyect.mvp.application.dtos.create.PurchaseDetailCreateDTO;
 import com.proyect.mvp.application.services.PurchaseDetailService;
-import com.proyect.mvp.domain.model.dtos.create.PurchaseDetailCreateDTO;
 
 import reactor.core.publisher.Mono;
 

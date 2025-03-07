@@ -1,8 +1,8 @@
 package com.proyect.mvp.infrastructure.routes;
 
+import com.proyect.mvp.application.dtos.create.CollectionPointCreateDTO;
+import com.proyect.mvp.application.dtos.update.CollectionPointUpdateDTO;
 import com.proyect.mvp.application.services.CollectionPointService;
-import com.proyect.mvp.domain.model.dtos.create.CollectionPointCreateDTO;
-import com.proyect.mvp.domain.model.dtos.update.CollectionPointUpdateDTO;
 import com.proyect.mvp.domain.model.entities.CollectionPointEntity;
 
 import org.springframework.context.annotation.Bean;

@@ -1,7 +1,7 @@
 package com.proyect.mvp.infrastructure.routes;
 
+import com.proyect.mvp.application.dtos.create.PurchaseDetailStateCreateDTO;
 import com.proyect.mvp.application.services.PurchaseDetailStateService;
-import com.proyect.mvp.domain.model.dtos.create.PurchaseDetailStateCreateDTO;
 import com.proyect.mvp.domain.model.entities.PurchaseDetailStateEntity;
 
 import org.springframework.context.annotation.Bean;

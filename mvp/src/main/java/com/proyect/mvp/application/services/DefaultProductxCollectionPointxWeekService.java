@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
-import com.proyect.mvp.domain.model.dtos.create.DefaultProductxCollectionPointxWeekCreateDTO;
+import com.proyect.mvp.application.dtos.create.DefaultProductxCollectionPointxWeekCreateDTO;
 import com.proyect.mvp.domain.model.entities.DefaultProductxCollectionPointxWeekEntity;
 import com.proyect.mvp.domain.model.entities.ProductEntity;
 import com.proyect.mvp.domain.repository.DefaultProductxCollectionPointxWeekRepository;

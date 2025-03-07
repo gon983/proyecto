@@ -1,7 +1,7 @@
 package com.proyect.mvp.infrastructure.routes;
 
+import com.proyect.mvp.application.dtos.create.ProductStateCreateDTO;
 import com.proyect.mvp.application.services.ProductStateService;
-import com.proyect.mvp.domain.model.dtos.create.ProductStateCreateDTO;
 import com.proyect.mvp.domain.model.entities.ProductStateEntity;
 
 import org.springframework.context.annotation.Bean;

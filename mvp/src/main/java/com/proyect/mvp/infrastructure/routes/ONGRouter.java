@@ -2,9 +2,9 @@ package com.proyect.mvp.infrastructure.routes;
 
 
 
+import com.proyect.mvp.application.dtos.create.ONGCreateDTO;
+import com.proyect.mvp.application.dtos.update.ONGUpdateDTO;
 import com.proyect.mvp.application.services.ONGService;
-import com.proyect.mvp.domain.model.dtos.create.ONGCreateDTO;
-import com.proyect.mvp.domain.model.dtos.update.ONGUpdateDTO;
 import com.proyect.mvp.domain.model.entities.ONGEntity;
 
 import org.springframework.context.annotation.Bean;

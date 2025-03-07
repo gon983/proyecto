@@ -1,7 +1,7 @@
 package com.proyect.mvp.infrastructure.routes;
 
+import com.proyect.mvp.application.dtos.create.NeighborhoodPackageStateCreateDTO;
 import com.proyect.mvp.application.services.NeighborhoodPackageStateService;
-import com.proyect.mvp.domain.model.dtos.create.NeighborhoodPackageStateCreateDTO;
 import com.proyect.mvp.domain.model.entities.NeighborhoodPackageStateEntity;
 
 import org.springframework.context.annotation.Bean;

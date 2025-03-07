@@ -1,0 +1,54 @@
+package com.proyect.mvp.application.dtos.update;
+
+
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.relational.core.mapping.Column;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+public class UserUpdateDTO {
+  
+
+    
+    private UUID idUser;
+
+ 
+    private String username;
+
+   
+    private String email;
+
+    
+    private LocalDateTime createdAt;
+
+    private String firstName;
+
+    private String lastName;
+
+   
+    private String documentType;
+
+    
+    private String documentNumber;
+
+    
+    private UUID fkNeighborhood;
+    private UUID fkCollectionPointSuscribed;
+
+    private String phone;
+
+    
+    private String photo;
+
+    private UUID roleOne;
+    private String mpPublicKey;
+
+    private String mpAccessToken;
+}
+

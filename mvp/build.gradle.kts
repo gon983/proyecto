@@ -34,6 +34,9 @@ dependencies {
 	implementation("org.springframework.security:spring-security-crypto")
 
 
+	implementation("com.mercadopago:sdk-java:2.1.7")
+
+
 
 	implementation("com.fasterxml.jackson.core:jackson-databind")
 	implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")

@@ -1,6 +1,6 @@
 package com.proyect.mvp.application.services;
 
-import com.proyect.mvp.domain.model.dtos.create.UserStateCreateDTO;
+import com.proyect.mvp.application.dtos.create.UserStateCreateDTO;
 import com.proyect.mvp.domain.model.entities.UserStateEntity;
 import com.proyect.mvp.domain.repository.UserStateRepository;
 

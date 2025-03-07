@@ -1,7 +1,7 @@
 package com.proyect.mvp.application.services;
 
-import com.proyect.mvp.domain.model.dtos.create.UserCreateDTO;
-import com.proyect.mvp.domain.model.dtos.update.UserUpdateDTO;
+import com.proyect.mvp.application.dtos.create.UserCreateDTO;
+import com.proyect.mvp.application.dtos.update.UserUpdateDTO;
 import com.proyect.mvp.domain.model.entities.UserEntity;
 import com.proyect.mvp.domain.repository.UserRepository;
 

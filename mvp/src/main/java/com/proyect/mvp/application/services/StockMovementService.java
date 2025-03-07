@@ -7,7 +7,7 @@ import org.springframework.r2dbc.connection.R2dbcTransactionManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.reactive.TransactionalOperator;
 
-import com.proyect.mvp.domain.model.dtos.create.StockMovementCreateDTO;
+import com.proyect.mvp.application.dtos.create.StockMovementCreateDTO;
 import com.proyect.mvp.domain.model.entities.StockMovementEntity;
 import com.proyect.mvp.domain.repository.StockMovementRepository;
 

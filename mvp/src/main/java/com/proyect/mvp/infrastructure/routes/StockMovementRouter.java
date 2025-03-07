@@ -5,8 +5,8 @@ import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
+import com.proyect.mvp.application.dtos.create.StockMovementCreateDTO;
 import com.proyect.mvp.application.services.StockMovementService;
-import com.proyect.mvp.domain.model.dtos.create.StockMovementCreateDTO;
 
 import reactor.core.publisher.Mono;
 

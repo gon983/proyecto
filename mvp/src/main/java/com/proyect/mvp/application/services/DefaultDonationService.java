@@ -2,8 +2,8 @@ package com.proyect.mvp.application.services;
 
 
 
-import com.proyect.mvp.domain.model.dtos.create.DefaultDonationCreateDTO;
-import com.proyect.mvp.domain.model.dtos.update.DefaultDonationUpdateDTO;
+import com.proyect.mvp.application.dtos.create.DefaultDonationCreateDTO;
+import com.proyect.mvp.application.dtos.update.DefaultDonationUpdateDTO;
 import com.proyect.mvp.domain.model.entities.DefaultDonationEntity;
 import com.proyect.mvp.domain.repository.DefaultDonationRepository;
 

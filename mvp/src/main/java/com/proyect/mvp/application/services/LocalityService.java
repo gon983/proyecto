@@ -1,6 +1,6 @@
 package com.proyect.mvp.application.services;
 
-import com.proyect.mvp.domain.model.dtos.create.LocalityCreateDTO;
+import com.proyect.mvp.application.dtos.create.LocalityCreateDTO;
 import com.proyect.mvp.domain.model.entities.LocalityEntity;
 import com.proyect.mvp.domain.repository.LocalityRepository;
 
