@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
@@ -39,11 +40,20 @@ public class PurchaseRouter {
                 .switchIfEmpty(ServerResponse.notFound().build());
     }
 
-    private Mono<ServerResponse> confirmPurchase(ServerRequest request, PurchaseService purchaseService){
+    private Mono<ServerResponse> confirmPurchase(ServerRequest request, PurchaseService purchaseService) {
         UUID idPurchase = UUID.fromString(request.pathVariable("idPurchase"));
+        
         return purchaseService.confirmPurchase(idPurchase)
-                        .flatMap(purchase -> ServerResponse.ok().bodyValue(purchase))
-                        .switchIfEmpty(ServerResponse.notFound().build());
+            .collectList() // Convertimos el Flux en un Mono<List<Preference>>
+            .flatMap(preferences -> {
+                if (preferences.isEmpty()) {
+                    return ServerResponse.notFound().build();
+                }
+                return ServerResponse.ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(preferences);
+            });
     }
+    
     
 }
