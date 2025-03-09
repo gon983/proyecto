@@ -52,7 +52,7 @@ public class PurchaseService {
     private final PurchaseDetailService purchaseDetailService;
     private final UserService userService;
     private final EncryptionService encryptionService;
-    private final String PROD_ACCESS_TOKEN = System.getenv("ACCESS_TOKEN");
+    
 
     public PurchaseService(PurchaseRepository purchaseRepository, PurchaseStateService purchaseStateService, PurchaseDetailService purchaseDetailService, UserService userService, EncryptionService encryptionService) {
         this.purchaseRepository = purchaseRepository;
@@ -80,92 +80,92 @@ public class PurchaseService {
         return purchaseRepository.findById(purchaseId)
             .flatMapMany(purchase -> 
                 purchaseDetailService.getDetailsFromPurchaseWithProducts(purchaseId)
-                    .flatMap(detail -> processPayment(detail, purchaseId))
+                    .flatMap(detail -> processPayment(detail, purchase.getFkUser()))
             );
     }
     
 
-private Mono<Preference> processPayment(PurchaseDetailEntity detail, UUID userId) {
+    private Mono<Preference> processPayment(PurchaseDetailEntity detail, UUID userId) {
+        return userService.getUserById(userId)
+                    .flatMap(user -> {
+
+
+                        MercadoPagoConfig.setAccessToken("APP_USR-2552125444382264-030609-9af3f586d7ec8eb52060f4db865e5014-447529108");
+        
+
     
-    MercadoPagoConfig.setAccessToken("PROD_ACCESS_TOKEN");
+                        PreferenceItemRequest itemRequest = PreferenceItemRequest.builder()
+                            .id(detail.getIdPurchaseDetail())
+                            .title(detail.getProduct().getName())
+                            .currencyId("ARS")
+                            .pictureUrl("https://www.mercadopago.com/org-img/MP3/home/logomp3.gif")
+                            .description("")
+                            .categoryId("food")
+                            .quantity((int) detail.getQuantity())
+                            .unitPrice(new BigDecimal(detail.getUnitPrice()))
+                            .build();
+                    
+                        List<PreferenceItemRequest> items = List.of(itemRequest);
+                    
+                        PreferencePayerRequest payer = PreferencePayerRequest.builder()
+                            .name(user.getFirstName())
+                            .surname(user.getLastName())
+                            .email(user.getEmail())
+                            .phone(PhoneRequest.builder().areaCode("54").number(user.getPhone()).build())
+                            .identification(IdentificationRequest.builder().type(user.getDocumentType()).number(user.getDocumentNumber()).build())
+                            .address(AddressRequest.builder().streetName("Street").zipCode("06233200").build())
+                            .build();
+                    
+                        PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
+                            .success("https://www.success.com")
+                            .failure("http://www.failure.com")
+                            .pending("http://www.pending.com")
+                            .build();
+                    
+                        PreferencePaymentMethodsRequest paymentMethods = PreferencePaymentMethodsRequest.builder()
+                            .excludedPaymentMethods(List.of())
+                            .excludedPaymentTypes(List.of())
+                            .build();
+                    
+                        PreferenceRequest preferenceRequest = PreferenceRequest.builder()
+                            .items(items)
+                            .payer(payer)
+                            .backUrls(backUrls)
+                            .autoReturn("approved")
+                            .paymentMethods(paymentMethods)
+                            .notificationUrl("https://www.your-site.com/ipn")
+                            .statementDescriptor("MEUNEGOCIO")
+                            .externalReference("Reference_1234")
+                            .expires(true)
+                            .expirationDateFrom(OffsetDateTime.parse("2016-02-01T12:00:00.000-04:00"))
+                            .expirationDateTo(OffsetDateTime.parse("2016-02-28T12:00:00.000-04:00"))
+                            .build();
+                    
+                        return Mono.fromCallable(() -> {
+                            try {
+                                PreferenceClient client = new PreferenceClient();
+                                Preference preference = client.create(preferenceRequest);
+                    
+                                // Logging de depuración
+                                System.out.println("Preference created with ID: " + preference.getId());
+                                System.out.println("Init point: " + preference.getInitPoint());
+                                System.out.println("Sandbox init point: " + preference.getSandboxInitPoint());
+                    
+                                return preference;
+                            } catch (MPException | MPApiException e) {
+                                e.printStackTrace();
+                                throw new RuntimeException("Error creating Mercado Pago preference", e);
+                            }
+                        }).onErrorResume(e -> {
+                            return Mono.error(new RuntimeException("Error processing payment: " + e.getMessage(), e));
+                        });
+
+                    
+                    
+                    });
+        
+    }
     
-    PreferenceItemRequest itemRequest = PreferenceItemRequest.builder()
-        .id(detail.getIdPurchaseDetail())
-        .title(detail.getProduct().getName())
-        .currencyId("ARS")
-        .pictureUrl("https://www.mercadopago.com/org-img/MP3/home/logomp3.gif")
-        .description("")
-        .categoryId("food")
-        .quantity((int) detail.getQuantity())
-        .unitPrice(new BigDecimal(detail.getUnitPrice()))
-        .build();
-    
-    List<PreferenceItemRequest> items = new ArrayList<>();
-    items.add(itemRequest);
-    
-    PreferencePayerRequest payer = PreferencePayerRequest.builder()
-        .name("João")
-        .surname("Silva")
-        .email("user@email.com")
-        .phone(PhoneRequest.builder()
-            .areaCode("11")
-            .number("4444-4444")
-            .build())
-        .identification(IdentificationRequest.builder()
-            .type("CPF")
-            .number("19119119100")
-            .build())
-        .address(AddressRequest.builder()
-            .streetName("Street")
-            //.streetNumber(123)
-            .zipCode("06233200")
-            .build())
-        .build();
-    
-    PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
-        .success("https://www.success.com")
-        .failure("http://www.failure.com")
-        .pending("http://www.pending.com")
-        .build();
-    
-    List<PreferencePaymentMethodRequest> excludedPaymentMethods = new ArrayList<>();
-    
-    List<PreferencePaymentTypeRequest> excludedPaymentTypes = new ArrayList<>();
-    
-    PreferencePaymentMethodsRequest paymentMethods = PreferencePaymentMethodsRequest.builder()
-        .excludedPaymentMethods(excludedPaymentMethods)
-        .excludedPaymentTypes(excludedPaymentTypes)
-        .build();
-    
-    PreferenceRequest preferenceRequest = PreferenceRequest.builder()
-        .items(items)
-        .payer(payer)
-        .backUrls(backUrls)
-        .autoReturn("approved")
-        .paymentMethods(paymentMethods)
-        .notificationUrl("https://www.your-site.com/ipn")
-        .statementDescriptor("MEUNEGOCIO")
-        .externalReference("Reference_1234")
-        .expires(true)
-        .expirationDateFrom(OffsetDateTime.parse("2016-02-01T12:00:00.000-04:00"))
-        .expirationDateTo(OffsetDateTime.parse("2016-02-28T12:00:00.000-04:00"))
-        .build();
-    
-        try {
-            PreferenceClient client = new PreferenceClient();
-            Preference preference = client.create(preferenceRequest);
-            
-            // Aquí puedes hacer logging para ver lo que devuelve
-            System.out.println("Preference created with ID: " + preference.getId());
-            System.out.println("Init point: " + preference.getInitPoint());
-            System.out.println("Sandbox init point: " + preference.getSandboxInitPoint());
-            
-            return Mono.just(preference);
-        } catch (MPException | MPApiException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Error creating Mercado Pago preference", e);
-        } 
-}
 
 
     public Mono<PurchaseEntity> getPurchaseWithDetails(UUID idPurchase){

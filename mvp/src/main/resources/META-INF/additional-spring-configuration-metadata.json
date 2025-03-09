@@ -1,5 +1,12 @@
-{"properties": [{
-  "name": "spring.r2dbc.pool.max-create-connection",
-  "type": "java.lang.String",
-  "description": "A description for 'spring.r2dbc.pool.max-create-connection'"
-}]}
+{"properties": [
+  {
+    "name": "spring.r2dbc.pool.max-create-connection",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.r2dbc.pool.max-create-connection'"
+  },
+  {
+    "name": "mercadopago.access.token",
+    "type": "java.lang.String",
+    "description": "A description for 'mercadopago.access.token'"
+  }
+]}
