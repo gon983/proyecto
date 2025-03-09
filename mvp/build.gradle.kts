@@ -34,7 +34,7 @@ dependencies {
 	implementation("org.springframework.security:spring-security-crypto")
 
 
-	implementation("com.mercadopago:sdk-java:2.1.29"){
+	implementation("com.mercadopago:sdk-java:2.+"){
         exclude(group = "com.google.collections", module = "google-collections")
     }
 
