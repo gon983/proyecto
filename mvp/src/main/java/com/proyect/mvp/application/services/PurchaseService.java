@@ -137,8 +137,8 @@ public class PurchaseService {
                             .statementDescriptor("MEUNEGOCIO")
                             .externalReference("Reference_1234")
                             .expires(true)
-                            .expirationDateFrom(OffsetDateTime.parse("2016-02-01T12:00:00.000-04:00"))
-                            .expirationDateTo(OffsetDateTime.parse("2016-02-28T12:00:00.000-04:00"))
+                            .expirationDateFrom(OffsetDateTime.now())
+                            .expirationDateTo(OffsetDateTime.parse("2027-02-28T12:00:00.000-04:00"))
                             .build();
                     
                         return Mono.fromCallable(() -> {
