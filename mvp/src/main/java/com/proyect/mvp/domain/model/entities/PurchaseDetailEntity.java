@@ -46,4 +46,7 @@ public class PurchaseDetailEntity {
     private LocalDateTime updatedAt;
 
     
+    public void addProduct(ProductEntity productEntity){
+        this.product = productEntity;
+    }
 }

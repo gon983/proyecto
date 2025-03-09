@@ -17,10 +17,12 @@ import reactor.core.publisher.Mono;
 public class PurchaseDetailService {
     private final PurchaseDetailRepository purchaseDetailRepository;
     private final PurchaseDetailStateService purchaseDetailStateService;
+    private final ProductService productService;
 
-    public PurchaseDetailService(PurchaseDetailRepository purchaseDetailRepository, PurchaseDetailStateService purchaseDetailStateService) {
+    public PurchaseDetailService(PurchaseDetailRepository purchaseDetailRepository, PurchaseDetailStateService purchaseDetailStateService, ProductService productService) {
         this.purchaseDetailRepository = purchaseDetailRepository;
         this.purchaseDetailStateService = purchaseDetailStateService;
+        this.productService = productService;
     }
 
     public Mono<PurchaseDetailEntity> createPurchaseDetail(UUID fkPurchase, PurchaseDetailCreateDTO purchaseDetailDto){
@@ -42,6 +44,13 @@ public class PurchaseDetailService {
     public Flux<PurchaseDetailEntity> getDetailsFromPurchase(UUID idPurchase){
         return purchaseDetailRepository.findAllByFkPurchase(idPurchase);
 
+    }
+
+    public Flux<PurchaseDetailEntity> getDetailsFromPurchaseWithProducts(UUID idPurchase){
+        return purchaseDetailRepository.findAllByFkPurchase(idPurchase)
+                                        .flatMap(detail -> productService.getProductById(detail.getFkProduct())
+                                                            .map(product -> {detail.addProduct(product);
+                                                                            return detail;}));   
     }
 
     

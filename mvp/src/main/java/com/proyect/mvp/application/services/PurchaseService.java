@@ -52,12 +52,12 @@ public class PurchaseService {
             });
     }
 
-    public Mono<PurchaseEntity> confirmPurchase(UUID purchaseId, UUID userId) {
+    public Mono<PurchaseEntity> confirmPurchase(UUID purchaseId) {
         return purchaseRepository.findById(purchaseId)
             .flatMap(purchase -> 
-                purchaseDetailService.getDetailsFromPurchase(purchaseId)
+                purchaseDetailService.getDetailsFromPurchaseWithProducts(purchaseId)
                     .collectList()
-                    .flatMap(details -> processPayments(purchase, details, userId))
+                    .flatMap(details -> processPayments(purchase, details, purchase.getFkUser()))
                     .thenReturn(purchase)
             );
     }

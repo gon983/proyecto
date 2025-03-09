@@ -23,7 +23,7 @@ public class PurchaseRouter {
     public RouterFunction<ServerResponse> purchaseRoutes(PurchaseService purchaseService) {
         return route(POST("/purchases"), request -> createPurchase(request, purchaseService))
                 .andRoute(GET("/purchases/{idPurchase}"), request -> getPurchaseWithDetails(request, purchaseService))
-                .andRoute(POST("/confirmPurchase/{idPurchase}/{idUser}"), request -> confirmPurchase(request, purchaseService));
+                .andRoute(POST("/confirmPurchase/{idPurchase}"), request -> confirmPurchase(request, purchaseService));
     }
 
     private Mono<ServerResponse> createPurchase(ServerRequest request, PurchaseService purchaseService) {
@@ -41,8 +41,7 @@ public class PurchaseRouter {
 
     private Mono<ServerResponse> confirmPurchase(ServerRequest request, PurchaseService purchaseService){
         UUID idPurchase = UUID.fromString(request.pathVariable("idPurchase"));
-        UUID idUser = UUID.fromString(request.pathVariable("idUser"));
-        return purchaseService.confirmPurchase(idPurchase, idUser)
+        return purchaseService.confirmPurchase(idPurchase)
                         .flatMap(purchase -> ServerResponse.ok().bodyValue(purchase))
                         .switchIfEmpty(ServerResponse.notFound().build());
     }
