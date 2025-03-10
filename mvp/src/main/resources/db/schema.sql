@@ -5,7 +5,7 @@
 -- Dumped from database version 17.4
 -- Dumped by pg_dump version 17.4
 
--- Started on 2025-02-26 21:46:23
+-- Started on 2025-03-10 18:53:17
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -355,7 +355,10 @@ CREATE TABLE public.purchase (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone,
     level character varying(10),
-    fk_current_state uuid NOT NULL
+    fk_current_state uuid NOT NULL,
+    mp_preference_id character varying,
+    mp_payment_id character varying,
+    mp_payment_date timestamp with time zone
 );
 
 
@@ -602,7 +605,9 @@ CREATE TABLE public.users (
     fk_role_two uuid,
     fk_role_three uuid,
     fk_collection_point_suscribed uuid,
-    level integer DEFAULT 1 NOT NULL
+    level integer DEFAULT 1 NOT NULL,
+    mp_public_key_encrypted character varying,
+    mp_access_token_encrypted character varying
 );
 
 
@@ -778,8 +783,8 @@ INSERT INTO public.neighborhood VALUES ('23f4f7d4-7923-495d-85d0-27f34d932537', 
 -- Data for Name: product; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.product VALUES ('1a6acd60-a74e-4724-96a8-6ad7359c2fd0', 'Tomate 1', 100.5, 10, 'https://example.com/producto.jpg', 'kg', 'b088c879-3fe7-4bcd-a6fc-89efb341c602', 25.99, '10fbe8c3-0291-4bc7-a96a-7d10782b36ec', 'a634e60f-7070-4f1b-bc22-9926952b5fff');
 INSERT INTO public.product VALUES ('eb12c24a-9948-4aaa-a6cc-cd57f359b4f6', 'Banana 1', 100.5, 10, 'https://example.com/producto.jpg', 'kg', 'b088c879-3fe7-4bcd-a6fc-89efb341c602', 25.99, '10fbe8c3-0291-4bc7-a96a-7d10782b36ec', '6ac6bc96-2a1b-4df2-abc2-ba78f96d96eb');
+INSERT INTO public.product VALUES ('1a6acd60-a74e-4724-96a8-6ad7359c2fd0', 'Tomate 1', 300, 10, 'https://example.com/producto.jpg', 'kg', 'b088c879-3fe7-4bcd-a6fc-89efb341c602', 25.99, '10fbe8c3-0291-4bc7-a96a-7d10782b36ec', 'a634e60f-7070-4f1b-bc22-9926952b5fff');
 
 
 --
@@ -804,8 +809,8 @@ INSERT INTO public.product VALUES ('eb12c24a-9948-4aaa-a6cc-cd57f359b4f6', 'Bana
 -- Data for Name: purchase; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.purchase VALUES ('77b613f9-1984-4a2a-a0c5-6302167b0841', 'bfb6dbcc-9f06-4b7e-9754-28368ef642fe', 0, NULL, NULL, '2025-02-24 20:43:16.944691', NULL, '1', '11c4c9f4-d5ee-4866-a22e-e1eb824efafa');
-INSERT INTO public.purchase VALUES ('fda6c680-686c-4493-9dc2-14e9dca88b34', 'bfb6dbcc-9f06-4b7e-9754-28368ef642fe', 0, NULL, NULL, '2025-02-25 18:36:03.004606', NULL, '1', '11c4c9f4-d5ee-4866-a22e-e1eb824efafa');
+INSERT INTO public.purchase VALUES ('77b613f9-1984-4a2a-a0c5-6302167b0841', 'bfb6dbcc-9f06-4b7e-9754-28368ef642fe', 0, NULL, NULL, '2025-02-24 20:43:16.944691', NULL, '1', '11c4c9f4-d5ee-4866-a22e-e1eb824efafa', NULL, NULL, NULL);
+INSERT INTO public.purchase VALUES ('fda6c680-686c-4493-9dc2-14e9dca88b34', 'bfb6dbcc-9f06-4b7e-9754-28368ef642fe', 0, NULL, NULL, '2025-02-25 18:36:03.004606', NULL, '1', '11c4c9f4-d5ee-4866-a22e-e1eb824efafa', NULL, NULL, NULL);
 
 
 --
@@ -921,6 +926,14 @@ INSERT INTO public.standar_product VALUES ('a634e60f-7070-4f1b-bc22-9926952b5fff
 
 INSERT INTO public.stock_movement VALUES ('d4fc9939-da45-48b4-ab69-84c29ba5eb5f', '1a6acd60-a74e-4724-96a8-6ad7359c2fd0', 0, '2025-02-26', 'sin comentarios', 'b088c879-3fe7-4bcd-a6fc-89efb341c602', 'INCREASE');
 INSERT INTO public.stock_movement VALUES ('4bab9a43-9173-490b-b058-57e9918c5c44', '1a6acd60-a74e-4724-96a8-6ad7359c2fd0', 0, '2025-02-26', 'sin comentarios', 'b088c879-3fe7-4bcd-a6fc-89efb341c602', 'INCREASE');
+INSERT INTO public.stock_movement VALUES ('d7f1436c-0e20-4cf2-af57-dc12da66ba94', '1a6acd60-a74e-4724-96a8-6ad7359c2fd0', 0, '2025-02-26', 'sin comentarios', 'b088c879-3fe7-4bcd-a6fc-89efb341c602', 'INCREASE');
+INSERT INTO public.stock_movement VALUES ('eb4e3a53-88e2-4d37-aff7-6a99aadffec6', '1a6acd60-a74e-4724-96a8-6ad7359c2fd0', 0, '2025-02-26', 'sin comentarios', 'b088c879-3fe7-4bcd-a6fc-89efb341c602', 'INCREASE');
+INSERT INTO public.stock_movement VALUES ('7a59ee1e-8528-4f15-bc05-b6aad7815ef4', '1a6acd60-a74e-4724-96a8-6ad7359c2fd0', 0, '2025-02-26', 'sin comentarios', 'b088c879-3fe7-4bcd-a6fc-89efb341c602', 'INCREASE');
+INSERT INTO public.stock_movement VALUES ('d9007d38-2b44-4076-8044-9d71736dc523', '1a6acd60-a74e-4724-96a8-6ad7359c2fd0', 100, '2025-02-26', 'sin comentarios', 'b088c879-3fe7-4bcd-a6fc-89efb341c602', 'INCREASE');
+INSERT INTO public.stock_movement VALUES ('ffd95857-0bf5-4cad-8e8a-4821f63a1c96', '1a6acd60-a74e-4724-96a8-6ad7359c2fd0', 100, '2025-02-26', 'sin comentarios', 'b088c879-3fe7-4bcd-a6fc-89efb341c602', 'INCREASE');
+INSERT INTO public.stock_movement VALUES ('33465dc5-ac54-43be-abf7-a7710b1bf537', '1a6acd60-a74e-4724-96a8-6ad7359c2fd0', 100, '2025-02-26', 'sin comentarios', 'b088c879-3fe7-4bcd-a6fc-89efb341c602', 'INCREASE');
+INSERT INTO public.stock_movement VALUES ('15b965fb-c4d8-48df-bb9b-19312c6bcaef', '1a6acd60-a74e-4724-96a8-6ad7359c2fd0', 100, '2025-02-26', 'sin comentarios', 'b088c879-3fe7-4bcd-a6fc-89efb341c602', 'INCREASE');
+INSERT INTO public.stock_movement VALUES ('38bed582-7c3b-4ca4-9947-7051b943278b', '1a6acd60-a74e-4724-96a8-6ad7359c2fd0', 100, '2025-02-26', 'sin comentarios', 'b088c879-3fe7-4bcd-a6fc-89efb341c602', 'INCREASE');
 
 
 --
@@ -945,10 +958,11 @@ INSERT INTO public.stock_movement VALUES ('4bab9a43-9173-490b-b058-57e9918c5c44'
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.users VALUES ('b088c879-3fe7-4bcd-a6fc-89efb341c602', 'juanperez', 'juan.perez@example.com', '2025-02-22 16:03:26.961483', 'Juan', 'ProductorDeTomates', 'DNI', '12345678', '23f4f7d4-7923-495d-85d0-27f34d932537', '+5491122334455', NULL, 0, '5c0e356c-ef1a-11ef-b668-52cf1c1a32ab', NULL, NULL, NULL, 1);
-INSERT INTO public.users VALUES ('6982b8a2-2a9e-47a4-8df9-85f3482b16e2', 'rodrigo', 'rodrigo@example.com', '2025-02-22 16:12:39.413808', 'Rodrigo', 'Dueño Plaza', 'DNI', '88888888', '23f4f7d4-7923-495d-85d0-27f34d932537', '+5491129898', NULL, 0, '6b4492b9-1f7d-4ef6-b3bf-7a8c89e4fe83', NULL, NULL, NULL, 1);
-INSERT INTO public.users VALUES ('3bc2cac3-aadc-468c-9942-39fd2b7f2762', 'martin', 'martin.perez@example.com', '2025-02-26 10:38:59.743479', 'martin', 'cons', 'DNI', '12315558', '23f4f7d4-7923-495d-85d0-27f34d932537', '+549112233334', NULL, 0, '98c1260b-885a-4b8a-a998-3bba99254ff4', NULL, NULL, NULL, 1);
-INSERT INTO public.users VALUES ('bfb6dbcc-9f06-4b7e-9754-28368ef642fe', 'grego', 'gregorio.perez@example.com', '2025-02-24 19:59:42.157521', 'Gregorio', 'Consumidor', 'DNI', '12345558', '23f4f7d4-7923-495d-85d0-27f34d932537', '+549112233464', NULL, NULL, '98c1260b-885a-4b8a-a998-3bba99254ff4', NULL, NULL, 'c446f03c-490c-4fe9-a63a-ad407c981c29', 1);
+INSERT INTO public.users VALUES ('6982b8a2-2a9e-47a4-8df9-85f3482b16e2', 'rodrigo', 'rodrigo@example.com', '2025-02-22 16:12:39.413808', 'Rodrigo', 'Dueño Plaza', 'DNI', '88888888', '23f4f7d4-7923-495d-85d0-27f34d932537', '+5491129898', NULL, 0, '6b4492b9-1f7d-4ef6-b3bf-7a8c89e4fe83', NULL, NULL, NULL, 1, NULL, NULL);
+INSERT INTO public.users VALUES ('3bc2cac3-aadc-468c-9942-39fd2b7f2762', 'martin', 'martin.perez@example.com', '2025-02-26 10:38:59.743479', 'martin', 'cons', 'DNI', '12315558', '23f4f7d4-7923-495d-85d0-27f34d932537', '+549112233334', NULL, 0, '98c1260b-885a-4b8a-a998-3bba99254ff4', NULL, NULL, NULL, 1, NULL, NULL);
+INSERT INTO public.users VALUES ('bfb6dbcc-9f06-4b7e-9754-28368ef642fe', 'grego', 'gregorio.perez@example.com', '2025-02-24 19:59:42.157521', 'Gregorio', 'Consumidor', 'DNI', '12345558', '23f4f7d4-7923-495d-85d0-27f34d932537', '+549112233464', NULL, NULL, '98c1260b-885a-4b8a-a998-3bba99254ff4', NULL, NULL, 'c446f03c-490c-4fe9-a63a-ad407c981c29', 0, 'f0d7e9bd0df358dfaf5da073fd29f3c9ce181dc24a7fb4d884d5f00b263fa09f9cf5b080324383d96e9c214ba4d8043b', 'cb3fa6fc938a052f958b9bf1706d7804477cafa5197a7e3da4a61aa07ffd09d2');
+INSERT INTO public.users VALUES ('ea131fed-9d42-4cfb-b189-e64f4bf4ed12', 'juanperez', 'juan.perez@example.com', '2025-03-06 20:26:17.902669', 'Juan', 'ProductorDeTomates', 'DNI', '12345678', '23f4f7d4-7923-495d-85d0-27f34d932537', '+5491122334455', NULL, 0, '5c0e356c-ef1a-11ef-b668-52cf1c1a32ab', NULL, NULL, NULL, 0, NULL, NULL);
+INSERT INTO public.users VALUES ('b088c879-3fe7-4bcd-a6fc-89efb341c602', 'juanperez', 'juan.perez@example.com', '2025-02-22 16:03:26.961483', 'Juan', 'ProductorDeTomates', 'DNI', '12345678', '23f4f7d4-7923-495d-85d0-27f34d932537', '+5491122334455', NULL, NULL, '5c0e356c-ef1a-11ef-b668-52cf1c1a32ab', NULL, NULL, NULL, 0, 'b2eceb8fa001256d38db23b24cd43df7ddaa01c4e84997f8eeeefd004f33b3681a3086321108bb46f7a2d2e32f59fde3', 'c85676a1507b6be360c4600e1ce89ea6f005bec45037c3290692ce86b5662346');
 
 
 --
@@ -1769,7 +1783,7 @@ ALTER TABLE ONLY public.vote
     ADD CONSTRAINT vote_fk_user_fkey FOREIGN KEY (fk_user) REFERENCES public.users(id_user);
 
 
--- Completed on 2025-02-26 21:46:24
+-- Completed on 2025-03-10 18:53:18
 
 --
 -- PostgreSQL database dump complete

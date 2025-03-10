@@ -102,7 +102,7 @@ public class PurchaseService {
     }
 
 
-    public Flux<Object> confirmPurchase(UUID purchaseId) {
+    public Flux<Preference> confirmPurchase(UUID purchaseId) {
         return purchaseRepository.findById(purchaseId)
             .flatMapMany(purchase -> 
                 purchaseDetailService.getDetailsFromPurchaseWithProducts(purchaseId)
@@ -112,84 +112,86 @@ public class PurchaseService {
             );
     }
     
-    private Mono<Object> processPayment(List<PurchaseDetailEntity> details, UUID userId, UUID purchaseId) {
-        return userService.getUserById(userId)
-                .flatMap(user -> {
-                    // Configuramos el token de acceso principal
-                    MercadoPagoConfig.setAccessToken("APP_USR-2552125444382264-030609-9af3f586d7ec8eb52060f4db865e5014-447529108");
+    private Mono<Preference> processPayment(List<PurchaseDetailEntity> details, UUID userId, UUID purchaseId) {
+            return userService.getUserById(userId)
+                    .flatMap(user -> {
+                        // Configuramos el token de acceso principal
+                        MercadoPagoConfig.setAccessToken("APP_USR-2552125444382264-030609-9af3f586d7ec8eb52060f4db865e5014-447529108");
                     
-                    // Creamos los items para la preferencia
-                    List<PreferenceItemRequest> items = details.stream()
-                            .map(detail -> PreferenceItemRequest.builder()
-                                    .id(detail.getIdPurchaseDetail())
-                                    .title(detail.getProduct().getName())
-                                    .currencyId("ARS")
-                                    .pictureUrl("https://www.mercadopago.com/org-img/MP3/home/logomp3.gif")
-                                    .description("Producto de " + detail.getProduct().getName())
-                                    .categoryId("food")
-                                    .quantity((int) detail.getQuantity())
-                                    .unitPrice(new BigDecimal(detail.getUnitPrice()))
-                                    .build())
-                            .collect(Collectors.toList());
+                        // Creamos los items para la preferencia
+                        List<PreferenceItemRequest> items = details.stream()
+                                .map(detail -> PreferenceItemRequest.builder()
+                                        .id(detail.getIdPurchaseDetail())
+                                        .title(detail.getProduct().getName())
+                                        .currencyId("ARS")
+                                        .pictureUrl("https://www.mercadopago.com/org-img/MP3/home/logomp3.gif")
+                                        .description("Producto de " + detail.getProduct().getName())
+                                        .categoryId("food")
+                                        .quantity((int) detail.getQuantity())
+                                        .unitPrice(new BigDecimal(detail.getUnitPrice()))
+                                        .build())
+                                .collect(Collectors.toList());
                     
-                    // Resto de la configuración de la preferencia...
-                    PreferencePayerRequest payer = PreferencePayerRequest.builder()
-                            .name(user.getFirstName())
-                            .surname(user.getLastName())
-                            .email(user.getEmail())
-                            .phone(PhoneRequest.builder().areaCode("54").number(user.getPhone()).build())
-                            .identification(IdentificationRequest.builder().type(user.getDocumentType()).number(user.getDocumentNumber()).build())
-                            .address(AddressRequest.builder().streetName("Street").zipCode("06233200").build())
-                            .build();
+                        // Resto de la configuración de la preferencia...
+                        PreferencePayerRequest payer = PreferencePayerRequest.builder()
+                                .name(user.getFirstName())
+                                .surname(user.getLastName())
+                                .email(user.getEmail())
+                                .phone(PhoneRequest.builder().areaCode("54").number(user.getPhone()).build())
+                                .identification(IdentificationRequest.builder().type(user.getDocumentType()).number(user.getDocumentNumber()).build())
+                                .address(AddressRequest.builder().streetName("Street").zipCode("06233200").build())
+                                .build();
                     
-                    PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
-                            .success("https://www.success.com")
-                            .failure("http://www.failure.com")
-                            .pending("http://www.pending.com")
-                            .build();
+                        PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
+                                .success("https://www.success.com")
+                                .failure("http://www.failure.com")
+                                .pending("http://www.pending.com")
+                                .build();
                     
-                    PreferencePaymentMethodsRequest paymentMethods = PreferencePaymentMethodsRequest.builder()
-                            .excludedPaymentMethods(List.of())
-                            .excludedPaymentTypes(List.of())
-                            .build();
+                        PreferencePaymentMethodsRequest paymentMethods = PreferencePaymentMethodsRequest.builder()
+                                .excludedPaymentMethods(List.of())
+                                .excludedPaymentTypes(List.of())
+                                .build();
                     
-                    // Almacenamos la información de la compra en metadata
-                    Map<String, Object> metadata = new HashMap<>();
-                    metadata.put("purchase_id", purchaseId.toString());
+                        // Almacenamos la información de la compra en metadata
+                        Map<String, Object> metadata = new HashMap<>();
+                        metadata.put("purchase_id", purchaseId.toString());
                     
-                    // Creamos la solicitud de preferencia
-                    PreferenceRequest preferenceRequest = PreferenceRequest.builder()
-                            .items(items)
-                            .payer(payer)
-                            .backUrls(backUrls)
-                            .autoReturn("approved")
-                            .paymentMethods(paymentMethods)
-                            .notificationUrl("https://www.your-site.com/ipn")
-                            .statementDescriptor("MARKETPLACE")
-                            .externalReference("Purchase_" + purchaseId.toString())
-                            .expires(true)
-                            .expirationDateFrom(OffsetDateTime.now())
-                            .expirationDateTo(OffsetDateTime.now().plusDays(7))
-                            .metadata(metadata)
-                            .build();
+                        // Creamos la solicitud de preferencia
+                        PreferenceRequest preferenceRequest = PreferenceRequest.builder()
+                                .items(items)
+                                .payer(payer)
+                                .backUrls(backUrls)
+                                .autoReturn("approved")
+                                .paymentMethods(paymentMethods)
+                                .notificationUrl("https://www.your-site.com/ipn")
+                                .statementDescriptor("MARKETPLACE")
+                                .externalReference("Purchase_" + purchaseId.toString())
+                                .expires(true)
+                                .expirationDateFrom(OffsetDateTime.now())
+                                .expirationDateTo(OffsetDateTime.now().plusDays(7))
+                                .metadata(metadata)
+                                .build();
                     
-                    return Mono.fromCallable(() -> {
-                        try {
-                            PreferenceClient client = new PreferenceClient();
-                            Preference preference = client.create(preferenceRequest);
-                            
-                            // Actualizamos la compra con el ID de preferencia
+                        return Mono.fromCallable(() -> {
+                            try {
+                                PreferenceClient client = new PreferenceClient();
+                                Preference preference = client.create(preferenceRequest);
+                                return preference;
+                            } catch (MPException | MPApiException e) {
+                                e.printStackTrace();
+                                throw new RuntimeException("Error creating Mercado Pago preference", e);
+                            }
+                        }).flatMap(preference -> {
+                            // Usamos thenReturn ya que updatePurchaseWithPreferenceId devuelve Mono<Void>
                             return updatePurchaseWithPreferenceId(purchaseId, preference.getId())
-                                   .thenReturn(preference);
-                        } catch (MPException | MPApiException e) {
-                            e.printStackTrace();
-                            throw new RuntimeException("Error creating Mercado Pago preference", e);
-                        }
-                    }).onErrorResume(e -> {
-                        return Mono.error(new RuntimeException("Error processing payment: " + e.getMessage(), e));
+                               .thenReturn(preference);
+                        }).onErrorResume(e -> {
+                            // Especificamos el tipo de error como Preference
+                            return Mono.<Preference>error(new RuntimeException("Error processing payment: " + e.getMessage(), e));
+                        });
                     });
-                });
-    }
+        }
     
     private Mono<Void> updatePurchaseWithPreferenceId(UUID purchaseId, String preferenceId) {
         return purchaseRepository.findById(purchaseId)
