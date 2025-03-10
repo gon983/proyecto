@@ -1,5 +1,6 @@
 package com.proyect.mvp.domain.model.entities;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -51,7 +52,37 @@ public class PurchaseEntity {
     @Column("fk_current_state")
     private UUID fkCurrentState;
 
+    @Column("mp_preference_id")
+    private String mpPreferenceId;
+
+    @Column("mp_payment_id")
+    private String mpPaymentId;
+
+    @Column("mp_payment_date")
+    private OffsetDateTime mpPaymentDate;
+   
+
     public void addDetails(List<PurchaseDetailEntity> details){
         this.details = details;
     }
+
+    public void setMpPreferenceId(String mpPreferenceId){
+        this.mpPreferenceId = mpPreferenceId;
+    }
+
+    public void setMpPaymentId(String mpPaymentId){
+        this.mpPaymentId = mpPaymentId;
+
+    }
+
+    public void setFkCurrentState(UUID state){
+        this.fkCurrentState = state;
+
+    }
+
+    public void setPaymentDate(OffsetDateTime paymentDate){
+        this.mpPaymentDate = paymentDate;
+    }
+
+
 }
