@@ -49,4 +49,8 @@ public class PurchaseDetailEntity {
     public void addProduct(ProductEntity productEntity){
         this.product = productEntity;
     }
+
+    public double calculatePrice(){
+        return this.unitPrice * this.quantity;
+    }
 }

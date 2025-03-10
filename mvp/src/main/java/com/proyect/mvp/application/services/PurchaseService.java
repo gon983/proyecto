@@ -127,8 +127,8 @@ public class PurchaseService {
                                         .pictureUrl("https://www.mercadopago.com/org-img/MP3/home/logomp3.gif")
                                         .description("Producto de " + detail.getProduct().getName())
                                         .categoryId("food")
-                                        .quantity((int) detail.getQuantity())
-                                        .unitPrice(new BigDecimal(detail.getUnitPrice()))
+                                        .quantity(1)
+                                        .unitPrice(new BigDecimal(detail.calculatePrice()))
                                         .build())
                                 .collect(Collectors.toList());
                     
