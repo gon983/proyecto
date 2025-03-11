@@ -57,6 +57,10 @@ public class StockMovementService {
 
     }
 
+    public Mono<Void> registrarMovimientoPorCompra(){
+        return Mono.empty(); // el registro del cambio de stock lo voy a hacer cuando les pague a los productores
+    }
+
 
     
 }

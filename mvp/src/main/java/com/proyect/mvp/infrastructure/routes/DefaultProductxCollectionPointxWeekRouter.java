@@ -22,16 +22,15 @@ public class DefaultProductxCollectionPointxWeekRouter {
 
     @Bean
     RouterFunction<ServerResponse> defaultProductxCpRoutes(DefaultProductxCollectionPointxWeekService defaultProductxCpService){
-    return route(POST("/defaultProductsxCp"), request -> createDefaultProductxCp(request, defaultProductxCpService))
-            .andRoute(GET("/defaultProductsxCp/{idUser}"), request -> getDefaultProductsxCpxWeek(request, defaultProductxCpService));
+    return route(GET("/defaultProductsxCp/{idUser}"), request -> getDefaultProductsxCpxWeek(request, defaultProductxCpService));
 
 }
 
-    Mono<ServerResponse> createDefaultProductxCp(ServerRequest request, DefaultProductxCollectionPointxWeekService defaultProductxCpService){
-        return request.bodyToMono(DefaultProductxCollectionPointxWeekCreateDTO.class)
-                       .flatMap(dto -> defaultProductxCpService.createDefaultProductxCollectionPointxWeek(dto))
-                       .flatMap(saved -> ServerResponse.ok().bodyValue(saved));
-    }
+    // Mono<ServerResponse> createDefaultProductxCp(ServerRequest request, DefaultProductxCollectionPointxWeekService defaultProductxCpService){
+    //     return request.bodyToMono(DefaultProductxCollectionPointxWeekCreateDTO.class)
+    //                    .flatMap(dto -> defaultProductxCpService.createDefaultProductxCollectionPointxWeek(dto))
+    //                    .flatMap(saved -> ServerResponse.ok().bodyValue(saved));
+    // } En teoria este endpoint no se tiene q usar, lo hice para probar las purchases
 
     Mono<ServerResponse> getDefaultProductsxCpxWeek(ServerRequest request, DefaultProductxCollectionPointxWeekService defaultProductxCpService){
         UUID idUser = UUID.fromString(request.pathVariable("idUser"));

@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
+import java.time.DayOfWeek;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -40,6 +42,8 @@ public class CollectionPointEntity {
 
 
     private Point ubication;
+
+    private String collectionRecurrentDay;
 
     private String description;
     @Transient

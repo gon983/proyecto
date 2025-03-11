@@ -1,6 +1,7 @@
 package com.proyect.mvp.domain.model.entities;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 import org.springframework.data.annotation.Id;
@@ -26,6 +27,6 @@ public class DefaultProductxCollectionPointxWeekEntity {
     @Column("fk_standar_product")
     UUID fkStandarProduct;
     @Column("date_init_week")
-    LocalDateTime dateInitWeek;
+    OffsetDateTime dateInitWeek;
     
 }

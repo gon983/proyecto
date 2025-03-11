@@ -48,6 +48,7 @@ import com.proyect.mvp.application.dtos.create.PurchaseCreateDTO;
 import com.proyect.mvp.domain.model.entities.PurchaseDetailEntity;
 import com.proyect.mvp.domain.model.entities.PurchaseEntity;
 import com.proyect.mvp.domain.model.entities.PurchaseStateEntity;
+import com.proyect.mvp.domain.model.entities.StockMovementEntity;
 import com.proyect.mvp.domain.repository.PurchaseRepository;
 
 
@@ -62,14 +63,17 @@ public class PurchaseService {
     private final PurchaseDetailService purchaseDetailService;
     private final UserService userService;
     private final EncryptionService encryptionService;
+    private final StockMovementService stockMovementService;
     
 
-    public PurchaseService(PurchaseRepository purchaseRepository, PurchaseStateService purchaseStateService, PurchaseDetailService purchaseDetailService, UserService userService, EncryptionService encryptionService) {
+    public PurchaseService(PurchaseRepository purchaseRepository, PurchaseStateService purchaseStateService, PurchaseDetailService purchaseDetailService,
+     UserService userService, EncryptionService encryptionService, StockMovementService stockMovementService) {
         this.purchaseRepository = purchaseRepository;
         this.purchaseStateService = purchaseStateService;
         this.purchaseDetailService = purchaseDetailService;
         this.userService = userService;
         this.encryptionService = encryptionService;
+        this.stockMovementService = stockMovementService;
     }
 
     public Mono<PurchaseEntity> createPurchase(PurchaseCreateDTO purchaseDto) {
@@ -248,6 +252,15 @@ public class PurchaseService {
     
     private Mono<Void> procesarPagoAprobado(String preferenceId, Payment payment) {
         return purchaseRepository.findByMpPreferenceId(preferenceId)
+                        .flatMap(
+                    purchase -> {
+                        return purchaseDetailService.getDetailsFromPurchaseWithProducts(purchase.getIdPurchase())
+                                        .collectList()
+                                        .flatMap(details -> {
+                                            purchase.addDetails(details);
+                                            return Mono.just(purchase);
+                                        });
+                    })
             .flatMap(purchase -> {
                 // Marcar la compra como pagada
                 return purchaseStateService.findByName("confirmed")
@@ -255,7 +268,11 @@ public class PurchaseService {
                         purchase.setFkCurrentState(state.getIdPurchaseState());
                         purchase.setMpPaymentId(payment.getId().toString());
                         purchase.setPaymentDate(payment.getDateApproved());
+
                         
+                        
+                        
+
                         return purchaseRepository.save(purchase)
                             .flatMap(updatedPurchase -> {
                                 // Ahora procesamos los pagos a los productores
