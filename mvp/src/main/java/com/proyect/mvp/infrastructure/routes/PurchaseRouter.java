@@ -10,6 +10,7 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
 import com.proyect.mvp.application.dtos.create.PurchaseCreateDTO;
+import com.proyect.mvp.application.dtos.other.MercadoPagoNotificationDTO;
 import com.proyect.mvp.application.services.PurchaseService;
 import com.proyect.mvp.infrastructure.config.middlewares.ConfirmPurchaseMiddleware;
 
@@ -59,7 +60,9 @@ public class PurchaseRouter {
     }
     
     private Mono<ServerResponse> confirmPayment(ServerRequest request, PurchaseService purchaseService) {
-        return ServerResponse.ok().build();
+        return request.bodyToMono(MercadoPagoNotificationDTO.class)
+                        .flatMap(notification -> purchaseService.procesarNotificacionPago(notification.getType(), notification.getData().getId()))
+                        .flatMap(confirmedPurchase -> ServerResponse.ok().build());
     }
     
 }
