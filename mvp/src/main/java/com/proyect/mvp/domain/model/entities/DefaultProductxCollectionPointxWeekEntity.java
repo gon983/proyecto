@@ -28,5 +28,7 @@ public class DefaultProductxCollectionPointxWeekEntity {
     UUID fkStandarProduct;
     @Column("date_init_week")
     OffsetDateTime dateInitWeek;
+    @Column("rating")
+    double rating;
     
 }

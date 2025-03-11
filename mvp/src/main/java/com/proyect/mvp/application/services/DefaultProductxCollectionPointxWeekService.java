@@ -47,12 +47,12 @@ public class DefaultProductxCollectionPointxWeekService {
 
     
 
-    public Mono<DefaultProductxCollectionPointxWeekEntity> createDefaultProductxCollectionPointxWeek(DefaultProductxCollectionPointxWeekCreateDTO defaultProductxCpDto){
+    public Mono<DefaultProductxCollectionPointxWeekEntity> insertDefaultProductxCollectionPointxWeek(UUID fkCollectionPoint, UUID fkStandarProduct, UUID fkProduct){
         DefaultProductxCollectionPointxWeekEntity defaultProductxCp = 
         DefaultProductxCollectionPointxWeekEntity.builder()
-                                                .fkCollectionPoint(defaultProductxCpDto.getFkCollectionPoint())
-                                                .fkStandarProduct(defaultProductxCpDto.getFkStandarProduct())
-                                                .fkProduct(defaultProductxCpDto.getFkProduct())
+                                                .fkCollectionPoint(fkCollectionPoint)
+                                                .fkStandarProduct(fkStandarProduct)
+                                                .fkProduct(fkProduct)
                                                 .build();
         return pxCpRepository.save(defaultProductxCp);
 

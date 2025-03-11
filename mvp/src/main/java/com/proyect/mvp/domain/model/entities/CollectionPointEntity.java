@@ -43,7 +43,7 @@ public class CollectionPointEntity {
 
     private Point ubication;
 
-    private String collectionRecurrentDay;
+    private DayOfWeek collectionRecurrentDay;
 
     private String description;
     @Transient
