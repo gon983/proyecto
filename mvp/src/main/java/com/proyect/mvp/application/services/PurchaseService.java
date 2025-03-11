@@ -204,8 +204,11 @@ public class PurchaseService {
     
     // Método para procesar las notificaciones de pago
     public Mono<Void> procesarNotificacionPago(String notificationType, String dataId) {
+        System.out.println("Método procesarNotificacionPago llamado con: " + notificationType + ", " + dataId);
         if ("payment".equals(notificationType)) {
+            System.out.println("Tipo de notificación correcto: payment");
             return Mono.fromCallable(() -> {
+                System.out.println("Dentro de fromCallable");
                 try {
                     // Configuramos el token de acceso principal
                     MercadoPagoConfig.setAccessToken("APP_USR-2552125444382264-030609-9af3f586d7ec8eb52060f4db865e5014-447529108");
@@ -213,6 +216,9 @@ public class PurchaseService {
                     // Obtenemos la información del pago
                     PaymentClient paymentClient = new PaymentClient();
                     Payment payment = paymentClient.get(Long.parseLong(dataId));
+                    System.out.println("Payment recuperado: ID=" + payment.getId());
+                    System.out.println("Payment status: " + payment.getStatus());
+                    System.out.println("Payment externalReference: " + payment.getExternalReference());
                     
                     // Verificamos si el pago está aprobado
                     if ("approved".equals(payment.getStatus())) {
@@ -225,6 +231,12 @@ public class PurchaseService {
                     
                     return null;
                 } catch (MPException | MPApiException e) {
+                    System.err.println("Error de MercadoPago: " + e.getClass().getName() + ": " + e.getMessage());
+                    if (e instanceof MPApiException) {
+                        MPApiException apiEx = (MPApiException) e;
+                        System.err.println("Status Code: " + apiEx.getStatusCode());
+                        System.err.println("API Response: " + apiEx.getApiResponse());
+                    }
                     e.printStackTrace();
                     throw new RuntimeException("Error processing payment notification", e);
                 }
