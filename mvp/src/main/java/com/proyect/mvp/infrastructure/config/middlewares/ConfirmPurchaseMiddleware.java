@@ -1,19 +1,22 @@
 package com.proyect.mvp.infrastructure.config.middlewares;
-
-import org.apache.commons.codec.digest.HmacUtils;
-import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.server.ServerRequest;
-import reactor.core.publisher.Mono;
 import java.nio.charset.StandardCharsets;
 
+import org.apache.commons.codec.digest.HmacUtils;
+import org.springframework.web.reactive.function.server.ServerRequest;
+import org.springframework.web.util.HtmlUtils;
+
+import reactor.core.publisher.Mono;
 
 public class ConfirmPurchaseMiddleware {
 
     private static final String SECRET_KEY = "313206a36978b24f8048cf0b28b825d2aef2dd2e37b672520158614ce0d5dd96";
     
     public Mono<Boolean> validate(ServerRequest request) {
+        // Crear un nuevo objeto ServerRequest que cachea el cuerpo
         return request.bodyToMono(String.class)
-                .flatMap(body -> {
+                .flatMap(originalBody -> {
+                    System.out.println("Body recibido en middleware: " + originalBody);
+                    
                     // Obtenemos los headers necesarios
                     String signatureHeader = request.headers().firstHeader("x-signature");
                     String requestIdHeader = request.headers().firstHeader("x-request-id");
@@ -37,10 +40,6 @@ public class ConfirmPurchaseMiddleware {
                     if (ts == null || v1 == null) {
                         return Mono.just(false);
                     }
-                    
-                    // Extraer data.id del body (si fuera necesario)
-                    // Para el ejemplo sencillo, usamos el Data ID de la URL o un valor fijo
-                    // En producción deberías parsear el JSON para obtener data.id
                     
                     // Construir el signedTemplate según la documentación
                     StringBuilder templateBuilder = new StringBuilder();
@@ -69,8 +68,15 @@ public class ConfirmPurchaseMiddleware {
                     System.out.println("Firma esperada: " + expectedSignature);
                     System.out.println("Firma recibida: " + v1);
                     
+                    // Almacenar el cuerpo en un atributo de la solicitud para reutilizarlo
+                    request.attributes().put("cachedBody", originalBody);
+                    
                     return Mono.just(expectedSignature.equals(v1));
                 });
     }
+    
+    // Método para recuperar el cuerpo cacheado
+    public static String getCachedBody(ServerRequest request) {
+        return (String) request.attributes().get("cachedBody");
+    }
 }
-

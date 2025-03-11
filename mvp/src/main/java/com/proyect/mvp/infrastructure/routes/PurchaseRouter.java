@@ -9,6 +9,8 @@ import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mercadopago.net.HttpStatus;
 import com.proyect.mvp.application.dtos.create.PurchaseCreateDTO;
 import com.proyect.mvp.application.dtos.other.MercadoPagoNotificationDTO;
 import com.proyect.mvp.application.services.PurchaseService;
@@ -60,9 +62,35 @@ public class PurchaseRouter {
     }
     
     private Mono<ServerResponse> confirmPayment(ServerRequest request, PurchaseService purchaseService) {
-        return request.bodyToMono(MercadoPagoNotificationDTO.class)
-                        .flatMap(notification -> purchaseService.procesarNotificacionPago(notification.getType(), notification.getData().getId()))
-                        .flatMap(confirmedPurchase -> ServerResponse.ok().build());
+        String cachedBody = ConfirmPurchaseMiddleware.getCachedBody(request);
+        
+        if (cachedBody != null) {
+            System.out.println("Usando cuerpo cacheado: " + cachedBody);
+            
+            try {
+                ObjectMapper mapper = new ObjectMapper();
+                MercadoPagoNotificationDTO notification = mapper.readValue(cachedBody, MercadoPagoNotificationDTO.class);
+                
+                System.out.println("Notificación deserializada: " + notification);
+                System.out.println("Tipo: " + notification.getType());
+                System.out.println("Data ID: " + notification.getData().getId());
+                
+                return purchaseService.procesarNotificacionPago(notification.getType(), notification.getData().getId())
+                    .flatMap(confirmedPurchase -> ServerResponse.ok().build())
+                    .onErrorResume(e -> {
+                        System.err.println("Error procesando la notificación: " + e.getMessage());
+                        e.printStackTrace();
+                        return ServerResponse.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+                    });
+            } catch (Exception e) {
+                System.err.println("Error deserializando JSON: " + e.getMessage());
+                e.printStackTrace();
+                return ServerResponse.status(HttpStatus.BAD_REQUEST).build();
+            }
+        } else {
+            System.err.println("No se encontró el cuerpo cacheado");
+            return ServerResponse.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
     
 }
