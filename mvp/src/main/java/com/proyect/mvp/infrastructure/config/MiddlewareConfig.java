@@ -2,9 +2,10 @@ package com.proyect.mvp.infrastructure.config;
 
 
 
-import com.proyect.mvp.infrastructure.middlewares.ConfirmPurchaseMiddleware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import com.proyect.mvp.infrastructure.config.middlewares.ConfirmPurchaseMiddleware;
 
 @Configuration
 public class MiddlewareConfig {

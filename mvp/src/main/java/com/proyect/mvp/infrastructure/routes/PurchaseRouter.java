@@ -11,7 +11,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 
 import com.proyect.mvp.application.dtos.create.PurchaseCreateDTO;
 import com.proyect.mvp.application.services.PurchaseService;
-import com.proyect.mvp.infrastructure.middlewares.ConfirmPurchaseMiddleware;
+import com.proyect.mvp.infrastructure.config.middlewares.ConfirmPurchaseMiddleware;
 
 import reactor.core.publisher.Mono;
 

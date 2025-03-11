@@ -1,4 +1,4 @@
-package com.proyect.mvp.infrastructure.middlewares;
+package com.proyect.mvp.infrastructure.config.middlewares;
 
 import org.apache.commons.codec.digest.HmacUtils;
 import org.springframework.context.annotation.Bean;
