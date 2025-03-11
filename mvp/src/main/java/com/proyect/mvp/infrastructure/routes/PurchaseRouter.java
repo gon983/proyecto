@@ -11,6 +11,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 
 import com.proyect.mvp.application.dtos.create.PurchaseCreateDTO;
 import com.proyect.mvp.application.services.PurchaseService;
+import com.proyect.mvp.infrastructure.middlewares.ConfirmPurchaseMiddleware;
 
 import reactor.core.publisher.Mono;
 
@@ -21,10 +22,12 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 public class PurchaseRouter {
 
     @Bean
-    public RouterFunction<ServerResponse> purchaseRoutes(PurchaseService purchaseService) {
+    public RouterFunction<ServerResponse> purchaseRoutes(PurchaseService purchaseService, ConfirmPurchaseMiddleware confirmPurchaseMiddleware) {
         return route(POST("/purchases"), request -> createPurchase(request, purchaseService))
                 .andRoute(GET("/purchases/{idPurchase}"), request -> getPurchaseWithDetails(request, purchaseService))
-                .andRoute(POST("/confirmPurchase/{idPurchase}"), request -> confirmPurchase(request, purchaseService));
+                .andRoute(POST("/confirmPurchase/{idPurchase}"), request -> confirmPurchase(request, purchaseService))
+                .andRoute(POST("/confirmPayment"), request ->  confirmPurchaseMiddleware.validate(request)
+                                                                        .flatMap(valid -> valid ? confirmPayment(request, purchaseService) : ServerResponse.status(401).build()));
     }
 
     private Mono<ServerResponse> createPurchase(ServerRequest request, PurchaseService purchaseService) {
@@ -55,5 +58,8 @@ public class PurchaseRouter {
             });
     }
     
+    private Mono<ServerResponse> confirmPayment(ServerRequest request, PurchaseService purchaseService) {
+        return ServerResponse.ok().build();
+    }
     
 }
