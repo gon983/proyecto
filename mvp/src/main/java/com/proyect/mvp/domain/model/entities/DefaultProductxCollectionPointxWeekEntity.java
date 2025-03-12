@@ -27,7 +27,7 @@ public class DefaultProductxCollectionPointxWeekEntity {
     @Column("fk_standar_product")
     UUID fkStandarProduct;
     @Column("date_init_week")
-    OffsetDateTime dateInitWeek;
+    OffsetDateTime dateRenewalDefaultProducts;
     @Column("rating")
     double rating;
     

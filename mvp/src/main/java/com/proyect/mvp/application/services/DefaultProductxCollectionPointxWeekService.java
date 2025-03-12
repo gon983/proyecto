@@ -101,6 +101,7 @@ public class DefaultProductxCollectionPointxWeekService {
                                                 .fkCollectionPoint(fkCollectionPoint)
                                                 .fkStandarProduct(fkStandarProduct)
                                                 .fkProduct(fkProduct)
+                                                .dateRenewalDefaultProducts(OffsetDateTime.now())
                                                 .build();
         return pxCpRepository.save(defaultProductxCp);
 
