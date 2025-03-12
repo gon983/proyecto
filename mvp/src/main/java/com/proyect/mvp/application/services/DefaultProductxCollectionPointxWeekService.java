@@ -1,9 +1,17 @@
 package com.proyect.mvp.application.services;
 
+import java.math.BigDecimal;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.proyect.mvp.application.dtos.create.DefaultProductxCollectionPointxWeekCreateDTO;
 import com.proyect.mvp.domain.model.entities.DefaultProductxCollectionPointxWeekEntity;
@@ -18,17 +26,19 @@ public class DefaultProductxCollectionPointxWeekService {
     private final DefaultProductxCollectionPointxWeekRepository pxCpRepository;
     private final ProductService productService;
     private final UserService userService;
+    private final CollectionPointService collectionPointService;
 
-    public DefaultProductxCollectionPointxWeekService(DefaultProductxCollectionPointxWeekRepository pxCpRepository, ProductService productService, UserService userService){
+    public DefaultProductxCollectionPointxWeekService(DefaultProductxCollectionPointxWeekRepository pxCpRepository, ProductService productService, UserService userService, CollectionPointService collectionPointService){
         this.pxCpRepository = pxCpRepository;
         this.productService = productService;
         this.userService = userService;
+        this.collectionPointService = collectionPointService;
     }
 
-    public Flux<DefaultProductxCollectionPointxWeekEntity> findAllFromCollectionPointAndDate(UUID fkCollectionPoint){
-        return pxCpRepository.findAllByFkCollectionPoint(fkCollectionPoint); //La implementacion de la date queda pendiente
+    // public Flux<DefaultProductxCollectionPointxWeekEntity> findAllFromCollectionPointAndDate(UUID fkCollectionPoint){
+    //     return pxCpRepository.findAllByFkCollectionPoint(fkCollectionPoint); //La implementacion de la date queda pendiente
         
-    } 
+    // } 
 
 
     public Flux<ProductEntity> getAllProductsForCpWithLevelPrice(UUID idUser) {
@@ -47,6 +57,44 @@ public class DefaultProductxCollectionPointxWeekService {
 
     
 
+    
+
+    @Scheduled(cron = "0 0 12 * * *") // Se ejecuta todos los días a las 12:00
+    @Transactional
+    public void processProductRenewal() {
+        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
+        
+        collectionPointService.getAllCollectionPoints()
+            .flatMap(collectionPoint -> {
+                OffsetDateTime collectionDay = getCollectionDay(now, collectionPoint.getCollectionRecurrentDay());
+                OffsetDateTime processDay = collectionDay.minusDays(5); // 5 días antes
+                LocalDate today = LocalDate.now();
+
+                if (today.equals(processDay.toLocalDate())) {
+                    return renewProductsForCollectionPoint(collectionPoint.getIdCollectionPoint(), collectionDay.minusWeeks(1));
+                }
+                return Flux.empty();
+            })
+            .subscribe();
+    }
+
+    private OffsetDateTime getCollectionDay(OffsetDateTime now, DayOfWeek collectionDay) {
+        return now.with(collectionDay).withHour(0).withMinute(0).withSecond(0);
+    }
+
+    private Flux<Void> renewProductsForCollectionPoint(UUID collectionPointId, OffsetDateTime lastWeek) {
+        return pxCpRepository.findAllByFkCollectionPointAndDateRange(collectionPointId, OffsetDateTime.now().minusDays(8), OffsetDateTime.now().minusDays(4))
+                            .flatMap(defaultProductsWeek -> {
+                                    if (defaultProductsWeek.getRating() < 3.5) {
+                                    return insertDefaultProductxCollectionPointxWeek(collectionPointId, defaultProductsWeek.getFkProduct(), defaultProductsWeek.getFkStandarProduct());
+                                    } else {
+                                    // Lógica para abrir votación (en otro módulo)
+                                    return Flux.empty();
+                                    }
+            })
+            .thenMany(Flux.empty());
+    }
+
     public Mono<DefaultProductxCollectionPointxWeekEntity> insertDefaultProductxCollectionPointxWeek(UUID fkCollectionPoint, UUID fkStandarProduct, UUID fkProduct){
         DefaultProductxCollectionPointxWeekEntity defaultProductxCp = 
         DefaultProductxCollectionPointxWeekEntity.builder()
@@ -58,6 +106,7 @@ public class DefaultProductxCollectionPointxWeekService {
 
         
     }
+    
     
 
     

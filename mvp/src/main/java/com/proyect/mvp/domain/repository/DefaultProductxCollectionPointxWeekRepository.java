@@ -1,7 +1,9 @@
 package com.proyect.mvp.domain.repository;
 
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
+import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
 
 import com.proyect.mvp.domain.model.entities.DefaultProductxCollectionPointxWeekEntity;
@@ -10,6 +12,12 @@ import reactor.core.publisher.Flux;
 
 public interface DefaultProductxCollectionPointxWeekRepository extends R2dbcRepository<DefaultProductxCollectionPointxWeekEntity, UUID> {
     
+    @Query("SELECT * FROM default_product_x_collection_point_x_week " +
+       "WHERE fk_collection_point = :fkCollectionPoint " +
+       "AND date_init_week BETWEEN :startDate AND :endDate")
+    Flux<DefaultProductxCollectionPointxWeekEntity> findAllByFkCollectionPointAndDateRange(UUID fkCollectionPoint, OffsetDateTime startDate, OffsetDateTime endDate);
+
     Flux<DefaultProductxCollectionPointxWeekEntity> findAllByFkCollectionPoint(UUID fkCollectionPoint);
+
 
 }
