@@ -59,8 +59,8 @@ public class DefaultProductxCollectionPointxWeekService {
 
     
 
-    @Scheduled(cron = "0 0 12 * * *") // Se ejecuta todos los días a las 12:00
-    @Transactional
+    // @Scheduled(cron = "0 0 12 * * *") // Se ejecuta todos los días a las 12:00
+    // @Transactional
     public void processProductRenewal() {
         OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
         

@@ -47,4 +47,6 @@ public class DefaultProductxCollectionPointxWeekRouter {
                                         .flatMap(productList -> ServerResponse.ok().bodyValue(productList));
     }
 
+    Mono<ServerResponse> renewalProductsManual(Server)
+
 }
