@@ -100,6 +100,6 @@ public class ProductService {
 
     public Flux<ProductEntity> getOptionsForStandarProduct(UUID fkStandarProduct, UUID idUser){
         return userService.getLocality(idUser)
-                           .flatMapMany(locality -> productRepository.findByFkStandarProductAndLocality(fkStandarProduct, locality));
+                           .flatMapMany(locality -> productRepository.findByFkStandarProductAndFkLocality(fkStandarProduct, locality));
     } 
 }

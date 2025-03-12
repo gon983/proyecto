@@ -57,7 +57,7 @@ public class ProductRouter {
         UUID idUser = UUID.fromString(request.pathVariable("idUser"));
         return productService.getOptionsForStandarProduct(idStandarProduct, idUser)
                             .collectList()
-                            .flatMap(productsList -> ServerResponse.ok().body(productsList, List.class));                                                
+                            .flatMap(productsList -> ServerResponse.ok().body(Mono.just(productsList), List.class));                                                
 
     }
 }

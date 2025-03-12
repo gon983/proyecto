@@ -63,8 +63,6 @@ public class NeighborhoodService {
                 .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)));
     }
 
-    public Mono<NeighborhoodEntity> getNeighborhoodByIdUser(UUID idUser){
-        return neighborhoodRepository.getNeighborhoodByIdUser(idUser);
-    }
+    
 }
 

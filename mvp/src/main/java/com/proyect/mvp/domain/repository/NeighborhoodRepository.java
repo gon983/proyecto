@@ -11,5 +11,5 @@ public interface NeighborhoodRepository extends R2dbcRepository<NeighborhoodEnti
     @Query("INSERT INTO neighborhood (id_neighborhood, name, fk_locality) VALUES (:idNeighborhood, :name, :localityId)")
     Mono<NeighborhoodEntity> insertNeighborhood(UUID idNeighborhood, String name, UUID localityId);
 
-    Mono<NeighborhoodEntity> getNeighborhoodByIdUser(UUID idUser);
+    
 }
