@@ -41,4 +41,6 @@ public class StandarProductRouter {
                         .flatMap(savedStandarProduct -> ServerResponse.ok().bodyValue(savedStandarProduct));
         
     }
+
+    
 }

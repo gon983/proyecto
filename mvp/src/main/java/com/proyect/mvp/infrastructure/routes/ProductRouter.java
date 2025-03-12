@@ -1,5 +1,6 @@
 package com.proyect.mvp.infrastructure.routes;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.context.annotation.Bean;
@@ -13,6 +14,7 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 import com.proyect.mvp.application.dtos.create.ProductCreateDTO;
 import com.proyect.mvp.application.dtos.update.ProductUpdateDTO;
 import com.proyect.mvp.application.services.ProductService;
+import com.proyect.mvp.application.services.StandarProductService;
 import com.proyect.mvp.domain.model.entities.ProductEntity;
 
 import reactor.core.publisher.Mono;
@@ -25,7 +27,8 @@ public class ProductRouter {
         return route(GET("/products/producer/{idProducer}"), request -> getProductsByProducer(request, productService))
                 .andRoute(POST("/products"), request -> createProduct(request, productService))
                 .andRoute(PUT("/products/{idProduct}"), request -> updateProduct(request, productService))
-                .andRoute(GET("/products"), request -> getAllProducts(request, productService));
+                .andRoute(GET("/products"), request -> getAllProducts(request, productService))
+                .andRoute(GET("/optionsForStandarProduct/{idStandarProduct}/{idUser}"), request -> getOptionsForStandarProduct(request, productService));
     }
 
     private Mono<ServerResponse> getProductsByProducer(ServerRequest request, ProductService productService) {
@@ -47,5 +50,14 @@ public class ProductRouter {
 
     private Mono<ServerResponse> getAllProducts(ServerRequest request, ProductService productService) {
         return ServerResponse.ok().body(productService.getAllProducts(), ProductEntity.class);
+    }
+
+    private Mono<ServerResponse> getOptionsForStandarProduct(ServerRequest request, ProductService productService){
+        UUID idStandarProduct = UUID.fromString(request.pathVariable("idStandarProduct"));
+        UUID idUser = UUID.fromString(request.pathVariable("idUser"));
+        return productService.getOptionsForStandarProduct(idStandarProduct, idUser)
+                            .collectList()
+                            .flatMap(productsList -> ServerResponse.ok().body(productsList, List.class));                                                
+
     }
 }

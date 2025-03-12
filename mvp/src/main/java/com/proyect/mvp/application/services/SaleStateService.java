@@ -50,4 +50,6 @@ public class SaleStateService {
                 .flatMap(existingSaleState -> saleStateRepository.deleteById(id))
                 .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)));
     }
+
+    
 }

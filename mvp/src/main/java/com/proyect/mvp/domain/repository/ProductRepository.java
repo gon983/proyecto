@@ -21,4 +21,6 @@ public interface ProductRepository extends R2dbcRepository<ProductEntity, UUID> 
     Mono<Void> updateStock(UUID idProduct, double newStock); 
 
     Mono<ProductEntity> findById(UUID id); // Para el método update alternativo
+
+    Flux<ProductEntity> findByFkStandarProductAndLocality(UUID fkStandarProduct, UUID fkLocality);
 }

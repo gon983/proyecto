@@ -16,10 +16,12 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final ProductHistoryService productHistoryService;
+    private final UserService userService;
 
-    public ProductService(ProductRepository productRepository, ProductHistoryService productHistoryService) {
+    public ProductService(ProductRepository productRepository, ProductHistoryService productHistoryService, UserService userService) {
         this.productRepository = productRepository;
         this.productHistoryService = productHistoryService;
+        this.userService = userService;
     }
 
 
@@ -95,4 +97,9 @@ public class ProductService {
                     return productRepository.save(newProduct);
                 });
     }
+
+    public Flux<ProductEntity> getOptionsForStandarProduct(UUID fkStandarProduct, UUID idUser){
+        return userService.getLocality(idUser)
+                           .flatMapMany(locality -> productRepository.findByFkStandarProductAndLocality(fkStandarProduct, locality));
+    } 
 }

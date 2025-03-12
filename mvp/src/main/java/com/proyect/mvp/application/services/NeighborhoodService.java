@@ -62,5 +62,9 @@ public class NeighborhoodService {
                 .flatMap(existingNeighborhood -> neighborhoodRepository.deleteById(id))
                 .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)));
     }
+
+    public Mono<NeighborhoodEntity> getNeighborhoodByIdUser(UUID idUser){
+        return neighborhoodRepository.getNeighborhoodByIdUser(idUser);
+    }
 }
 

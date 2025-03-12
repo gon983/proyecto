@@ -18,10 +18,12 @@ import java.util.UUID;
 public class UserService {
     private final UserRepository userRepository;
     private final EncryptionService encryptionService;
+    private final NeighborhoodService neighborhoodService;
 
-    public UserService(UserRepository userRepository, EncryptionService encryptionService) {
+    public UserService(UserRepository userRepository, EncryptionService encryptionService, NeighborhoodService neighborhoodService) {
         this.userRepository = userRepository;
         this.encryptionService = encryptionService;
+        this.neighborhoodService = neighborhoodService;
     }
 
     public Flux<UserEntity> getAllUsers() {
@@ -76,6 +78,11 @@ public class UserService {
                     return userRepository.save(userEntity); // Retornar el nuevo usuario guardado
                 })
                 .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)));
+    }
+
+    public Mono<UUID> getLocality(UUID idUser){
+        return neighborhoodService.getNeighborhoodByIdUser(idUser)
+                                    .flatMap(neighborhood -> Mono.just(neighborhood.getLocalityId()));
     }
 
 
