@@ -85,11 +85,11 @@ public class DefaultProductxCollectionPointxWeekService {
     private Flux<Void> renewProductsForCollectionPoint(UUID collectionPointId, OffsetDateTime lastWeek) {
         return pxCpRepository.findAllByFkCollectionPointAndDateRange(collectionPointId, OffsetDateTime.now().minusDays(8), OffsetDateTime.now().minusDays(4))
                             .flatMap(defaultProductsWeek -> {
-                                    if (defaultProductsWeek.getRating() < 3.5) {
+                                    if (defaultProductsWeek.getRating() > 3.5) {
                                     return insertDefaultProductxCollectionPointxWeek(collectionPointId, defaultProductsWeek.getFkProduct(), defaultProductsWeek.getFkStandarProduct());
                                     } else {
                                     // Lógica para abrir votación (en otro módulo)
-                                    return Flux.empty();
+                                    return createDefaultProductxCollectionPointxWeekWithoutProduct(collectionPointId, defaultProductsWeek.getFkStandarProduct());
                                     }
             })
             .thenMany(Flux.empty());
@@ -106,6 +106,22 @@ public class DefaultProductxCollectionPointxWeekService {
         return pxCpRepository.save(defaultProductxCp);
 
         
+    }
+
+    public Mono<DefaultProductxCollectionPointxWeekEntity> createDefaultProductxCollectionPointxWeekWithoutProduct(UUID fkCollectionPoint, UUID fkStandarProduct){
+        DefaultProductxCollectionPointxWeekEntity defaultProductxCp = 
+        DefaultProductxCollectionPointxWeekEntity.builder()
+                                                .fkCollectionPoint(fkCollectionPoint)
+                                                .fkStandarProduct(fkStandarProduct)
+                                                .dateRenewalDefaultProducts(OffsetDateTime.now())
+                                                .build();
+        return pxCpRepository.save(defaultProductxCp);
+
+        
+    }
+
+    public Flux<DefaultProductxCollectionPointxWeekEntity> getAllDefaultProductsxCpxWeekToVote(UUID fkCollectionPoint){
+        return pxCpRepository.findAllWhereDateIsNearWithFkCollectionPointAndFkProductNull(fkCollectionPoint, OffsetDateTime.now().minusDays(4), OffsetDateTime.now());
     }
     
     
