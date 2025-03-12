@@ -67,11 +67,11 @@ public class DefaultProductxCollectionPointxWeekService {
         collectionPointService.getAllCollectionPoints()
             .flatMap(collectionPoint -> {
                 OffsetDateTime collectionDay = getCollectionDay(now, collectionPoint.getCollectionRecurrentDay());
-                OffsetDateTime processDay = collectionDay.minusDays(5); // 5 días antes
+                OffsetDateTime processDay = collectionDay.plusDays(2); 
                 LocalDate today = LocalDate.now();
 
                 if (today.equals(processDay.toLocalDate())) {
-                    return renewProductsForCollectionPoint(collectionPoint.getIdCollectionPoint(), collectionDay.minusWeeks(1));
+                    return renewProductsForCollectionPoint(collectionPoint.getIdCollectionPoint());
                 }
                 return Flux.empty();
             })
@@ -82,7 +82,7 @@ public class DefaultProductxCollectionPointxWeekService {
         return now.with(collectionDay).withHour(0).withMinute(0).withSecond(0);
     }
 
-    private Flux<Void> renewProductsForCollectionPoint(UUID collectionPointId, OffsetDateTime lastWeek) {
+    public Flux<Void> renewProductsForCollectionPoint(UUID collectionPointId) {
         return pxCpRepository.findAllByFkCollectionPointAndDateRange(collectionPointId, OffsetDateTime.now().minusDays(8), OffsetDateTime.now().minusDays(4))
                             .flatMap(defaultProductsWeek -> {
                                     if (defaultProductsWeek.getRating() > 3.5) {

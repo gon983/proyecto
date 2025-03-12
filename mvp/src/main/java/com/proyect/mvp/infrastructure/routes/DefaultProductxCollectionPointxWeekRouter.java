@@ -23,7 +23,8 @@ public class DefaultProductxCollectionPointxWeekRouter {
     @Bean
     RouterFunction<ServerResponse> defaultProductxCpRoutes(DefaultProductxCollectionPointxWeekService defaultProductxCpService){
     return route(GET("/defaultProductsxCp/{idUser}"), request -> getDefaultProductsxCpxWeek(request, defaultProductxCpService))
-                .andRoute(GET("/defaultProductsxCpToVote/{idCollectionPoint}"), request -> getDefaultProductsxCpToVote(request, defaultProductxCpService));
+                .andRoute(GET("/defaultProductsxCpToVote/{idCollectionPoint}"), request -> getDefaultProductsxCpToVote(request, defaultProductxCpService))
+                .andRoute(GET("/renewalProductsManual/{collectionPointId}"), request -> renewalProductsManual(request, defaultProductxCpService));
 
 }
 
@@ -47,6 +48,13 @@ public class DefaultProductxCollectionPointxWeekRouter {
                                         .flatMap(productList -> ServerResponse.ok().bodyValue(productList));
     }
 
-    Mono<ServerResponse> renewalProductsManual(Server)
+    Mono<ServerResponse> renewalProductsManual(ServerRequest request, DefaultProductxCollectionPointxWeekService defaultProductxCollectionPointxWeekService) {
+        UUID collectionPointId = UUID.fromString(request.pathVariable("collectionPointId"));
+        return Mono.fromRunnable(() -> defaultProductxCollectionPointxWeekService.renewProductsForCollectionPoint(collectionPointId))
+                .then(ServerResponse.ok().build());
+    }
+    
+            
+    }
 
-}
+        
