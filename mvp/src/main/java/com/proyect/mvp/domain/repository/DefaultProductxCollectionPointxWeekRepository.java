@@ -23,7 +23,7 @@ public interface DefaultProductxCollectionPointxWeekRepository extends R2dbcRepo
     @Query("SELECT * FROM default_product_x_collection_point_x_week " +
        "WHERE fk_collection_point = :fkCollectionPoint " +
        "AND date_renewal_default_products BETWEEN :startDate AND :endDate" +
-       "AND fk_product IS NULL")
+       " AND fk_product IS NULL")
     Flux<DefaultProductxCollectionPointxWeekEntity> findAllWhereDateIsNearWithFkCollectionPointAndFkProductNull(UUID fkCollectionPoint, OffsetDateTime startDate, OffsetDateTime endDate);
 
 }
