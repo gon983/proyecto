@@ -819,6 +819,33 @@
 					"response": []
 				},
 				{
+					"name": "put productor",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"juanperez\",\r\n  \"email\": \"juan.perez@example.com\",\r\n  \"firstName\": \"Juan\",\r\n  \"lastName\": \"ProductorDeTomates\",\r\n  \"documentType\": \"DNI\",\r\n  \"documentNumber\": \"12345678\",\r\n  \"fkNeighborhood\": \"23f4f7d4-7923-495d-85d0-27f34d932537\",\r\n  \"phone\": \"+5491122334455\",\r\n  \"photo\": \"https://example.com/profile.jpg\",\r\n  \"roleOne\": \"5c0e356c-ef1a-11ef-b668-52cf1c1a32ab\",\r\n  \"mpAccessToken\":\"qxyPFKs1Qe\",\r\n  \"mpPublicKey\":\"TESTUSER660142845\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/users/b088c879-3fe7-4bcd-a6fc-89efb341c602",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"b088c879-3fe7-4bcd-a6fc-89efb341c602"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "get users",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
@@ -943,8 +970,102 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "5. Confirmar compra",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/confirmPurchase/fda6c680-686c-4493-9dc2-14e9dca88b34/",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"confirmPurchase",
+										"fda6c680-686c-4493-9dc2-14e9dca88b34",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Recibir confirmacion pago",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
 						}
 					]
+				}
+			]
+		},
+		{
+			"name": "Votation",
+			"item": [
+				{
+					"name": "1. Ver los default Products en mi collection point de esta semana q quedaron abiertos para votacion hoy (solamente un dia se vota)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/defaultProductsxCpToVote/c446f03c-490c-4fe9-a63a-ad407c981c29",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"defaultProductsxCpToVote",
+								"c446f03c-490c-4fe9-a63a-ad407c981c29"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2. Ver para ese default products todas las opciones de productos q hay",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/optionsForStandarProduct/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"optionsForStandarProduct",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3. Votar un producto para ese default product",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/voteProduct/{idUser}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"voteProduct",
+								"{idUser}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4. Automaticamente, al final del dia de votacion, contar los votos de cada default y ponerle el fkProduct con mas votos",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
 				}
 			]
 		}
