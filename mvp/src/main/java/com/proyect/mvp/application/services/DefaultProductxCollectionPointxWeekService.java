@@ -8,7 +8,7 @@ import java.time.ZoneOffset;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
+import com.proyect.mvp.domain.repository.ONGRepository;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,16 +23,19 @@ import reactor.core.publisher.Mono;
 
 @Service
 public class DefaultProductxCollectionPointxWeekService {
+
+    private final ONGRepository ONGRepository;
     private final DefaultProductxCollectionPointxWeekRepository pxCpRepository;
     private final ProductService productService;
     private final UserService userService;
     private final CollectionPointService collectionPointService;
 
-    public DefaultProductxCollectionPointxWeekService(DefaultProductxCollectionPointxWeekRepository pxCpRepository, ProductService productService, UserService userService, CollectionPointService collectionPointService){
+    public DefaultProductxCollectionPointxWeekService(DefaultProductxCollectionPointxWeekRepository pxCpRepository, ProductService productService, UserService userService, CollectionPointService collectionPointService, ONGRepository ONGRepository){
         this.pxCpRepository = pxCpRepository;
         this.productService = productService;
         this.userService = userService;
         this.collectionPointService = collectionPointService;
+        this.ONGRepository = ONGRepository;
     }
 
     // public Flux<DefaultProductxCollectionPointxWeekEntity> findAllFromCollectionPointAndDate(UUID fkCollectionPoint){
@@ -59,8 +62,7 @@ public class DefaultProductxCollectionPointxWeekService {
 
     
 
-    // @Scheduled(cron = "0 0 12 * * *") // Se ejecuta todos los días a las 12:00
-    // @Transactional
+    @Scheduled(cron = "0 0 12 * * *") // Se ejecuta todos los días a las 12:00
     public void processProductRenewal() {
         OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
         
@@ -85,8 +87,9 @@ public class DefaultProductxCollectionPointxWeekService {
     public Flux<Void> renewProductsForCollectionPoint(UUID collectionPointId) {
         return pxCpRepository.findAllByFkCollectionPointAndDateRange(collectionPointId, OffsetDateTime.now().minusDays(8), OffsetDateTime.now().minusDays(4))
                             .flatMap(defaultProductsWeek -> {
+                                    System.out.println(defaultProductsWeek);
                                     if (defaultProductsWeek.getRating() > 3.5) {
-                                    return insertDefaultProductxCollectionPointxWeek(collectionPointId, defaultProductsWeek.getFkProduct(), defaultProductsWeek.getFkStandarProduct());
+                                    return insertDefaultProductxCollectionPointxWeek(collectionPointId, defaultProductsWeek.getFkStandarProduct(), defaultProductsWeek.getFkProduct());
                                     } else {
                                     // Lógica para abrir votación (en otro módulo)
                                     return createDefaultProductxCollectionPointxWeekWithoutProduct(collectionPointId, defaultProductsWeek.getFkStandarProduct());
@@ -122,6 +125,10 @@ public class DefaultProductxCollectionPointxWeekService {
 
     public Flux<DefaultProductxCollectionPointxWeekEntity> getAllDefaultProductsxCpxWeekToVote(UUID fkCollectionPoint){
         return pxCpRepository.findAllWhereDateIsNearWithFkCollectionPointAndFkProductNull(fkCollectionPoint, OffsetDateTime.now().minusDays(4), OffsetDateTime.now());
+    }
+
+    public void update(DefaultProductxCollectionPointxWeekEntity dp){
+        pxCpRepository.save(dp);
     }
     
     

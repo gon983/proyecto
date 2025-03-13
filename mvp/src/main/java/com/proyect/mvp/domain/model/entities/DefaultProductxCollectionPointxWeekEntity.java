@@ -30,5 +30,9 @@ public class DefaultProductxCollectionPointxWeekEntity {
     OffsetDateTime dateRenewalDefaultProducts;
     @Column("rating")
     double rating;
+
+    public void setFkProduct(UUID fkProduct){
+        this.fkProduct = fkProduct;
+    }
     
 }

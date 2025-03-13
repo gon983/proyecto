@@ -50,7 +50,7 @@ public class DefaultProductxCollectionPointxWeekRouter {
 
     Mono<ServerResponse> renewalProductsManual(ServerRequest request, DefaultProductxCollectionPointxWeekService defaultProductxCollectionPointxWeekService) {
         UUID collectionPointId = UUID.fromString(request.pathVariable("collectionPointId"));
-        return Mono.fromRunnable(() -> defaultProductxCollectionPointxWeekService.renewProductsForCollectionPoint(collectionPointId))
+        return defaultProductxCollectionPointxWeekService.renewProductsForCollectionPoint(collectionPointId)
                 .then(ServerResponse.ok().build());
     }
     
