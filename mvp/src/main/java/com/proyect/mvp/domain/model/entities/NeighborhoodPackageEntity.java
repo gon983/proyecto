@@ -16,13 +16,9 @@ public class NeighborhoodPackageEntity {
     
     @Column( "id_neighborhood_package")
     private String idNeighborhoodPackage;
-
-    
     
     private UserEntity  inCharge;
-
-    
-    
+  
     private CollectionPointEntity  collectionPoint;
 
     @Column( "date")

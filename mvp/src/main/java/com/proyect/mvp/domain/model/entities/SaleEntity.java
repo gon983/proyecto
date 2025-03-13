@@ -18,17 +18,11 @@ public class SaleEntity {
 
     @Column( "amount")
     private double amount;
-
-    
-    
+ 
     private UserEntity  productor; // Assuming "productor" refers to the User entity
-
-    
-    
+  
     private UserEntity  deliverGuy;
 
-    
-    
     private PaymentMethodEntity  paymentMethod;
 
     @Column( "bill")

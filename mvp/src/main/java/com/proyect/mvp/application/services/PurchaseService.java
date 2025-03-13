@@ -8,8 +8,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import com.google.gson.JsonObject;
+import kong.unirest.HttpResponse;
+import kong.unirest.Unirest;
 
 import org.springframework.stereotype.Service;
 
@@ -285,62 +289,72 @@ public class PurchaseService {
             .then();
     }
 
-    private Mono<Void> procesarPagosProductores(List<PurchaseDetailEntity> details, Payment payment){
-        return Mono.empty();
+   
+    
+    private Mono<Void> procesarPagosProductores(List<PurchaseDetailEntity> details, Payment payment) {
+        // Agrupamos por productor
+        Map<UUID, List<PurchaseDetailEntity>> detallesPorProductor = details.stream()
+                .collect(Collectors.groupingBy(detail -> detail.getProduct().getFkProductor()));
+    
+        // Procesamos cada productor
+        return Flux.fromIterable(detallesPorProductor.entrySet())
+            .flatMap((Entry<UUID, List<PurchaseDetailEntity>> entry) -> {
+                UUID productorId = entry.getKey();
+                List<PurchaseDetailEntity> detallesProductor = entry.getValue();
+    
+                BigDecimal montoProductor = detallesProductor.stream()
+                        .map(detail -> new BigDecimal(detail.calculatePrice()))
+                        .reduce(BigDecimal.ZERO, BigDecimal::add);
+    
+                return userService.getUserById(productorId)
+                    .flatMap(productor -> transferirFondosAProductor(productorId, productor.getMpAccessToken(), montoProductor, payment.getId()))
+                    .then(Mono.empty()); // Explicita el tipo de retorno como Mono<Void>
+            })
+            .then();
     }
     
-    // private Mono<Void> procesarPagosProductores(List<PurchaseDetailEntity> details, Payment payment) {
-    //     // Agrupamos por productor
-    //     Map<UUID, List<PurchaseDetailEntity>> detallesPorProductor = details.stream()
-    //             .collect(Collectors.groupingBy(detail -> detail.getProduct().getFkProductor()));
-        
-    //     // Procesamos cada productor
-    //     return Flux.fromIterable(detallesPorProductor.entrySet())
-    //         .flatMap(entry -> {
-    //             UUID productorId = entry.getKey();
-    //             List<PurchaseDetailEntity> detallesProductor = entry.getValue();
-                
-    //             // Calculamos el monto total para este productor
-    //             BigDecimal montoProductor = detallesProductor.stream()
-    //                     .map(detail -> new BigDecimal(detail.getUnitPrice()).multiply(BigDecimal.valueOf(detail.getQuantity())))
-    //                     .reduce(BigDecimal.ZERO, BigDecimal::add);
-                
-    //             // Obtenemos el mpAccessToken del productor
-    //             return productorService.getById(productorId)
-    //                 .flatMap(productor -> {
-    //                     String mpAccessToken = productor.getMpAccessToken();
-                        
-    //                     // Realizamos la transferencia al productor
-    //                     return transferirFondosAProductor(productorId, mpAccessToken, montoProductor, payment.getId());
-    //                 });
-    //         })
-    //         .then();
-    // }
+
+   
     
-    // private Mono<Void> transferirFondosAProductor(UUID productorId, String mpAccessToken, BigDecimal monto, Long paymentId) {
-    //     return Mono.fromCallable(() -> {
-    //         try {
-    //             // Temporalmente cambiamos al token del productor
-    //             MercadoPagoConfig.setAccessToken(mpAccessToken);
+    private Mono<Object> transferirFondosAProductor(UUID productorId, String mpAccessToken, BigDecimal monto, Long paymentId) {
+        return Mono.defer(() -> {
+            try {
+                // Temporalmente cambiamos al token del productor
+                MercadoPagoConfig.setAccessToken(mpAccessToken);
                 
-    //             // Aquí implementarías la lógica para transferir fondos
-    //             // Esto puede ser con la API de Mercado Pago para transferencias
-    //             // Por ejemplo, usando un PayoutClient o similar
+                // Construimos la solicitud de pago (Payout)
+                JsonObject payoutRequest = new JsonObject();
+                payoutRequest.addProperty("amount", monto);
+                payoutRequest.addProperty("currency_id", "ARS"); // Cambiar si se usa otra moneda
+                payoutRequest.addProperty("description", "Pago de venta ID " + paymentId);
                 
-    //             System.out.println("Transferidos " + monto + " al productor " + productorId);
+                // Enviamos la solicitud a la API de Mercado Pago
+                HttpResponse<String> response = Unirest.post("https://api.mercadopago.com/v1/payments")
+                    .header("Authorization", "Bearer " + mpAccessToken)
+                    .header("Content-Type", "application/json")
+                    .body(payoutRequest.toString())
+                    .asString();
                 
-    //             return null;
-    //         } catch (Exception e) {
-    //             System.err.println("Error al transferir fondos al productor " + productorId + ": " + e.getMessage());
-    //             throw e;
-    //         } finally {
-    //             // Restauramos el token principal
-    //             MercadoPagoConfig.setAccessToken("APP_USR-2552125444382264-030609-9af3f586d7ec8eb52060f4db865e5014-447529108");
-    //         }
-    //     }).onErrorResume(e -> {
-    //         // Registramos el error pero no interrumpimos el flujo
-    //         System.err.println("Error procesando pago para productor " + productorId + ": " + e.getMessage());
-    //         return Mono.empty();
-    //     });
-    // }
+                // Verificamos la respuesta
+                if (response.getStatus() >= 200 && response.getStatus() < 300) {
+                    System.out.println("Transferidos " + monto + " al productor " + productorId);
+                    return Mono.empty();
+                } else {
+                    System.err.println("Error en la transferencia: " + response.getBody());
+                    return Mono.error(new RuntimeException("Error en la transferencia: " + response.getBody()));
+                }
+            } catch (Exception e) {
+                System.err.println("Error al transferir fondos al productor " + productorId + ": " + e.getMessage());
+                return Mono.error(e);
+            } finally {
+                // Restauramos el token principal
+                MercadoPagoConfig.setAccessToken("APP_USR-2552125444382264-030609-9af3f586d7ec8eb52060f4db865e5014-447529108");
+            }
+        }).onErrorResume(e -> {
+            System.err.println("Error procesando pago para productor " + productorId + ": " + e.getMessage());
+            return Mono.empty();
+        });
+    }
+    
+    
 }
