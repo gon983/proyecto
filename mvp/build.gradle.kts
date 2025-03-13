@@ -37,7 +37,8 @@ dependencies {
 	implementation("com.mercadopago:sdk-java:2.+"){
         exclude(group = "com.google.collections", module = "google-collections")
     }
-	 implementation("com.konghq:unirest-objectmapper-jackson:3.13.6")
+	implementation("com.konghq:unirest-java:3.14.3")
+	implementation("com.konghq:unirest-objectmapper-jackson:3.14.3")
 
 
 
