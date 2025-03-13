@@ -60,6 +60,9 @@ public class PurchaseEntity {
 
     @Column("mp_payment_date")
     private OffsetDateTime mpPaymentDate;
+
+    @Column("external_reference")
+    private String externalReference;
    
 
     public void addDetails(List<PurchaseDetailEntity> details){
@@ -68,6 +71,10 @@ public class PurchaseEntity {
 
     public void setMpPreferenceId(String mpPreferenceId){
         this.mpPreferenceId = mpPreferenceId;
+    }
+    public void setExternalReference(String externalReference){
+        this.externalReference = externalReference;
+
     }
 
     public void setMpPaymentId(String mpPaymentId){

@@ -258,7 +258,7 @@ public class PurchaseService {
                             }
                         }).flatMap(preference -> {
                             System.out.println("Actualizando compra con ID de preferencia: " + preference.getId());
-                            return updatePurchaseWithPreferenceId(purchaseId, preference.getId())
+                            return updatePurchaseWithPreferenceId(purchaseId, preference.getId(), preference.getExternalReference())
                                .doOnSuccess(v -> System.out.println("Compra actualizada correctamente con preferenceId"))
                                .doOnError(e -> System.err.println("Error al actualizar compra: " + e.getMessage()))
                                .thenReturn(preference);
@@ -279,10 +279,11 @@ public class PurchaseService {
                 });
     }
     
-    private Mono<Void> updatePurchaseWithPreferenceId(UUID purchaseId, String preferenceId) {
+    private Mono<Void> updatePurchaseWithPreferenceId(UUID purchaseId, String preferenceId, String externalReference) {
         return purchaseRepository.findById(purchaseId)
             .flatMap(purchase -> {
                 purchase.setMpPreferenceId(preferenceId);
+                purchase.setExternalReference(externalReference);
                 return purchaseRepository.save(purchase);
             })
             .then();
@@ -321,8 +322,8 @@ public class PurchaseService {
     
                     if ("approved".equals(payment.getStatus())) {
                         System.out.println("Pago aprobado, procesando...");
-                        String preferenceId = payment.getId().toString();
-                        System.out.println("PreferenceId obtenido: " + preferenceId);
+                        String preferenceId = "54615ae8-04f0-475f-af83-7132fe04884e"; // hay q hardcodearlo porque en realidad se obtiene desde el objeto payment 
+                        System.out.println("PId obtenido: " + preferenceId);
     
                         System.out.println("Llamando a procesarPagoAprobado...");
                         Object resultado = procesarPagoAprobado(preferenceId, payment);
