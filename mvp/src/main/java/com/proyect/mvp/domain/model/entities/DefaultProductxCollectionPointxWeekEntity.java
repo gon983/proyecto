@@ -32,6 +32,7 @@ public class DefaultProductxCollectionPointxWeekEntity {
     double rating;
 
     public void setFkProduct(UUID fkProduct){
+        
         this.fkProduct = fkProduct;
     }
     

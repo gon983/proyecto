@@ -13,11 +13,13 @@ import reactor.core.publisher.Mono;
 public interface VoteRepository extends R2dbcRepository<VoteEntity, UUID> {
 
 
-    @Query("SELECT v.fkProduct FROM Vote v " +
-       "WHERE v.fkStandarProduct = :idDefaultProductxCollectionPoint " +
-       "GROUP BY v.fkProduct " +
-       "ORDER BY COUNT(v.fkProduct) DESC " +
-       "LIMIT 1")
+    @Query("SELECT v.fk_product " +
+       "FROM Vote v " +
+       "WHERE v.fk_default_product_x_collection_point_x_week = :idDefaultProductxCollectionPoint " +
+       "GROUP BY v.fk_product " +
+       "ORDER BY COUNT(*) DESC " +  // Se usa COUNT(*) en lugar de COUNT(v.fkProduct)
+       " LIMIT 1")  // En lugar de LIMIT 1 para compatibilidad
     Mono<UUID> getMostVotedProductForDefaultProduct(@Param("idDefaultProductxCollectionPoint") UUID idDefaultProductxCollectionPoint);
+
     
 }

@@ -127,9 +127,11 @@ public class DefaultProductxCollectionPointxWeekService {
         return pxCpRepository.findAllWhereDateIsNearWithFkCollectionPointAndFkProductNull(fkCollectionPoint, OffsetDateTime.now().minusDays(4), OffsetDateTime.now());
     }
 
-    public void update(DefaultProductxCollectionPointxWeekEntity dp){
-        pxCpRepository.save(dp);
+    public Mono<DefaultProductxCollectionPointxWeekEntity> update(DefaultProductxCollectionPointxWeekEntity dp){
+        System.out.println("Entre al update");
+        return pxCpRepository.save(dp); // Retornar el Mono para encadenarlo
     }
+        
     
     
 

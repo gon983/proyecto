@@ -59,7 +59,7 @@ public class VoteService {
                 LocalDate today = LocalDate.now();
 
                 if (today.equals(processDay.toLocalDate())) {
-                    return countVotesAndSelectProduct(collectionPoint.getIdCollectionPoint(), collectionDay.plusDays(2), collectionDay.plusDays(3));
+                    return countVotesAndSelectProduct(collectionPoint.getIdCollectionPoint());
                 }
                 return Flux.empty();
             })            .subscribe();
@@ -69,18 +69,20 @@ public class VoteService {
         return now.with(collectionDay).withHour(0).withMinute(0).withSecond(0);
     }
 
-    private Flux<DefaultProductxCollectionPointxWeekEntity> countVotesAndSelectProduct(UUID idCollectionPoint, OffsetDateTime startDate, OffsetDateTime finishDate) {    
-        return dpxcpService.getAllDefaultProductsxCpxWeekToVote(idCollectionPoint) // Flux<DefaultProduct>
+    public Flux<DefaultProductxCollectionPointxWeekEntity> countVotesAndSelectProduct(UUID idCollectionPoint) {    
+        return dpxcpService.getAllDefaultProductsxCpxWeekToVote(idCollectionPoint)
                 .flatMap(defaultProduct -> 
                     voteRepository.getMostVotedProductForDefaultProduct(defaultProduct.getIdDefaultProductxCollectionPoint())
-                        .doOnNext(defaultProduct::setFkProduct) // Asignamos sin alterar la cadena reactiva
-                        .thenReturn(defaultProduct) // Pasamos el objeto modificado
+                        .doOnNext(mostVoted -> {
+                            
+                            defaultProduct.setFkProduct(mostVoted);
+                            
+                        })
+                        .thenReturn(defaultProduct)
                 )
-                .flatMap(defaultProduct -> {
-                    dpxcpService.update(defaultProduct); // Guardamos el cambio en la BD
-                    return Mono.just(defaultProduct);
-                });
+                .flatMap(defaultProduct -> dpxcpService.update(defaultProduct)); // Ahora encadena la actualización
     }
+    
     
     
 }
