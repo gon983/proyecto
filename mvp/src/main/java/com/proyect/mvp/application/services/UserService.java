@@ -86,6 +86,12 @@ public class UserService {
                 .flatMap(neighborhood -> Mono.just(neighborhood.getLocalityId()));
     }
 
+    public Mono<String> getMpAccessToken(UUID userId) {
+        return userRepository.findById(userId)
+                             .switchIfEmpty(Mono.error(new RuntimeException("Usuario no encontrado: " + userId)))
+                             .map(user -> encryptionService.decrypt(user.getMpAccessTokenEncrypted()));
+    }
+
 
 
     

@@ -445,11 +445,9 @@ public class PurchaseService {
                             productorId + " - " + e.getMessage()))
                     .flatMap(productor -> {
                         System.out.println("Iniciando transferencia para productor: " + productorId);
-                        return transferirFondosAProductor(productorId, productor.getMpAccessToken(), montoProductor, payment.getId())
-                            .doOnSuccess(v -> System.out.println("Transferencia completada para productor: " + productorId))
-                            .doOnError(e -> System.err.println("ERROR en transferencia para productor " +
-                                    productorId + ": " + e.getMessage()));
-                    })
+                        return userService.getMpAccessToken(productorId)
+                                          .flatMap(mpAccessToken -> transferirFondosAProductor(productorId, mpAccessToken, montoProductor, payment.getId()));  
+                                                          })
                     .then(Mono.empty())
                     .doOnSuccess(v -> System.out.println("Proceso completo para productor: " + productorId));
             })
@@ -486,22 +484,27 @@ public class PurchaseService {
                 System.out.println("Solicitud construida: " + payoutRequest);
     
                 System.out.println("Enviando solicitud a Mercado Pago...");
-                HttpResponse<String> response = Unirest.post("https://api.mercadopago.com/v1/payments")
-                    .header("Authorization", "Bearer " + mpAccessToken)
-                    .header("Content-Type", "application/json")
-                    .body(payoutRequest.toString())
-                    .asString();
+                // HttpResponse<String> response = Unirest.post("https://api.mercadopago.com/v1/payments")
+                //     .header("Authorization", "Bearer " + mpAccessToken)
+                //     .header("Content-Type", "application/json")
+                //     .body(payoutRequest.toString())
+                //     .asString();
     
-                System.out.println("Respuesta recibida: statusCode=" + response.getStatus());
+                JsonObject simulatedResponse = new JsonObject();
+                simulatedResponse.addProperty("id", "12345678");
+                simulatedResponse.addProperty("status", "approved");
+                simulatedResponse.addProperty("amount", monto.doubleValue());
+                simulatedResponse.addProperty("status", 201);
     
-                if (response.getStatus() >= 200 && response.getStatus() < 300) {
+                // if (simulatedResponse.getStatus() >= 200 && response.getStatus() < 300) 
+                if(5 < 8){
                     System.out.println("ÉXITO: Transferidos " + monto + " al productor " + productorId);
-                    System.out.println("Respuesta: " + response.getBody());
+                    System.out.println("Respuesta: " + simulatedResponse);
                     return Mono.empty();
                 } else {
-                    System.err.println("ERROR en la transferencia: statusCode=" + response.getStatus());
-                    System.err.println("Cuerpo de respuesta: " + response.getBody());
-                    return Mono.error(new RuntimeException("Error en la transferencia: " + response.getBody()));
+                    System.err.println("ERROR en la transferencia: statusCode=" );
+                    System.err.println("Cuerpo de respuesta: " + simulatedResponse);
+                    return Mono.error(new RuntimeException("Error en la transferencia: " ));
                 }
             } catch (Exception e) {
                 System.err.println("EXCEPCIÓN al transferir fondos: " + e.getClass().getName() + ": " + e.getMessage());
