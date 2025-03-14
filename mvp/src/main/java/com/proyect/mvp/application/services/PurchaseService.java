@@ -69,16 +69,18 @@ public class PurchaseService {
     private final UserService userService;
     private final EncryptionService encryptionService;
     private final StockMovementService stockMovementService;
+    private final SaleService saleService;
     
 
     public PurchaseService(PurchaseRepository purchaseRepository, PurchaseStateService purchaseStateService, PurchaseDetailService purchaseDetailService,
-     UserService userService, EncryptionService encryptionService, StockMovementService stockMovementService) {
+     UserService userService, EncryptionService encryptionService, StockMovementService stockMovementService, SaleService saleService) {
         this.purchaseRepository = purchaseRepository;
         this.purchaseStateService = purchaseStateService;
         this.purchaseDetailService = purchaseDetailService;
         this.userService = userService;
         this.encryptionService = encryptionService;
         this.stockMovementService = stockMovementService;
+        this.saleService = saleService;
     }
 
     public Mono<PurchaseEntity> createPurchase(PurchaseCreateDTO purchaseDto) {
@@ -140,7 +142,7 @@ public class PurchaseService {
                         List<PreferenceItemRequest> items = new ArrayList<>();
                         try {
                             items = details.stream()
-                                    .map(detail -> {
+                                    .<PreferenceItemRequest> map(detail -> {
                                         System.out.println("Procesando detalle: " + detail.getIdPurchaseDetail() + ", producto: " + 
                                             (detail.getProduct() != null ? detail.getProduct().getName() : "null"));
                                         
@@ -217,7 +219,7 @@ public class PurchaseService {
                                     .backUrls(backUrls)
                                     .autoReturn("approved")
                                     .paymentMethods(paymentMethods)
-                                    .notificationUrl(" https://7068-196-32-67-187.ngrok-free.app/confirmPayment")
+                                    .notificationUrl("https://7068-196-32-67-187.ngrok-free.app/confirmPayment")
                                     .statementDescriptor("MARKETPLACE")
                                     .externalReference("Purchase_" + purchaseId.toString())
                                     .expires(true)
@@ -268,7 +270,6 @@ public class PurchaseService {
                                 System.err.println("Causa: " + e.getCause().getMessage());
                             }
                             e.printStackTrace();
-                            // Especificamos el tipo de error como Preference
                             return Mono.<Preference>error(new RuntimeException("Error processing payment: " + e.getMessage(), e));
                         });
                     } catch (Exception e) {
@@ -276,8 +277,7 @@ public class PurchaseService {
                         e.printStackTrace();
                         return Mono.<Preference>error(new RuntimeException("General error in processPayment: " + e.getMessage(), e));
                     }
-                });
-    }
+                });    }
     
     private Mono<Void> updatePurchaseWithPreferenceId(UUID purchaseId, String preferenceId, String externalReference) {
         return purchaseRepository.findById(purchaseId)
@@ -426,28 +426,47 @@ public class PurchaseService {
                 UUID productorId = entry.getKey();
                 List<PurchaseDetailEntity> detallesProductor = entry.getValue();
     
-                BigDecimal montoProductor = detallesProductor.stream()
-                        .map(detail -> {
-                            BigDecimal precio = new BigDecimal(detail.calculatePrice());
-                            System.out.println("- Producto: " + detail.getIdPurchaseDetail() +
-                                    ", precio: " + precio);
-                            return precio;
-                        })
-                        .reduce(BigDecimal.ZERO, BigDecimal::add);
+                // Primero registramos cada venta - antes de procesar el pago
+                return Flux.fromIterable(detallesProductor)
+                    .flatMap(detail -> {
+                        System.out.println("Registrando venta del detalle: " + detail.getIdPurchaseDetail() + 
+                                           " para productor: " + productorId);
+                        return saleService.registrarVenta(detail.getIdPurchaseDetail(), productorId)
+                            .doOnSuccess(resultado -> System.out.println("Venta registrada correctamente"))
+                            .doOnError(e -> System.err.println("Error al registrar venta: " + e.getMessage()))
+                            .onErrorResume(e -> {
+                                // Continuamos con el flujo aunque falle el registro
+                                System.err.println("Continuando a pesar del error en el registro");
+                                return Mono.empty();
+                            })
+                            .thenReturn(detail); // Devolvemos el detalle para mantener el flujo
+                    })
+                    .collectList()
+                    .flatMap(detallesRegistrados -> {
+                        // Calculamos el monto total después de registrar las ventas
+                        BigDecimal montoProductor = detallesRegistrados.stream()
+                            .map(detail -> {
+                                BigDecimal precio = new BigDecimal(detail.calculatePrice());
+                                System.out.println("- Producto: " + detail.getIdPurchaseDetail() +
+                                        ", precio: " + precio);
+                                return precio;
+                            })
+                            .reduce(BigDecimal.ZERO, BigDecimal::add);
     
-                System.out.println("Monto total para productor " + productorId + ": " + montoProductor);
+                        System.out.println("Monto total para productor " + productorId + ": " + montoProductor);
     
-                return userService.getUserById(productorId)
-                    .doOnNext(productor -> System.out.println("Usuario productor encontrado: " +
-                            productorId + ", token MP: " +
-                            (productor.getMpAccessToken() != null ? "[presente]" : "[ausente]")))
-                    .doOnError(e -> System.err.println("ERROR: No se encontró el usuario productor: " +
-                            productorId + " - " + e.getMessage()))
-                    .flatMap(productor -> {
-                        System.out.println("Iniciando transferencia para productor: " + productorId);
-                        return userService.getMpAccessToken(productorId)
-                                          .flatMap(mpAccessToken -> transferirFondosAProductor(productorId, mpAccessToken, montoProductor, payment.getId()));  
-                                                          })
+                        return userService.getUserById(productorId)
+                            .doOnNext(productor -> System.out.println("Usuario productor encontrado: " +
+                                    productorId + ", token MP: " +
+                                    (productor.getMpAccessToken() != null ? "[presente]" : "[ausente]")))
+                            .doOnError(e -> System.err.println("ERROR: No se encontró el usuario productor: " +
+                                    productorId + " - " + e.getMessage()))
+                            .flatMap(productor -> {
+                                System.out.println("Iniciando transferencia para productor: " + productorId);
+                                return userService.getMpAccessToken(productorId)
+                                                  .flatMap(mpAccessToken -> transferirFondosAProductor(productorId, mpAccessToken, montoProductor, payment.getId()));
+                            });
+                    })
                     .then(Mono.empty())
                     .doOnSuccess(v -> System.out.println("Proceso completo para productor: " + productorId));
             })

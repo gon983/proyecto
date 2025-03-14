@@ -9,20 +9,25 @@ import org.springframework.web.server.ResponseStatusException;
 import com.proyect.mvp.application.dtos.create.PurchaseDetailCreateDTO;
 import com.proyect.mvp.domain.model.entities.PurchaseDetailEntity;
 import com.proyect.mvp.domain.model.entities.PurchaseDetailStateEntity;
+import com.proyect.mvp.domain.repository.ONGRepository;
 import com.proyect.mvp.domain.repository.PurchaseDetailRepository;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
 @Service
 public class PurchaseDetailService {
+
+    private final ONGRepository ONGRepository;
     private final PurchaseDetailRepository purchaseDetailRepository;
     private final PurchaseDetailStateService purchaseDetailStateService;
     private final ProductService productService;
 
-    public PurchaseDetailService(PurchaseDetailRepository purchaseDetailRepository, PurchaseDetailStateService purchaseDetailStateService, ProductService productService) {
+    public PurchaseDetailService(PurchaseDetailRepository purchaseDetailRepository, PurchaseDetailStateService purchaseDetailStateService, ProductService productService, ONGRepository ONGRepository) {
         this.purchaseDetailRepository = purchaseDetailRepository;
         this.purchaseDetailStateService = purchaseDetailStateService;
         this.productService = productService;
+        this.ONGRepository = ONGRepository;
     }
 
     public Mono<PurchaseDetailEntity> createPurchaseDetail(UUID fkPurchase, PurchaseDetailCreateDTO purchaseDetailDto){
@@ -51,6 +56,10 @@ public class PurchaseDetailService {
                                         .flatMap(detail -> productService.getProductById(detail.getFkProduct())
                                                             .map(product -> {detail.addProduct(product);
                                                                             return detail;}));   
+    }
+
+    public Mono<PurchaseDetailEntity> getById(UUID idDetail){
+        return purchaseDetailRepository.findById(idDetail);
     }
 
     

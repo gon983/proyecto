@@ -13,4 +13,6 @@ import reactor.core.publisher.Mono;
 public interface PurchaseDetailRepository extends R2dbcRepository<PurchaseDetailEntity,String> {
     Flux<PurchaseDetailEntity>findAllByFkPurchase(UUID idPurchase);
 
+    Mono<PurchaseDetailEntity> findById(UUID id);
+
 }

@@ -22,7 +22,7 @@ public class PurchaseDetailEntity {
 
     @Id
     @Column( "id_purchase_detail")
-    private String idPurchaseDetail;
+    private UUID idPurchaseDetail;
     @Transient
     private ProductEntity  product;
     @Column("fk_product")
@@ -52,5 +52,9 @@ public class PurchaseDetailEntity {
 
     public double calculatePrice(){
         return this.unitPrice * this.quantity;
+    }
+
+    public String getIdPurchaseDetail(){
+        return idPurchaseDetail.toString();
     }
 }
