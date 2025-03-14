@@ -16,7 +16,7 @@ import java.util.List;
 public interface PurchaseRepository extends R2dbcRepository<PurchaseEntity,UUID> {
 
 
-    @Query("Select 1 from purchase where mp_preference_id = :mpPreferenceId")
+    @Query("Select * from purchase where mp_preference_id = :mpPreferenceId")
     Mono<PurchaseEntity> findByMpPreferenceId(@Param("mpPreferenceId")String mpPreferenceId);
 
 }
