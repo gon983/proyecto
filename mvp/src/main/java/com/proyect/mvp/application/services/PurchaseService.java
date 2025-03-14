@@ -289,129 +289,116 @@ public class PurchaseService {
             .then();
     }
     
-    public Mono<Void> procesarNotificacionPago(String notificationType, String dataId) throws MPException, MPApiException {
+    public Mono<Void> procesarNotificacionPago(String notificationType, String dataId) {
         System.out.println("=========== INICIO procesarNotificacionPago ===========");
         System.out.println("Parámetros recibidos: notificationType=" + notificationType + ", dataId=" + dataId);
     
-        if ("payment".equals(notificationType)) {
-            System.out.println("Tipo de notificación correcto: payment");
-            return Mono.fromCallable(() -> {
-                System.out.println("=========== INICIO fromCallable ===========");
-                try {
-                    System.out.println("Configurando token de acceso");
-                    MercadoPagoConfig.setAccessToken("APP_USR-2552125444382264-030609-9af3f586d7ec8eb52060f4db865e5014-447529108");
-                    System.out.println("Token configurado correctamente");
-    
-                    System.out.println("Creando PaymentClient");
-                    PaymentClient paymentClient = new PaymentClient();
-                    System.out.println("PaymentClient creado correctamente");
-    
-                    System.out.println("Intentando convertir dataId a Long: " + dataId);
-                    Long paymentId = Long.parseLong(dataId);
-                    System.out.println("Conversión exitosa, obteniendo datos del pago: " + paymentId);
-    
-                    // Simulación de un pago
-                    SimuledPayment payment = new SimuledPayment();
-                    payment.setId(paymentId);
-                    payment.setStatus("approved");
-                    payment.setDateApproved(OffsetDateTime.now());
-    
-                    if (payment.getId() == null) {
-                        System.out.println("ADVERTENCIA: Id es NULL");
-                    }
-    
-                    if ("approved".equals(payment.getStatus())) {
-                        System.out.println("Pago aprobado, procesando...");
-                        String preferenceId = "54615ae8-04f0-475f-af83-7132fe04884e"; // hay q hardcodearlo porque en realidad se obtiene desde el objeto payment 
-                        System.out.println("PId obtenido: " + preferenceId);
-    
-                        System.out.println("Llamando a procesarPagoAprobado...");
-                        Object resultado = procesarPagoAprobado(preferenceId, payment);
-                        System.out.println("procesarPagoAprobado completado con resultado: " + resultado);
-                        return resultado;
-                    } else {
-                        System.out.println("Pago NO aprobado, estado: " + payment.getStatus());
-                    }
-    
-                    System.out.println("Retornando null ya que no se procesó el pago");
-                    return null;
-                } catch (NumberFormatException e) {
-                    System.err.println("ERROR: No se pudo convertir dataId a Long: " + e.getMessage());
-                    e.printStackTrace();
-                    throw new RuntimeException("Error al convertir dataId a Long", e);
-                } catch (Exception e) {
-                    System.err.println("ERROR inesperado: " + e.getClass().getName() + ": " + e.getMessage());
-                    e.printStackTrace();
-                    throw new RuntimeException("Error inesperado procesando notificación de pago", e);
-                } finally {
-                    System.out.println("=========== FIN fromCallable ===========");
-                }
-            }).then()
-              .doOnSuccess(v -> System.out.println("Procesamiento completado exitosamente"))
-              .doOnError(e -> System.err.println("Error en el procesamiento reactivo: " + e.getMessage()))
-              .doFinally(signal -> System.out.println("=========== FIN procesarNotificacionPago con señal: " + signal + " ==========="));
-        } else {
+        if (!"payment".equals(notificationType)) {
             System.out.println("Tipo de notificación no procesable: " + notificationType);
             System.out.println("=========== FIN procesarNotificacionPago (sin procesar) ===========");
             return Mono.empty();
         }
+    
+        System.out.println("Tipo de notificación correcto: payment");
+        
+        return Mono.defer(() -> {
+            System.out.println("=========== INICIO defer ===========");
+            try {
+                System.out.println("Configurando token de acceso");
+                MercadoPagoConfig.setAccessToken("APP_USR-2552125444382264-030609-9af3f586d7ec8eb52060f4db865e5014-447529108");
+                System.out.println("Token configurado correctamente");
+    
+                System.out.println("Creando PaymentClient");
+                PaymentClient paymentClient = new PaymentClient();
+                System.out.println("PaymentClient creado correctamente");
+    
+                System.out.println("Intentando convertir dataId a Long: " + dataId);
+                Long paymentId = Long.parseLong(dataId);
+                System.out.println("Conversión exitosa, obteniendo datos del pago: " + paymentId);
+    
+                // Simulación de un pago
+                SimuledPayment payment = new SimuledPayment();
+                payment.setId(paymentId);
+                payment.setStatus("approved");
+                payment.setDateApproved(OffsetDateTime.now());
+    
+                if (payment.getId() == null) {
+                    System.out.println("ADVERTENCIA: Id es NULL");
+                    return Mono.empty();
+                }
+    
+                if (!"approved".equals(payment.getStatus())) {
+                    System.out.println("Pago NO aprobado, estado: " + payment.getStatus());
+                    return Mono.empty();
+                }
+    
+                System.out.println("Pago aprobado, procesando...");
+                String preferenceId = "447529108-eee80c12-5b5e-4796-bba1-f36c91469a9d"; 
+                System.out.println("PId obtenido: " + preferenceId);
+    
+                System.out.println("Llamando a procesarPagoAprobado...");
+                return procesarPagoAprobado(preferenceId, payment);
+    
+            } catch (NumberFormatException e) {
+                System.err.println("ERROR: No se pudo convertir dataId a Long: " + e.getMessage());
+                e.printStackTrace();
+                return Mono.error(new RuntimeException("Error al convertir dataId a Long", e));
+            } catch (Exception e) {
+                System.err.println("ERROR inesperado: " + e.getClass().getName() + ": " + e.getMessage());
+                e.printStackTrace();
+                return Mono.error(new RuntimeException("Error inesperado procesando notificación de pago", e));
+            } finally {
+                System.out.println("=========== FIN defer ===========");
+            }
+        })
+        .doOnSuccess(v -> System.out.println("Procesamiento completado exitosamente"))
+        .doOnError(e -> System.err.println("Error en el procesamiento reactivo: " + e.getMessage()))
+        .doFinally(signal -> System.out.println("=========== FIN procesarNotificacionPago con señal: " + signal + " ==========="));
     }
     
     private Mono<Void> procesarPagoAprobado(String preferenceId, SimuledPayment payment) {
-        System.out.println("=========== INICIO procesarPagoAprobado ===========");
-        System.out.println("Parámetros recibidos: preferenceId=" + preferenceId + ", paymentId=" + payment.getId());
-    
         return purchaseRepository.findByMpPreferenceId(preferenceId)
-                .doOnNext(purchase -> System.out.println("Compra encontrada con ID: " + purchase.getIdPurchase()))
-                .doOnError(e -> System.err.println("ERROR: No se encontró la compra con preferenceId: " + preferenceId + " - " + e.getMessage()))
+                .switchIfEmpty(Mono.error(new RuntimeException("Compra no encontrada para preferenceId: " + preferenceId)))
                 .flatMap(purchase -> {
-                    System.out.println("Obteniendo detalles de la compra: " + purchase.getIdPurchase());
+                    System.out.println("Compra encontrada: " + purchase.getIdPurchase());
+    
+                    // Obtener detalles de la compra
                     return purchaseDetailService.getDetailsFromPurchaseWithProducts(purchase.getIdPurchase())
-                            .doOnNext(detail -> System.out.println("- Detalle encontrado: " + detail.getIdPurchaseDetail() + ", producto: " +
-                                    (detail.getProduct() != null ? detail.getProduct().getIdProduct() : "null")))
                             .collectList()
-                            .doOnNext(details -> System.out.println("Total de detalles encontrados: " + details.size()))
                             .flatMap(details -> {
-                                System.out.println("Añadiendo detalles a la compra");
+                                System.out.println("Detalles encontrados: " + details.size());
                                 purchase.addDetails(details);
                                 return Mono.just(purchase);
                             });
                 })
                 .flatMap(purchase -> {
-                    System.out.println("Buscando estado 'confirmed' para actualizar la compra");
+                    // Buscar el estado 'confirmed'
                     return purchaseStateService.findByName("confirmed")
-                        .doOnNext(state -> System.out.println("Estado 'confirmed' encontrado con ID: " + state.getIdPurchaseState()))
-                        .doOnError(e -> System.err.println("ERROR: No se encontró el estado 'confirmed' - " + e.getMessage()))
-                        .flatMap(state -> {
-                            System.out.println("Actualizando compra con nuevo estado");
-                            purchase.setFkCurrentState(state.getIdPurchaseState());
-                            purchase.setMpPaymentId(payment.getId().toString());
-                            purchase.setPaymentDate(payment.getDateApproved());
+                            .switchIfEmpty(Mono.error(new RuntimeException("Estado 'confirmed' no encontrado")))
+                            .flatMap(state -> {
+                                System.out.println("Estado 'confirmed' encontrado: " + state.getIdPurchaseState());
     
-                            System.out.println("Datos actualizados: estado=" + state.getIdPurchaseState() +
-                                    ", mpPaymentId=" + payment.getId() +
-                                    ", paymentDate=" + payment.getDateApproved());
+                                // Actualizar la compra
+                                purchase.setFkCurrentState(state.getIdPurchaseState());
+                                purchase.setMpPaymentId(payment.getId().toString());
+                                purchase.setPaymentDate(payment.getDateApproved());
     
-                            System.out.println("Guardando compra actualizada");
-                            return purchaseRepository.save(purchase)
-                                .doOnNext(updatedPurchase -> System.out.println("Compra guardada correctamente: " + updatedPurchase.getIdPurchase()))
-                                .doOnError(e -> System.err.println("ERROR al guardar la compra: " + e.getMessage()))
-                                .flatMap(updatedPurchase -> {
-                                    System.out.println("Obteniendo detalles de la compra actualizada para procesar pagos");
-                                    return purchaseDetailService.getDetailsFromPurchaseWithProducts(updatedPurchase.getIdPurchase())
-                                        .doOnNext(detail -> System.out.println("- Detalle para pago: " + detail.getIdPurchaseDetail()))
-                                        .collectList()
-                                        .doOnNext(details -> System.out.println("Total detalles para pagos: " + details.size()))
-                                        .flatMap(details -> {
-                                            System.out.println("Procesando pagos a productores");
-                                            return procesarPagosProductores(details, payment);
-                                        });
-                                });
-                        });
+                                System.out.println("Compra actualizada: " + purchase.getIdPurchase());
+                                return purchaseRepository.save(purchase);
+                            });
                 })
-                .doOnSuccess(v -> System.out.println("Procesamiento de pago aprobado completado exitosamente"))
+                .flatMap(updatedPurchase -> {
+                    // Procesar pagos a productores
+                    return purchaseDetailService.getDetailsFromPurchaseWithProducts(updatedPurchase.getIdPurchase())
+                            .collectList()
+                            .flatMap(details -> {
+                                System.out.println("Procesando pagos a productores: " + details.size());
+                                return procesarPagosProductores(details, payment);
+                            });
+                })
+                .doOnSuccess(v -> System.out.println("Procesamiento de pago aprobado completado"))
                 .doOnError(e -> System.err.println("ERROR en procesarPagoAprobado: " + e.getMessage()))
-                .doFinally(signal -> System.out.println("=========== FIN procesarPagoAprobado con señal: " + signal + " ==========="))
+                .doFinally(signal -> System.out.println("FIN procesarPagoAprobado: " + signal))
                 .then();
     }
     
