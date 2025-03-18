@@ -10,9 +10,9 @@ import com.proyect.mvp.domain.model.entities.PurchaseDetailStateEntity;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-public interface PurchaseDetailRepository extends R2dbcRepository<PurchaseDetailEntity,String> {
+public interface PurchaseDetailRepository extends R2dbcRepository<PurchaseDetailEntity,UUID> {
     Flux<PurchaseDetailEntity>findAllByFkPurchase(UUID idPurchase);
 
-    Mono<PurchaseDetailEntity> findById(UUID id);
+    Mono<PurchaseDetailEntity> findByIdPurchaseDetail(UUID id);
 
 }

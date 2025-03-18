@@ -91,6 +91,26 @@ public class PurchaseEntity {
         this.mpPaymentDate = paymentDate;
     }
 
+    @Override
+    public String toString() {
+        return "PurchaseEntity{" +
+                "idPurchase=" + idPurchase +
+                ", fkUser=" + fkUser +
+                ", amount=" + amount +
+                ", fkNeighborhoodPackage=" + fkNeighborhoodPackage +
+                ", fkPaymentMethod=" + fkPaymentMethod +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", level='" + level + '\'' +
+                ", fkCurrentState=" + fkCurrentState +
+                ", mpPreferenceId='" + mpPreferenceId + '\'' +
+                ", mpPaymentId='" + mpPaymentId + '\'' +
+                ", mpPaymentDate=" + mpPaymentDate +
+                ", externalReference='" + externalReference + '\'' +
+                ", details=" + (details != null ? details.toString() : "null") +
+                '}';
+    }
+
     
 
 

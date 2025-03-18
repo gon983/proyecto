@@ -15,6 +15,7 @@ import com.google.gson.JsonObject;
 
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import com.mercadopago.MercadoPagoConfig;
 import com.mercadopago.client.preference.PreferenceClient;
@@ -205,9 +206,9 @@ public class PurchaseService {
                                 .build();
                     
                         // Almacenamos la información de la compra en metadata
-                        System.out.println("Creando metadata con purchaseId: " + purchaseId);
-                        Map<String, Object> metadata = new HashMap<>();
-                        metadata.put("purchase_id", purchaseId.toString());
+                        // System.out.println("Creando metadata con purchaseId: " + purchaseId);
+                        // Map<String, Object> metadata = new HashMap<>();
+                        // metadata.put("purchase_id", purchaseId.toString());
                     
                         // Creamos la solicitud de preferencia - IMPORTANTE: Esta variable debe ser final o efectivamente final
                         System.out.println("Construyendo objeto de preferencia");
@@ -219,13 +220,12 @@ public class PurchaseService {
                                     .backUrls(backUrls)
                                     .autoReturn("approved")
                                     .paymentMethods(paymentMethods)
-                                    .notificationUrl("https://7068-196-32-67-187.ngrok-free.app/confirmPayment")
+                                    .notificationUrl("https://26f3-196-32-67-187.ngrok-free.app/confirmPayment")
                                     .statementDescriptor("MARKETPLACE")
                                     .externalReference("Purchase_" + purchaseId.toString())
                                     .expires(true)
                                     .expirationDateFrom(OffsetDateTime.now())
                                     .expirationDateTo(OffsetDateTime.now().plusDays(7))
-                                    .metadata(metadata)
                                     .build();
                             System.out.println("Objeto de preferencia construido exitosamente");
                         } catch (Exception e) {
@@ -316,11 +316,9 @@ public class PurchaseService {
                 Long paymentId = Long.parseLong(dataId);
                 System.out.println("Conversión exitosa, obteniendo datos del pago: " + paymentId);
     
-                // Simulación de un pago
-                SimuledPayment payment = new SimuledPayment();
-                payment.setId(paymentId);
-                payment.setStatus("approved");
-                payment.setDateApproved(OffsetDateTime.now());
+                
+                Payment payment = paymentClient.get(paymentId);
+                
     
                 if (payment.getId() == null) {
                     System.out.println("ADVERTENCIA: Id es NULL");
@@ -332,12 +330,18 @@ public class PurchaseService {
                     return Mono.empty();
                 }
     
-                System.out.println("Pago aprobado, procesando...");
-                String preferenceId = "447529108-eee80c12-5b5e-4796-bba1-f36c91469a9d"; 
-                System.out.println("PId obtenido: " + preferenceId);
+                String externalReference = payment.getExternalReference();
+                // Eliminar el prefijo "Purchase_" si lo has configurado así
+                String purchaseIdStr = externalReference.replace("Purchase_", "");
+                UUID purchaseId = UUID.fromString(purchaseIdStr);
     
                 System.out.println("Llamando a procesarPagoAprobado...");
-                return procesarPagoAprobado(preferenceId, payment);
+                return purchaseRepository.findById(purchaseId)
+                                        .flatMap(purchase -> {
+                                            String preferenceId = purchase.getMpPreferenceId();
+                                            System.out.println("PreferenceId obtenido de la base de datos: " + preferenceId);
+                                            return procesarPagoAprobado(preferenceId, payment);
+                                        });
     
             } catch (NumberFormatException e) {
                 System.err.println("ERROR: No se pudo convertir dataId a Long: " + e.getMessage());
@@ -356,7 +360,7 @@ public class PurchaseService {
         .doFinally(signal -> System.out.println("=========== FIN procesarNotificacionPago con señal: " + signal + " ==========="));
     }
     
-    private Mono<Void> procesarPagoAprobado(String preferenceId, SimuledPayment payment) {
+    private Mono<Void> procesarPagoAprobado(String preferenceId, Payment payment) {
         return purchaseRepository.findByMpPreferenceId(preferenceId)
                 .switchIfEmpty(Mono.error(new RuntimeException("Compra no encontrada para preferenceId: " + preferenceId)))
                 .flatMap(purchase -> {
@@ -402,12 +406,13 @@ public class PurchaseService {
                 .then();
     }
     
-    private Mono<Void> procesarPagosProductores(List<PurchaseDetailEntity> details, SimuledPayment payment) {
+    private Mono<Void> procesarPagosProductores(List<PurchaseDetailEntity> details, Payment payment) {
         System.out.println("=========== INICIO procesarPagosProductores ===========");
         System.out.println("Detalles recibidos: " + details.size() + ", paymentId: " + payment.getId());
     
         // Agrupamos por productor
         Map<UUID, List<PurchaseDetailEntity>> detallesPorProductor = details.stream()
+                .peek(detail -> detail.toString())
                 .collect(Collectors.groupingBy(detail -> {
                     UUID productorId = detail.getProduct() != null ? detail.getProduct().getFkProductor() : null;
                     System.out.println("Agrupando detalle " + detail.getIdPurchaseDetail() +
@@ -429,7 +434,7 @@ public class PurchaseService {
                 // Primero registramos cada venta - antes de procesar el pago
                 return Flux.fromIterable(detallesProductor)
                     .flatMap(detail -> {
-                        System.out.println("Registrando venta del detalle: " + detail.getIdPurchaseDetail() + 
+                        System.out.println("Registrando venta del detalle: " + detail.toString() + 
                                            " para productor: " + productorId);
                         return saleService.registrarVenta(detail.getIdPurchaseDetail(), productorId)
                             .doOnSuccess(resultado -> System.out.println("Venta registrada correctamente"))
@@ -457,8 +462,7 @@ public class PurchaseService {
     
                         return userService.getUserById(productorId)
                             .doOnNext(productor -> System.out.println("Usuario productor encontrado: " +
-                                    productorId + ", token MP: " +
-                                    (productor.getMpAccessToken() != null ? "[presente]" : "[ausente]")))
+                                    productorId + ", token MP: " ))
                             .doOnError(e -> System.err.println("ERROR: No se encontró el usuario productor: " +
                                     productorId + " - " + e.getMessage()))
                             .flatMap(productor -> {
@@ -474,73 +478,92 @@ public class PurchaseService {
             .doOnError(e -> System.err.println("ERROR general en procesarPagosProductores: " + e.getMessage()))
             .doFinally(signal -> System.out.println("=========== FIN procesarPagosProductores con señal: " + signal + " ==========="))
             .then();
-    }
-    
-    private Mono<Object> transferirFondosAProductor(UUID productorId, String mpAccessToken, BigDecimal monto, Long paymentId) {
-        System.out.println("=========== INICIO transferirFondosAProductor ===========");
-        System.out.println("Parámetros: productorId=" + productorId +
-                ", token=" + (mpAccessToken != null ? "[presente]" : "[ausente]") +
-                ", monto=" + monto +
-                ", paymentId=" + paymentId);
-    
-        return Mono.defer(() -> {
-            try {
-                System.out.println("Verificando token de acceso del productor");
-                if (mpAccessToken == null || mpAccessToken.isEmpty()) {
-                    System.err.println("ERROR: Token de acceso nulo o vacío para el productor " + productorId);
-                    return Mono.error(new RuntimeException("Token de acceso inválido para el productor"));
-                }
-    
-                System.out.println("Cambiando al token del productor");
-                MercadoPagoConfig.setAccessToken(mpAccessToken);
-                System.out.println("Token cambiado correctamente");
-    
-                System.out.println("Construyendo solicitud de pago");
-                JsonObject payoutRequest = new JsonObject();
-                payoutRequest.addProperty("amount", monto);
-                payoutRequest.addProperty("currency_id", "ARS");
-                payoutRequest.addProperty("description", "Pago de venta ID " + paymentId);
-                System.out.println("Solicitud construida: " + payoutRequest);
-    
-                System.out.println("Enviando solicitud a Mercado Pago...");
-                // HttpResponse<String> response = Unirest.post("https://api.mercadopago.com/v1/payments")
-                //     .header("Authorization", "Bearer " + mpAccessToken)
-                //     .header("Content-Type", "application/json")
-                //     .body(payoutRequest.toString())
-                //     .asString();
-    
-                JsonObject simulatedResponse = new JsonObject();
-                simulatedResponse.addProperty("id", "12345678");
-                simulatedResponse.addProperty("status", "approved");
-                simulatedResponse.addProperty("amount", monto.doubleValue());
-                simulatedResponse.addProperty("status", 201);
-    
-                // if (simulatedResponse.getStatus() >= 200 && response.getStatus() < 300) 
-                if(5 < 8){
-                    System.out.println("ÉXITO: Transferidos " + monto + " al productor " + productorId);
-                    System.out.println("Respuesta: " + simulatedResponse);
-                    return Mono.empty();
-                } else {
-                    System.err.println("ERROR en la transferencia: statusCode=" );
-                    System.err.println("Cuerpo de respuesta: " + simulatedResponse);
-                    return Mono.error(new RuntimeException("Error en la transferencia: " ));
-                }
-            } catch (Exception e) {
-                System.err.println("EXCEPCIÓN al transferir fondos: " + e.getClass().getName() + ": " + e.getMessage());
-                e.printStackTrace();
-                return Mono.error(e);
-            } finally {
-                System.out.println("Restaurando token principal");
-                MercadoPagoConfig.setAccessToken("APP_USR-2552125444382264-030609-9af3f586d7ec8eb52060f4db865e5014-447529108");
-                System.out.println("Token principal restaurado");
+    }    
+
+
+
+
+    private Mono<Void> transferirFondosAProductor(UUID productorId, String mpAccessToken, BigDecimal monto, Long paymentId) {
+    System.out.println("=========== INICIO transferirFondosAProductor ===========");
+    System.out.println("Parámetros: productorId=" + productorId +
+            ", token=" + (mpAccessToken != null ? "[presente]" : "[ausente]") +
+            ", monto=" + monto +
+            ", paymentId=" + paymentId);
+
+    return Mono.defer(() -> {
+        try {
+            System.out.println("Verificando token de acceso del productor");
+            if (mpAccessToken == null || mpAccessToken.isEmpty()) {
+                System.err.println("ERROR: Token de acceso nulo o vacío para el productor " + productorId);
+                return Mono.error(new RuntimeException("Token de acceso inválido para el productor"));
             }
-        }).onErrorResume(e -> {
-            System.err.println("ERROR MANEJADO: Error procesando pago para productor " + productorId + ": " + e.getMessage());
+
+            System.out.println("Cambiando al token del productor");
+            MercadoPagoConfig.setAccessToken(mpAccessToken);
+            System.out.println("Token cambiado correctamente");
+
+            System.out.println("Construyendo solicitud de pago");
+            // Corregido según la documentación de la API de Mercado Pago para pagos
+            JsonObject payoutRequest = new JsonObject();
+            
+            // Agregamos la información del método de pago
+            payoutRequest.addProperty("transaction_amount", monto);
+            payoutRequest.addProperty("description", "Pago de venta ID " + paymentId);
+            
+            // Para Argentina
+            payoutRequest.addProperty("payment_method_id", "account_money");
+            JsonObject payment_method_options = new JsonObject();
+            payment_method_options.addProperty("type", "wallet");
+            payoutRequest.add("payment_method_options", payment_method_options);
+            
+            // // Información del pagador (opcional pero recomendado)
+            // JsonObject payer = new JsonObject();
+            // payer.addProperty("email", "test_user_@testuser.com");
+            // payoutRequest.add("payer", payer);
+            
+            System.out.println("Solicitud construida: " + payoutRequest);
+
+            System.out.println("Enviando solicitud a Mercado Pago usando WebClient...");
+            
+            return WebClient.create("https://api.mercadopago.com")
+                .post()
+                .uri("/v1/payments")
+                .header("Authorization", "Bearer " + mpAccessToken)
+                .header("Content-Type", "application/json")
+                .bodyValue(payoutRequest.toString())
+                .retrieve()
+                .onStatus(status -> status.is4xxClientError() || status.is5xxServerError(), 
+                    response -> response.bodyToMono(String.class)
+                        .flatMap(errorBody -> {
+                            System.err.println("ERROR en la transferencia: statusCode=" + response.statusCode());
+                            System.err.println("Cuerpo de respuesta: " + errorBody);
+                            return Mono.error(new RuntimeException("Error en la transferencia: " + response.statusCode() + " - " + errorBody));
+                        })
+                )
+                .bodyToMono(String.class)
+                .doOnSuccess(responseBody -> {
+                    System.out.println("ÉXITO: Transferidos " + monto + " al productor " + productorId);
+                    System.out.println("Respuesta: " + responseBody);
+                })
+                .then();
+                
+        } catch (Exception e) {
+            System.err.println("EXCEPCIÓN al transferir fondos: " + e.getClass().getName() + ": " + e.getMessage());
             e.printStackTrace();
-            return Mono.empty();
-        })
-        .doFinally(signal -> System.out.println("=========== FIN transferirFondosAProductor con señal: " + signal + " ==========="));
-    }
+            return Mono.error(e);
+        } finally {
+            System.out.println("Restaurando token principal");
+            MercadoPagoConfig.setAccessToken("APP_USR-2552125444382264-030609-9af3f586d7ec8eb52060f4db865e5014-447529108");
+            System.out.println("Token principal restaurado");
+        }
+    })
+    .onErrorResume(e -> {
+        System.err.println("ERROR MANEJADO: Error procesando pago para productor " + productorId + ": " + e.getMessage());
+        e.printStackTrace();
+        return Mono.empty();
+    })
+    .doFinally(signal -> System.out.println("=========== FIN transferirFondosAProductor con señal: " + signal + " ==========="));
+}
     
     
 }

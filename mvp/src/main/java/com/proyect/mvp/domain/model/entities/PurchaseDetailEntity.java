@@ -57,4 +57,11 @@ public class PurchaseDetailEntity {
     public String getIdPurchaseDetail(){
         return idPurchaseDetail.toString();
     }
+
+    @Override
+    public String toString(){
+        return "| Product: " + fkProduct +
+                "unitPrice" + unitPrice +
+                "quantity" + quantity + "|";
+    }
 }

@@ -59,7 +59,10 @@ public class PurchaseDetailService {
     }
 
     public Mono<PurchaseDetailEntity> getById(UUID idDetail){
-        return purchaseDetailRepository.findById(idDetail);
+        return purchaseDetailRepository.findByIdPurchaseDetail(idDetail)
+        .flatMap(detail -> productService.getProductById(detail.getFkProduct())
+                                                            .map(product -> {detail.addProduct(product);
+                                                                            return detail;}));
     }
 
     
