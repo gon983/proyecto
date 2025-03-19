@@ -512,14 +512,12 @@ public class PurchaseService {
             
             // Para Argentina
             payoutRequest.addProperty("payment_method_id", "account_money");
-            JsonObject payment_method_options = new JsonObject();
-            payment_method_options.addProperty("type", "wallet");
-            payoutRequest.add("payment_method_options", payment_method_options);
+            // payoutRequest.addProperty("payment_type_id", "account_money");
             
-            // // Información del pagador (opcional pero recomendado)
-            // JsonObject payer = new JsonObject();
-            // payer.addProperty("email", "test_user_@testuser.com");
-            // payoutRequest.add("payer", payer);
+            // Información del pagador (opcional pero recomendado)
+            JsonObject payer = new JsonObject();
+            payer.addProperty("email", "test_user_@testuser.com");
+            payoutRequest.add("payer", payer);
             
             System.out.println("Solicitud construida: " + payoutRequest);
 
