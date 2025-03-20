@@ -93,6 +93,12 @@ public class UserEntity {
 
     @Transient
     private String mpAccessToken;
+    @Column("access_token_productor")
+    private String accessTokenProductor;
+    @Column("user_productor_mp_id")
+    private String userProductorMpId;
+    @Column("refresh_productor_token")
+    private String refreshProductorToken;
 
 
     

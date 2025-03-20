@@ -361,7 +361,7 @@ public class MercadoPagoSplitService {
     private Mono<String> crearPagoSplit(UUID productorId, BigDecimal monto, Long paymentId) {
         System.out.println("Creando pago split para productor: " + productorId + ", monto: " + monto);
         
-        return userService.getMpUserId(productorId)
+        return userService.getMpProductorUserId(productorId)
             .flatMap(mpUserId -> {
                 // Crear el objeto de pago
                 JsonObject pagoSplit = new JsonObject();
@@ -403,34 +403,34 @@ public class MercadoPagoSplitService {
      */
     public Mono<Preference> crearCompraCompleta(PurchaseCreateDTO purchaseDto, List<PurchaseDetailEntity> details) {
         System.out.println("Creando compra completa con pagos split");
-        
+    
         // 1. Crear la compra
         return purchaseStateService.findByName("pending")
             .switchIfEmpty(Mono.error(new IllegalStateException("Estado 'pending' no encontrado")))
             .flatMap(purchaseState -> {
                 PurchaseEntity purchase = PurchaseEntity.builder()
+                    .idPurchase(UUID.randomUUID())
                     .fkUser(purchaseDto.getFkUser())
                     .level(purchaseDto.getLevel())
                     .createdAt(LocalDateTime.now())
                     .fkCurrentState(purchaseState.getIdPurchaseState())
                     .build();
-                
+    
                 return purchaseRepository.save(purchase);
             })
             .flatMap(purchase -> {
                 // 2. Guardar los detalles de la compra
+                UUID purchaseId = purchase.getIdPurchase();
                 return Flux.fromIterable(details)
-                    .map(detail -> {
-                        detail.setFkPurchase(purchase.getIdPurchase());
-                        return detail;
+                    .flatMap(detail -> {
+                        detail.setFkPurchase(purchaseId);
+                        return purchaseDetailService.save(detail);
                     })
-                    .flatMap(detail -> purchaseDetailService.saveDetail(detail))
-                    .collectList()
-                    .thenReturn(purchase);
+                    .then(Mono.just(purchaseId));  // Use `then` to return a Mono<UUID>
             })
-            .flatMap(purchase -> {
-                // 3. Crear la preferencia de pago
-                return crearPreferenciaPago(purchase.getIdPurchase());
+            .flatMap(purchaseId -> {
+                // 3. Crear la preferencia de pago (explicitly return Mono<Preference>)
+                return crearPreferenciaPago(purchaseId);
             });
     }
 
@@ -456,9 +456,9 @@ public class MercadoPagoSplitService {
                         String newAccessToken = jsonResponse.get("access_token").getAsString();
                         String newRefreshToken = jsonResponse.get("refresh_token").getAsString();
                         
-                        // Guardar los nuevos tokens
+                        // Guardar los nuevos tokens y devolver el access token
                         return userService.updateProducerMpTokens(productorId, newAccessToken, newRefreshToken)
-                            .thenReturn(newAccessToken);
+                            .thenReturn(newAccessToken); // Use thenReturn instead of then(Mono.just())
                     });
             });
     }

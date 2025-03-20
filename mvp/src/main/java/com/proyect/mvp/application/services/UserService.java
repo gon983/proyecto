@@ -92,6 +92,25 @@ public class UserService {
                              .map(user -> encryptionService.decrypt(user.getMpAccessTokenEncrypted()));
     }
 
+    public Mono<? extends Void> saveProducerMpData(UUID productorId, String accessTokenProductor, String userProductorMpId,
+            String refreshProductorToken) {
+        return userRepository.saveProducerMpData(productorId, accessTokenProductor, userProductorMpId,refreshProductorToken);
+    }
+
+    public Mono<String> getMpProductorUserId(UUID productorId) {
+        return userRepository.findById(productorId)
+                            .flatMap(productor-> Mono.just(productor.getUserProductorMpId()));
+    }
+
+    public Mono<String> getMpRefreshToken(UUID productorId) {
+        return userRepository.findById(productorId)
+                            .flatMap(productor-> Mono.just(productor.getRefreshProductorToken()));
+    }
+
+    public Mono<Void> updateProducerMpTokens(UUID productorId,String newAccessToken,String newRefreshToken){
+        return userRepository.updateProducerMpTokens(productorId, newAccessToken, newRefreshToken);
+    }
+
 
 
     

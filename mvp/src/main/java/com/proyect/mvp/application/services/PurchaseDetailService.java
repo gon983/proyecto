@@ -65,5 +65,9 @@ public class PurchaseDetailService {
                                                                             return detail;}));
     }
 
+    public Mono<PurchaseDetailEntity> save(PurchaseDetailEntity detail) {
+        return purchaseDetailRepository.save(detail);
+    }
+
     
 }

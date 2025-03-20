@@ -58,6 +58,10 @@ public class PurchaseDetailEntity {
         return idPurchaseDetail.toString();
     }
 
+    public void setFkPurchase(UUID idPurchase){
+        this.fkPurchase = idPurchase;
+    }
+
     @Override
     public String toString(){
         return "| Product: " + fkProduct +

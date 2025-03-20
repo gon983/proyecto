@@ -19,4 +19,18 @@ public interface UserRepository extends R2dbcRepository<UserEntity, UUID> {
     ":#{#user.documentType}, :#{#user.documentNumber}, :#{#user.fkNeighborhood}, " +
     ":#{#user.phone}, :#{#user.roleOne})")
     Mono<UserEntity> insertUser(@Param("user") UserEntity user);
+
+    @Query("UPDATE users SET access_token_productor = :access_token_productor, user_productor_mp_id = :user_productor_mp_id, refresh_productor_token = :refresh_productor_token WHERE id_user = :productor_id")
+    Mono<Void> saveProducerMpData(
+    @Param("productor_id") UUID productorId,
+    @Param("access_token_productor") String accessTokenProductor,
+    @Param("user_productor_mp_id") String userProductorMpId,
+    @Param("refresh_productor_token") String refreshProductorToken
+);
+
+    @Query("UPDATE users SET access_token_productor = :newAccessToken, refresh_productor_token = :newRefreshToken WHERE id_user = :productorId  ")
+    Mono<Void> updateProducerMpTokens(
+        @Param("productorId") UUID productorId, 
+        @Param("newAccessToken")String newAccessToken, 
+        @Param("newRefreshToken") String newRefreshToken);
 }
