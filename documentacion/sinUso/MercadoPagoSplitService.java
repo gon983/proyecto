@@ -34,7 +34,10 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -55,11 +58,11 @@ public class MercadoPagoSplitService {
     private final PurchaseDetailService purchaseDetailService;
 
     // ================ CONFIGURACIÓN REQUERIDA =================
-    private static final String APP_ID = "TU_APP_ID"; // Obtenido al crear la aplicación
-    private static final String CLIENT_SECRET = "TU_CLIENT_SECRET"; // Obtenido al crear la aplicación
-    private static final String MARKETPLACE_ACCESS_TOKEN = "TU_ACCESS_TOKEN_MARKETPLACE"; // Access Token del marketplace
-    private static final String REDIRECT_URI = "https://tu-dominio.com/auth/callback"; // URL configurada en tu aplicación
-    private static final String NOTIFICATION_URL = "https://tu-dominio.com/api/notificaciones"; // URL para notificaciones
+    private static final String APP_ID = "2552125444382264"; // Obtenido al crear la aplicación
+    private static final String CLIENT_SECRET = "6jNUiU2UsjlkXaUzWcwXaqak40NhMEZ8"; // Obtenido al crear la aplicación
+    private static final String MARKETPLACE_ACCESS_TOKEN = "APP_USR-2552125444382264-030609-9af3f586d7ec8eb52060f4db865e5014-447529108"; // Access Token del marketplace
+    private static final String REDIRECT_URI = "https://662b-196-32-67-187.ngrok-free.app/mp/auth/callback"; // URL configurada en tu aplicación
+    private static final String NOTIFICATION_URL = "https://662b-196-32-67-187.ngrok-free.app/mp/notification"; // URL para notificaciones
     // =========================================================
 
     public MercadoPagoSplitService(
@@ -75,13 +78,18 @@ public class MercadoPagoSplitService {
         this.purchaseDetailService = purchaseDetailService;
     }
 
-    /**
-     * Genera URL para que los productores autoricen a tu marketplace
-     */
-    public String generarUrlAutorizacionProductor() {
-        return "https://auth.mercadopago.com.ar/authorization?client_id=" + APP_ID +
-               "&response_type=code&platform_id=mp&redirect_uri=" + REDIRECT_URI;
-    }
+    public String generarUrlAutorizacionProductor(UUID productorId) {
+        try {
+            // Genera la URL de autorización
+            return "https://auth.mercadopago.com/authorization?client_id="+ APP_ID
+            +"&response_type=code&platform_id=mp&state="+ productorId
+            +"&redirect_uri=" + REDIRECT_URI;
+        } catch (Exception e) {
+            throw new RuntimeException("Error al generar la URL de autorización", e);
+        }
+    }        
+        
+    
 
     /**
      * Procesa el código de autorización recibido cuando un productor autoriza a tu marketplace
@@ -110,6 +118,9 @@ public class MercadoPagoSplitService {
                 
                 System.out.println("Autenticación exitosa para productor: " + productorId);
                 System.out.println("MP User ID: " + userId);
+                System.out.println("MP access token: " + accessToken);
+                System.out.println("MP refresh token : " + refreshToken);
+                
                 
                 // Guardar los datos del productor en la base de datos
                 return userService.saveProducerMpData(productorId, accessToken, userId, refreshToken);
@@ -362,6 +373,7 @@ public class MercadoPagoSplitService {
         System.out.println("Creando pago split para productor: " + productorId + ", monto: " + monto);
         
         return userService.getMpProductorUserId(productorId)
+            .doOnNext(userId -> System.out.println(userId))
             .flatMap(mpUserId -> {
                 // Crear el objeto de pago
                 JsonObject pagoSplit = new JsonObject();
@@ -395,44 +407,45 @@ public class MercadoPagoSplitService {
                         System.err.println("Error al crear pago split: " + e.getMessage());
                     });
             });
-    }
-    
+    }    
     /**
      * Crea una compra completa con pagos split (método principal)
      * Este método combina todo el flujo de compra, desde crear la compra hasta generar la preferencia
      */
-    public Mono<Preference> crearCompraCompleta(PurchaseCreateDTO purchaseDto, List<PurchaseDetailEntity> details) {
-        System.out.println("Creando compra completa con pagos split");
+    // public Mono<Preference> crearCompraCompleta(PurchaseCreateDTO purchaseDto, List<PurchaseDetailEntity> details) {
+    //     System.out.println("Creando compra completa con pagos split");
     
-        // 1. Crear la compra
-        return purchaseStateService.findByName("pending")
-            .switchIfEmpty(Mono.error(new IllegalStateException("Estado 'pending' no encontrado")))
-            .flatMap(purchaseState -> {
-                PurchaseEntity purchase = PurchaseEntity.builder()
-                    .idPurchase(UUID.randomUUID())
-                    .fkUser(purchaseDto.getFkUser())
-                    .level(purchaseDto.getLevel())
-                    .createdAt(LocalDateTime.now())
-                    .fkCurrentState(purchaseState.getIdPurchaseState())
-                    .build();
+    //     // 1. Crear la compra
+    //     return purchaseStateService.findByName("pending")
+    //         .switchIfEmpty(Mono.error(new IllegalStateException("Estado 'pending' no encontrado")))
+    //         .flatMap(purchaseState -> {
+    //             PurchaseEntity purchase = PurchaseEntity.builder()
+    //                 .idPurchase(UUID.randomUUID())
+    //                 .fkUser(purchaseDto.getFkUser())
+    //                 .level(purchaseDto.getLevel())
+    //                 .createdAt(LocalDateTime.now())
+    //                 .fkCurrentState(purchaseState.getIdPurchaseState())
+    //                 .build();
     
-                return purchaseRepository.save(purchase);
-            })
-            .flatMap(purchase -> {
-                // 2. Guardar los detalles de la compra
-                UUID purchaseId = purchase.getIdPurchase();
-                return Flux.fromIterable(details)
-                    .flatMap(detail -> {
-                        detail.setFkPurchase(purchaseId);
-                        return purchaseDetailService.save(detail);
-                    })
-                    .then(Mono.just(purchaseId));  // Use `then` to return a Mono<UUID>
-            })
-            .flatMap(purchaseId -> {
-                // 3. Crear la preferencia de pago (explicitly return Mono<Preference>)
-                return crearPreferenciaPago(purchaseId);
-            });
-    }
+    //             return purchaseRepository.save(purchase);
+    //         })
+    //         .flatMap(purchase -> {
+    //             // 2. Guardar los detalles de la compra
+    //             UUID purchaseId = purchase.getIdPurchase();
+    //             return Flux.fromIterable(details)
+    //                 .flatMap(detail -> {
+    //                     detail.setFkPurchase(purchaseId);
+    //                     return purchaseDetailService.save(detail);
+    //                 })
+    //                 .then(Mono.just(purchaseId));  // Use `then` to return a Mono<UUID>
+    //         })
+    //         .flatMap(purchaseId -> {
+    //             // 3. Crear la preferencia de pago (explicitly return Mono<Preference>)
+    //             return crearPreferenciaPago(purchaseId);
+    //         });
+    // }
+
+    
 
     /**
      * Método para refrescar el token de un productor cuando expire

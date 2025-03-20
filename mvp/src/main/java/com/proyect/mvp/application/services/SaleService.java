@@ -19,29 +19,31 @@ public class SaleService {
     private final ONGRepository ONGRepository;
     private final SaleRepository saleRepository;
     private final PurchaseDetailService detailService;
+    private final SaleStateService saleStateService;
 
-    public SaleService(SaleRepository saleRepository, ONGRepository ONGRepository, PurchaseDetailService purchaseDetailService, ONGRouter ONGRouter){
+    public SaleService(SaleRepository saleRepository, ONGRepository ONGRepository, PurchaseDetailService purchaseDetailService, ONGRouter ONGRouter, SaleStateService saleStateService){
         this.saleRepository = saleRepository;
         this.ONGRepository = ONGRepository;
         this.detailService = purchaseDetailService;
         this.ONGRouter = ONGRouter;
+        this.saleStateService = saleStateService;
     }
     
 
     public Mono<SaleEntity> registrarVenta(String fkDetail, UUID fkProductor){
-        return  detailService.getById(UUID.fromString(fkDetail))
-                            .flatMap(detail -> {
-
-                                SaleEntity sale = SaleEntity.builder()
-                                                            .amount(detail.calculatePrice())
-                                                            .fkProductor(fkProductor)
-                                                            .fkProduct(detail.getProduct().getIdProduct())
-                                                            .quantity(detail.getQuantity())
-                                                            .unitPrice(detail.getUnitPrice())
-                                                            .build();
-                                return saleRepository.save(sale);
-
-                            });
-
-    }
-}
+        return saleStateService.findSaleStateByName("pending_payment")
+                .flatMap(state -> 
+                            detailService.getById(UUID.fromString(fkDetail))
+                                .flatMap(detail -> {
+                                                    SaleEntity sale = SaleEntity.builder()
+                                                                        .amount(detail.calculatePrice())
+                                                                        .fkCurrentState(state.getIdSaleState())
+                                                                        .fkProductor(fkProductor)
+                                                                        .fkProduct(detail.getProduct().getIdProduct())
+                                                                        .quantity(detail.getQuantity())
+                                                                        .unitPrice(detail.getUnitPrice())
+                                                                        .build();
+                                                        return saleRepository.save(sale);
+                                                    })
+                                            );
+                }}

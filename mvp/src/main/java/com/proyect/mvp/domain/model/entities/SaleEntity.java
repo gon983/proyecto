@@ -30,20 +30,13 @@ public class SaleEntity {
     private double amount;
  
     private UUID  fkProductor; // Assuming "productor" refers to the User entity
-    
-    @Transient
-    private UserEntity  deliverGuy;
 
-    @Nullable
-    private PaymentMethodEntity  paymentMethod;
-
-    @Nullable
-    @Column( "bill")
-    private String bill;
     @Column("fk_product")
     UUID fkProduct;
     @Column("quantity")
     double quantity;
     @Column("unit_price")
     double unitPrice;
+    @Column("fk_current_state")
+    UUID fkCurrentState;
 }

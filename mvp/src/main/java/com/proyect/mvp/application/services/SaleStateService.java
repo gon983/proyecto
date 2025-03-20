@@ -51,5 +51,10 @@ public class SaleStateService {
                 .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)));
     }
 
+    public Mono<SaleStateEntity> findSaleStateByName(String name){
+        return saleStateRepository.findByName(name);
+
+    }
+
     
 }

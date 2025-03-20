@@ -71,6 +71,7 @@ public class PurchaseService {
     private final EncryptionService encryptionService;
     private final StockMovementService stockMovementService;
     private final SaleService saleService;
+    static String NOTIFICATION_URL = "https://662b-196-32-67-187.ngrok-free.app/confirmPayment";
     
 
     public PurchaseService(PurchaseRepository purchaseRepository, PurchaseStateService purchaseStateService, PurchaseDetailService purchaseDetailService,
@@ -220,7 +221,7 @@ public class PurchaseService {
                                     .backUrls(backUrls)
                                     .autoReturn("approved")
                                     .paymentMethods(paymentMethods)
-                                    .notificationUrl("https://26f3-196-32-67-187.ngrok-free.app/confirmPayment")
+                                    .notificationUrl(NOTIFICATION_URL)
                                     .statementDescriptor("MARKETPLACE")
                                     .externalReference("Purchase_" + purchaseId.toString())
                                     .expires(true)
@@ -446,31 +447,31 @@ public class PurchaseService {
                             })
                             .thenReturn(detail); // Devolvemos el detalle para mantener el flujo
                     })
-                    .collectList()
-                    .flatMap(detallesRegistrados -> {
+                    // .collectList()
+                    // .flatMap(detallesRegistrados -> {
                         // Calculamos el monto total después de registrar las ventas
-                        BigDecimal montoProductor = detallesRegistrados.stream()
-                            .map(detail -> {
-                                BigDecimal precio = new BigDecimal(detail.calculatePrice());
-                                System.out.println("- Producto: " + detail.getIdPurchaseDetail() +
-                                        ", precio: " + precio);
-                                return precio;
-                            })
-                            .reduce(BigDecimal.ZERO, BigDecimal::add);
+                        // BigDecimal montoProductor = detallesRegistrados.stream()
+                        //     .map(detail -> {
+                        //         BigDecimal precio = new BigDecimal(detail.calculatePrice());
+                        //         System.out.println("- Producto: " + detail.getIdPurchaseDetail() +
+                        //                 ", precio: " + precio);
+                        //         return precio;
+                        //     })
+                        //     .reduce(BigDecimal.ZERO, BigDecimal::add);
     
-                        System.out.println("Monto total para productor " + productorId + ": " + montoProductor);
+                        // System.out.println("Monto total para productor " + productorId + ": " + montoProductor);
     
-                        return userService.getUserById(productorId)
-                            .doOnNext(productor -> System.out.println("Usuario productor encontrado: " +
-                                    productorId + ", token MP: " ))
-                            .doOnError(e -> System.err.println("ERROR: No se encontró el usuario productor: " +
-                                    productorId + " - " + e.getMessage()))
-                            .flatMap(productor -> {
-                                System.out.println("Iniciando transferencia para productor: " + productorId);
-                                return userService.getMpAccessToken(productorId)
-                                                  .flatMap(mpAccessToken -> transferirFondosAProductor(productorId, mpAccessToken, montoProductor, payment.getId()));
-                            });
-                    })
+                        // return userService.getUserById(productorId)
+                        //     .doOnNext(productor -> System.out.println("Usuario productor encontrado: " +
+                        //             productorId + ", token MP: " ))
+                        //     .doOnError(e -> System.err.println("ERROR: No se encontró el usuario productor: " +
+                        //             productorId + " - " + e.getMessage()))
+                        //     .flatMap(productor -> {
+                        //         System.out.println("Iniciando transferencia para productor: " + productorId);
+                        //         return userService.getMpAccessToken(productorId)
+                        //                           .flatMap(mpAccessToken -> transferirFondosAProductor(productorId, mpAccessToken, montoProductor, payment.getId()));
+                        //     });
+                    // })
                     .then(Mono.empty())
                     .doOnSuccess(v -> System.out.println("Proceso completo para productor: " + productorId));
             })
