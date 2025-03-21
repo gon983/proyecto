@@ -1,7 +1,11 @@
 package com.proyect.mvp.application.services;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
 import com.proyect.mvp.infrastructure.routes.ONGRouter;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +17,7 @@ import com.proyect.mvp.domain.model.entities.SaleEntity;
 import com.proyect.mvp.domain.repository.ONGRepository;
 import com.proyect.mvp.domain.repository.SaleRepository;
 
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
@@ -68,26 +73,77 @@ public class SaleService {
 
 
         public Mono<List<CollectionPointSalesDTO>> obtenerVentasProductorPorCollectionPoint(UUID idProductor) {
-            return productService.getProductsByProducer(idProductor)
-                // Obtener todos los productos del productor y convertirlo a Flux
-                .flatMap((ProductEntity product) -> {
-                    // Para cada producto, obtener su locality y mantener el contexto del producto
-                    return Mono.just(product.getFkLocality())
-                        .flatMapMany(fkLocality -> neighborhoodService.getNeighborhoodOfLocality(fkLocality))
-                        .flatMap(neighborhood -> collectionPointService.getCollectionPointByFkNeighborhood(neighborhood.getIdNeighborhood()))
-                        .flatMap(collectionPoint -> {
-                            return saleRepository.getSalesSummary(collectionPoint.getIdCollectionPoint())
-                                .map(salesList -> {
-                                    // Creamos el DTO con la lista de ventas
-                                    return CollectionPointSalesDTO.builder()
+        return productService.getProductsByProducer(idProductor)
+            .collectList()
+            // Tomamos solo el primer producto (ya que todos tienen la misma localidad)
+            .flatMap(productList -> {
+                
+                // Obtenemos la localidad del primer producto
+                UUID locality = productList.get(0).getFkLocality();
+                System.out.println("Procesando localidad: " + locality);
+                
+                // Obtenemos todos los barrios de esta localidad
+                return neighborhoodService.getNeighborhoodsOfLocality(locality)
+                    .doOnNext(neighborhoods -> {
+                        System.out.println("Barrios encontrados: " + neighborhoods.size());
+                        neighborhoods.forEach(n -> System.out.println("  - Barrio: " + n.getIdNeighborhood()));
+                    })
+                    // Convertimos la lista de barrios a un Flux para procesarlos
+                    .flatMapMany(neighborhoods -> Flux.fromIterable(neighborhoods))
+                    // Para cada barrio, obtenemos los puntos de recolección
+                    .flatMap(neighborhood -> {
+                        System.out.println("Procesando barrio: " + neighborhood.getIdNeighborhood());
+                        return collectionPointService.getCollectionPointByFkNeighborhood(neighborhood.getIdNeighborhood())
+                            .doOnNext(cp -> System.out.println("  - Punto encontrado: " + cp.getIdCollectionPoint()));
+                    })
+                    // Para cada punto, obtenemos las ventas y creamos el DTO
+                    .flatMap(collectionPoint -> {
+                        return this.getSalesSummary(collectionPoint.getIdCollectionPoint())
+                            .map(salesList -> {
+                                System.out.println("  - Ventas para punto " + collectionPoint.getIdCollectionPoint() + ": " + salesList.size());
+                                return CollectionPointSalesDTO.builder()
                                         .collectionPoint(collectionPoint)
-                                        .sales(salesList) // Asignamos la lista completa
+                                        .sales(salesList)
                                         .build();
-                                });
-                        });
-                })
-                .collectList();
-        }
+                            });
+                    })
+                    // Combinamos todos los resultados en una lista
+                    .collectList();
+            });
+}
+
+    public Mono<List<SaleSummaryDTO>> getSalesSummary(UUID idCollectionPoint) {
+    return saleRepository.getSalesForCollectionPoint(idCollectionPoint)
+        .flatMap(sale -> 
+            productService.getProductById(sale.getFkProduct())  // Obtener producto
+                .map(product -> new SaleSummaryDTO(
+                    product.getIdProduct(),
+                    product.getName(),
+                    product.getStock(),
+                    product.getUnitMeasurement(),
+                    sale.getQuantity(),
+                    sale.getAmount()
+                ))
+        )
+        .collect(Collectors.groupingBy(
+            SaleSummaryDTO::getIdProduct,   // Agrupar por idProduct
+            Collectors.reducing(
+                new SaleSummaryDTO(null, "", 0.0, "", 0.0, 0.0), // Valor inicial
+                (sale1, sale2) -> new SaleSummaryDTO(
+                    sale1.getIdProduct(),
+                    sale1.getName(),
+                    sale1.getStock(),
+                    sale1.getUnitMeasurement(),
+                    sale1.getTotalQuantity() + sale2.getTotalQuantity(), // Sumar cantidades
+                    sale1.getTotalAmount() + sale2.getTotalAmount()      // Sumar montos
+                )
+            )
+        ))
+        .map(groupedMap -> new ArrayList<>(groupedMap.values())); // Convertir Map a List
+}
+
+
+        
             
             
     }

@@ -3,6 +3,8 @@ package com.proyect.mvp.application.services;
 import com.proyect.mvp.application.dtos.create.NeighborhoodCreateDTO;
 import com.proyect.mvp.domain.model.entities.NeighborhoodEntity;
 import com.proyect.mvp.domain.repository.NeighborhoodRepository;
+import com.proyect.mvp.infrastructure.routes.SaleRouter;
+import io.netty.util.internal.SocketUtils;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -10,15 +12,19 @@ import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
 public class NeighborhoodService {
 
+    private final SaleRouter saleRouter;
+
     private final NeighborhoodRepository neighborhoodRepository;
 
-    public NeighborhoodService(NeighborhoodRepository neighborhoodRepository) {
+    public NeighborhoodService(NeighborhoodRepository neighborhoodRepository, SaleRouter saleRouter) {
         this.neighborhoodRepository = neighborhoodRepository;
+        this.saleRouter = saleRouter;
     }
 
     public Flux<NeighborhoodEntity> getAllNeighborhoods() {
@@ -30,9 +36,9 @@ public class NeighborhoodService {
                 .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)));
     }
 
-    public Flux<NeighborhoodEntity> getNeighborhoodOfLocality(UUID id) {
+    public Mono<List<NeighborhoodEntity>> getNeighborhoodsOfLocality(UUID id) {
         return neighborhoodRepository.findByFkLocality(id)
-                .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)));
+                .collectList();
     }
 
 
@@ -41,9 +47,9 @@ public class NeighborhoodService {
         NeighborhoodEntity neighborhoodEntity = NeighborhoodEntity.builder()
                 .idNeighborhood(UUID.randomUUID())
                 .name(neighborhood.getName())
-                .localityId(neighborhood.getLocalityId())
+                .fkLocality(neighborhood.getFkLocality())
                 .build();
-        return neighborhoodRepository.insertNeighborhood(neighborhoodEntity.getIdNeighborhood(), neighborhoodEntity.getName(), neighborhoodEntity.getLocalityId())
+        return neighborhoodRepository.insertNeighborhood(neighborhoodEntity.getIdNeighborhood(), neighborhoodEntity.getName(), neighborhoodEntity.getFkLocality())
                 .thenReturn(neighborhoodEntity)
                 .onErrorMap(error -> {
                     System.err.println("Error al guardar barrio: " + error.getMessage());
@@ -57,7 +63,7 @@ public class NeighborhoodService {
                     NeighborhoodEntity newNeighborhood = NeighborhoodEntity.builder()
                             .idNeighborhood(id)
                             .name(updatedNeighborhood.getName())
-                            .localityId(updatedNeighborhood.getLocalityId())
+                            .fkLocality(updatedNeighborhood.getFkLocality())
                             .build();
                     return neighborhoodRepository.save(newNeighborhood);
                 })

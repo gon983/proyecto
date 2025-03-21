@@ -83,7 +83,7 @@ public class UserService {
     public Mono<UUID> getLocality(UUID idUser){
         return getUserById(idUser)
                 .flatMap(user -> neighborhoodService.getNeighborhoodById(user.getFkNeighborhood()))
-                .flatMap(neighborhood -> Mono.just(neighborhood.getLocalityId()));
+                .flatMap(neighborhood -> Mono.just(neighborhood.getFkLocality()));
     }
 
     public Mono<String> getMpAccessToken(UUID userId) {

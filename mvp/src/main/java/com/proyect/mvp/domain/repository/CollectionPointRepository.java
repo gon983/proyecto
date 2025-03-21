@@ -28,5 +28,6 @@ public interface CollectionPointRepository extends R2dbcRepository<CollectionPoi
             @Param("description") String description
     );
 
-    Mono<CollectionPointEntity> getCollectionPointByFkNeighborhood(UUID idNeighborhood);
+    @Query("SELECT * from collection_point  WHERE fk_neighborhood = :idNeigborhood ")
+    Mono<CollectionPointEntity> getCollectionPointByFkNeighborhood(@Param("idNeighborhood") UUID idNeighborhood);
 }

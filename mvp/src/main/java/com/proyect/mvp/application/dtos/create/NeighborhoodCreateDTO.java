@@ -9,6 +9,6 @@ import java.util.UUID;
 @NoArgsConstructor
 public class NeighborhoodCreateDTO {
     private String name;
-    private UUID localityId;
+    private UUID fkLocality;
 }
 

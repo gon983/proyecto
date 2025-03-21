@@ -21,11 +21,11 @@ public class NeighborhoodEntity {
     private UUID idNeighborhood;
     private String name;
     @Column("fk_locality")
-    private UUID localityId;
+    private UUID fkLocality;
 
-    public NeighborhoodEntity(String name, UUID localityId) {
+    public NeighborhoodEntity(String name, UUID fkLocality) {
         this.idNeighborhood = UUID.randomUUID();
         this.name = name;
-        this.localityId = localityId;
+        this.fkLocality = fkLocality;
     }
 }
