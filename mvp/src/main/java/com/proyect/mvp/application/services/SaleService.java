@@ -6,6 +6,8 @@ import com.proyect.mvp.infrastructure.routes.ONGRouter;
 import org.springframework.stereotype.Service;
 
 import com.proyect.mvp.application.dtos.response.CollectionPointSalesDTO;
+import com.proyect.mvp.application.dtos.response.SaleSummaryDTO;
+import com.proyect.mvp.domain.model.entities.ProductEntity;
 import com.proyect.mvp.domain.model.entities.PurchaseDetailEntity;
 import com.proyect.mvp.domain.model.entities.SaleEntity;
 import com.proyect.mvp.domain.repository.ONGRepository;
@@ -65,22 +67,27 @@ public class SaleService {
         }
 
 
-    public Mono<List<CollectionPointSalesDTO>> obtenerVentasProductorPorCollectionPoint(UUID idProductor){
-        return productService.getProductsByProducer(idProductor)
-                             .flatMap(product -> Mono.just(product.getFkLocality()))
-                             .flatMap(fkLocality -> {return neighborhoodService.getNeighborhoodOfLocality(fkLocality);})
-                             .flatMap(neighborhood -> { return collectionPointService.getCollectionPointByFkNeighborhood(neighborhood.getIdNeighborhood())})
-                             .flatMap(collectionPoint -> {
-                                return saleRepository.getSalesSummary(collectionPoint.getIdCollectionPoint())
-                                                        .flatMap(sales -> { CollectionPointSalesDTO cpSales = CollectionPointSalesDTO.builder()
-                                                                                                                                    .collectionPoint(collectionPoint)
-                                                                                                                                    .sales(sales)
-                                                                                                                                    .build();
-                                                                            return cpSales;});
-                            })
-                            .collectList();
-
-    }    
+        public Mono<List<CollectionPointSalesDTO>> obtenerVentasProductorPorCollectionPoint(UUID idProductor) {
+            return productService.getProductsByProducer(idProductor)
+                // Obtener todos los productos del productor y convertirlo a Flux
+                .flatMap((ProductEntity product) -> {
+                    // Para cada producto, obtener su locality y mantener el contexto del producto
+                    return Mono.just(product.getFkLocality())
+                        .flatMapMany(fkLocality -> neighborhoodService.getNeighborhoodOfLocality(fkLocality))
+                        .flatMap(neighborhood -> collectionPointService.getCollectionPointByFkNeighborhood(neighborhood.getIdNeighborhood()))
+                        .flatMap(collectionPoint -> {
+                            return saleRepository.getSalesSummary(collectionPoint.getIdCollectionPoint())
+                                .map(salesList -> {
+                                    // Creamos el DTO con la lista de ventas
+                                    return CollectionPointSalesDTO.builder()
+                                        .collectionPoint(collectionPoint)
+                                        .sales(salesList) // Asignamos la lista completa
+                                        .build();
+                                });
+                        });
+                })
+                .collectList();
+        }
             
             
     }

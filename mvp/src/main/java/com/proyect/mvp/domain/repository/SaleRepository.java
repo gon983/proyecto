@@ -10,6 +10,8 @@ import org.springframework.data.repository.query.Param;
 import com.proyect.mvp.application.dtos.response.SaleSummaryDTO;
 import com.proyect.mvp.domain.model.entities.SaleEntity;
 
+import reactor.core.publisher.Mono;
+
 public interface SaleRepository extends R2dbcRepository<SaleEntity,UUID> {
 
     @Query(value = "SELECT p.*, SUM(s.quantity) AS totalQuantity, SUM(s.amount) AS totalAmount " +
@@ -17,7 +19,7 @@ public interface SaleRepository extends R2dbcRepository<SaleEntity,UUID> {
                    "JOIN product p ON s.fk_product = p.id_product " +
                    "WHERE s.fk_collection_point = :collectionPoint " +
                    "GROUP BY s.fk_product, nativeQuery = true")
-    List<SaleSummaryDTO> findSalesSummaryByCollectionPointNative(@Param("collectionPoint") String collectionPoint);
+    Mono<List<SaleSummaryDTO>> getSalesSummary(@Param("collectionPoint") UUID collectionPoint);
 }
 
 
