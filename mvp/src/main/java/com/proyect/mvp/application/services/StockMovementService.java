@@ -67,7 +67,7 @@ public class StockMovementService {
                             return productService.getProductById(detail.getFkProduct())
                             .flatMap(
                                 product -> {
-                                    double newStock = product.getStock() +detail.getQuantity();
+                                    double newStock = product.getStock() - detail.getQuantity();
                                     if(newStock<0){return Mono.error(new IllegalArgumentException("Stock Insuficiente"));}
 
                                     StockMovementEntity movement =
