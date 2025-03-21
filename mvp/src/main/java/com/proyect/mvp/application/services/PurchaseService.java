@@ -398,7 +398,7 @@ public class PurchaseService {
                             .collectList()
                             .flatMap(details -> {
                                 System.out.println("Procesando pagos a productores: " + details.size());
-                                return procesarPagosProductores(details, payment);
+                                return registrarVentas(details, payment, updatedPurchase.getFkUser());
                             });
                 })
                 .doOnSuccess(v -> System.out.println("Procesamiento de pago aprobado completado"))
@@ -407,162 +407,44 @@ public class PurchaseService {
                 .then();
     }
     
-    private Mono<Void> procesarPagosProductores(List<PurchaseDetailEntity> details, Payment payment) {
-        System.out.println("=========== INICIO procesarPagosProductores ===========");
+    private Mono<Void> registrarVentas(List<PurchaseDetailEntity> details, Payment payment, UUID fkUser) {
+        System.out.println("=========== INICIO registrarVentas ===========");
         System.out.println("Detalles recibidos: " + details.size() + ", paymentId: " + payment.getId());
-    
-        // Agrupamos por productor
-        Map<UUID, List<PurchaseDetailEntity>> detallesPorProductor = details.stream()
-                .peek(detail -> detail.toString())
-                .collect(Collectors.groupingBy(detail -> {
-                    UUID productorId = detail.getProduct() != null ? detail.getProduct().getFkProductor() : null;
-                    System.out.println("Agrupando detalle " + detail.getIdPurchaseDetail() +
-                            " para producto " + (detail.getProduct() != null ? detail.getProduct().getIdProduct() : "null") +
-                            " del productor " + productorId);
-                    return productorId;
-                }));
-    
-        System.out.println("Total de productores a pagar: " + detallesPorProductor.size());
-    
-        // Procesamos cada productor
-        return Flux.fromIterable(detallesPorProductor.entrySet())
-            .doOnNext(entry -> System.out.println("Procesando productor: " + entry.getKey() +
-                    " con " + entry.getValue().size() + " productos"))
-            .flatMap((Entry<UUID, List<PurchaseDetailEntity>> entry) -> {
-                UUID productorId = entry.getKey();
-                List<PurchaseDetailEntity> detallesProductor = entry.getValue();
-    
-                // Primero registramos cada venta - antes de procesar el pago
-                return Flux.fromIterable(detallesProductor)
-                    .flatMap(detail -> {
-                        System.out.println("Registrando venta del detalle: " + detail.toString() + 
-                                           " para productor: " + productorId);
-                        return saleService.registrarVenta(detail.getIdPurchaseDetail(), productorId)
-                            .doOnSuccess(resultado -> System.out.println("Venta registrada correctamente"))
-                            .doOnError(e -> System.err.println("Error al registrar venta: " + e.getMessage()))
-                            .onErrorResume(e -> {
-                                // Continuamos con el flujo aunque falle el registro
-                                System.err.println("Continuando a pesar del error en el registro");
-                                return Mono.empty();
-                            })
-                            .thenReturn(detail); // Devolvemos el detalle para mantener el flujo
-                    })
-                    // .collectList()
-                    // .flatMap(detallesRegistrados -> {
-                        // Calculamos el monto total después de registrar las ventas
-                        // BigDecimal montoProductor = detallesRegistrados.stream()
-                        //     .map(detail -> {
-                        //         BigDecimal precio = new BigDecimal(detail.calculatePrice());
-                        //         System.out.println("- Producto: " + detail.getIdPurchaseDetail() +
-                        //                 ", precio: " + precio);
-                        //         return precio;
-                        //     })
-                        //     .reduce(BigDecimal.ZERO, BigDecimal::add);
-    
-                        // System.out.println("Monto total para productor " + productorId + ": " + montoProductor);
-    
-                        // return userService.getUserById(productorId)
-                        //     .doOnNext(productor -> System.out.println("Usuario productor encontrado: " +
-                        //             productorId + ", token MP: " ))
-                        //     .doOnError(e -> System.err.println("ERROR: No se encontró el usuario productor: " +
-                        //             productorId + " - " + e.getMessage()))
-                        //     .flatMap(productor -> {
-                        //         System.out.println("Iniciando transferencia para productor: " + productorId);
-                        //         return userService.getMpAccessToken(productorId)
-                        //                           .flatMap(mpAccessToken -> transferirFondosAProductor(productorId, mpAccessToken, montoProductor, payment.getId()));
-                        //     });
-                    // })
-                    .then(Mono.empty())
-                    .doOnSuccess(v -> System.out.println("Proceso completo para productor: " + productorId));
-            })
-            .doOnComplete(() -> System.out.println("Todos los pagos a productores procesados"))
-            .doOnError(e -> System.err.println("ERROR general en procesarPagosProductores: " + e.getMessage()))
-            .doFinally(signal -> System.out.println("=========== FIN procesarPagosProductores con señal: " + signal + " ==========="))
-            .then();
-    }    
-
-
-
-
-    private Mono<Void> transferirFondosAProductor(UUID productorId, String mpAccessToken, BigDecimal monto, Long paymentId) {
-    System.out.println("=========== INICIO transferirFondosAProductor ===========");
-    System.out.println("Parámetros: productorId=" + productorId +
-            ", token=" + (mpAccessToken != null ? "[presente]" : "[ausente]") +
-            ", monto=" + monto +
-            ", paymentId=" + paymentId);
-
-    return Mono.defer(() -> {
-        try {
-            System.out.println("Verificando token de acceso del productor");
-            if (mpAccessToken == null || mpAccessToken.isEmpty()) {
-                System.err.println("ERROR: Token de acceso nulo o vacío para el productor " + productorId);
-                return Mono.error(new RuntimeException("Token de acceso inválido para el productor"));
-            }
-
-            System.out.println("Cambiando al token del productor");
-            MercadoPagoConfig.setAccessToken(mpAccessToken);
-            System.out.println("Token cambiado correctamente");
-
-            System.out.println("Construyendo solicitud de pago");
-            // Corregido según la documentación de la API de Mercado Pago para pagos
-            JsonObject payoutRequest = new JsonObject();
-            
-            // Agregamos la información del método de pago
-            payoutRequest.addProperty("transaction_amount", monto);
-            payoutRequest.addProperty("description", "Pago de venta ID " + paymentId);
-            
-            // Para Argentina
-            payoutRequest.addProperty("payment_method_id", "account_money");
-            // payoutRequest.addProperty("payment_type_id", "account_money");
-            
-            // Información del pagador (opcional pero recomendado)
-            JsonObject payer = new JsonObject();
-            payer.addProperty("email", "test_user_@testuser.com");
-            payoutRequest.add("payer", payer);
-            
-            System.out.println("Solicitud construida: " + payoutRequest);
-
-            System.out.println("Enviando solicitud a Mercado Pago usando WebClient...");
-            
-            return WebClient.create("https://api.mercadopago.com")
-                .post()
-                .uri("/v1/payments")
-                .header("Authorization", "Bearer " + mpAccessToken)
-                .header("Content-Type", "application/json")
-                .bodyValue(payoutRequest.toString())
-                .retrieve()
-                .onStatus(status -> status.is4xxClientError() || status.is5xxServerError(), 
-                    response -> response.bodyToMono(String.class)
-                        .flatMap(errorBody -> {
-                            System.err.println("ERROR en la transferencia: statusCode=" + response.statusCode());
-                            System.err.println("Cuerpo de respuesta: " + errorBody);
-                            return Mono.error(new RuntimeException("Error en la transferencia: " + response.statusCode() + " - " + errorBody));
-                        })
-                )
-                .bodyToMono(String.class)
-                .doOnSuccess(responseBody -> {
-                    System.out.println("ÉXITO: Transferidos " + monto + " al productor " + productorId);
-                    System.out.println("Respuesta: " + responseBody);
-                })
-                .then();
+        
+        return Flux.fromIterable(details)
+            .doOnNext(detail -> System.out.println("Procesando detalle: " + detail.toString()))
+            .flatMap(detail -> {
+                UUID productorId = detail.getProduct() != null ? detail.getProduct().getFkProductor() : null;
                 
-        } catch (Exception e) {
-            System.err.println("EXCEPCIÓN al transferir fondos: " + e.getClass().getName() + ": " + e.getMessage());
-            e.printStackTrace();
-            return Mono.error(e);
-        } finally {
-            System.out.println("Restaurando token principal");
-            MercadoPagoConfig.setAccessToken("APP_USR-2552125444382264-030609-9af3f586d7ec8eb52060f4db865e5014-447529108");
-            System.out.println("Token principal restaurado");
-        }
-    })
-    .onErrorResume(e -> {
-        System.err.println("ERROR MANEJADO: Error procesando pago para productor " + productorId + ": " + e.getMessage());
-        e.printStackTrace();
-        return Mono.empty();
-    })
-    .doFinally(signal -> System.out.println("=========== FIN transferirFondosAProductor con señal: " + signal + " ==========="));
-}
+                if (productorId == null) {
+                    System.err.println("Detalle sin productor válido: " + detail.getIdPurchaseDetail());
+                    return Mono.empty();
+                }
+                
+                System.out.println("Registrando venta del detalle: " + detail.toString() + 
+                                   " para productor: " + productorId);
+                
+                // Usamos cast explícito para resolver posibles problemas de inferencia
+                return saleService.registrarVenta(detail.getIdPurchaseDetail(), productorId, fkUser)
+                    .flatMap(resultado -> {
+                        System.out.println("Venta registrada correctamente");
+                        return stockMovementService.registrarMovimientoPorCompra(fkUser, detail.getIdPurchaseDetail())
+                            .doOnSuccess(v -> System.out.println("Movimiento de stock registrado correctamente"))
+                            .onErrorResume(e -> {
+                                System.err.println("Error al registrar movimiento de stock: " + e.getMessage());
+                                return Mono.empty();
+                            });
+                    })
+                    .onErrorResume(e -> {
+                        System.err.println("Error al registrar venta: " + e.getMessage());
+                        return Mono.empty();
+                    });
+            })
+            .doOnComplete(() -> System.out.println("Todas las ventas procesadas"))
+            .doOnError(e -> System.err.println("ERROR general en registrarVentas: " + e.getMessage()))
+            .doFinally(signal -> System.out.println("=========== FIN registrarVentas con señal: " + signal + " ==========="))
+            .then();
+    }
     
     
 }

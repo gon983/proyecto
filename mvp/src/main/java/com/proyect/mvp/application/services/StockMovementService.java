@@ -9,6 +9,7 @@ import org.springframework.transaction.reactive.TransactionalOperator;
 
 import com.proyect.mvp.application.dtos.create.StockMovementCreateDTO;
 import com.proyect.mvp.domain.model.entities.StockMovementEntity;
+import com.proyect.mvp.domain.model.entities.StockMovementTypeEnum;
 import com.proyect.mvp.domain.repository.StockMovementRepository;
 
 import io.r2dbc.spi.ConnectionFactory;
@@ -20,11 +21,14 @@ public class StockMovementService {
     private final StockMovementRepository stockMovementRepository;
     private final ProductService productService;
     private final TransactionalOperator transactionalOperator;
+    private final PurchaseDetailService detailService;
 
-    public StockMovementService(StockMovementRepository stockMovementRepository, ProductService productService, ConnectionFactory connectionFactory){
+    public StockMovementService(StockMovementRepository stockMovementRepository, ProductService productService,
+     ConnectionFactory connectionFactory, PurchaseDetailService detailService){
         this.stockMovementRepository = stockMovementRepository;
         this.productService = productService;
         this.transactionalOperator = TransactionalOperator.create(new R2dbcTransactionManager(connectionFactory));
+        this.detailService = detailService;
 
     }
 
@@ -57,8 +61,30 @@ public class StockMovementService {
 
     }
 
-    public Mono<Void> registrarMovimientoPorCompra(){
-        return Mono.empty(); // el registro del cambio de stock lo voy a hacer cuando les pague a los productores
+    public Mono<Void> registrarMovimientoPorCompra(UUID fkUser, String idDetail){
+        return detailService.getById(UUID.fromString(idDetail))
+                            .flatMap(detail -> {
+                            return productService.getProductById(detail.getFkProduct())
+                            .flatMap(
+                                product -> {
+                                    double newStock = product.getStock() +detail.getQuantity();
+                                    if(newStock<0){return Mono.error(new IllegalArgumentException("Stock Insuficiente"));}
+
+                                    StockMovementEntity movement =
+                                    StockMovementEntity.builder()
+                                                        .fkProduct(detail.getFkProduct())
+                                                        .fkUser(fkUser)
+                                                        .type(StockMovementTypeEnum.DECREASE)
+                                                        .quantity(detail.getQuantity())
+                                                        .date(LocalDateTime.now())
+                                                        .comment("")
+                                                        .build();
+                                    
+                                    return productService.updateStock(product.getIdProduct(), newStock)
+                                                        .then(stockMovementRepository.save(movement))
+                                                        .then();
+
+                                }); });
     }
 
 

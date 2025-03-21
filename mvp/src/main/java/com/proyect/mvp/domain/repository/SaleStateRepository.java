@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public interface SaleStateRepository extends R2dbcRepository<SaleStateEntity, UUID> {
 
-    @Query("INSERT INTO sales_tate (id_sale_state, name) VALUES (:idSaleState, :name)")
+    @Query("INSERT INTO sale_state (id_sale_state, name) VALUES (:idSaleState, :name)")
     Mono<SaleStateEntity> insertSaleState(UUID idSaleState, String name);
 
     Mono<SaleStateEntity> findByName(String name);

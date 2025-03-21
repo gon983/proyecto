@@ -39,4 +39,8 @@ public class SaleEntity {
     double unitPrice;
     @Column("fk_current_state")
     UUID fkCurrentState;
+    @Column("fk_buyer")
+    UUID fkBuyer;
+    @Column("fk_collection_point")
+    UUID fkCollectionPoint;
 }
