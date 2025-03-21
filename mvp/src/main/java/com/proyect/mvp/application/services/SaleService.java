@@ -1,9 +1,11 @@
 package com.proyect.mvp.application.services;
 
+import java.util.List;
 import java.util.UUID;
 import com.proyect.mvp.infrastructure.routes.ONGRouter;
 import org.springframework.stereotype.Service;
 
+import com.proyect.mvp.application.dtos.response.CollectionPointSalesDTO;
 import com.proyect.mvp.domain.model.entities.PurchaseDetailEntity;
 import com.proyect.mvp.domain.model.entities.SaleEntity;
 import com.proyect.mvp.domain.repository.ONGRepository;
@@ -21,15 +23,22 @@ public class SaleService {
     private final PurchaseDetailService detailService;
     private final SaleStateService saleStateService;
     private final UserService userService;
+    private final ProductService productService;
+    private final NeighborhoodService neighborhoodService;
+    private final CollectionPointService collectionPointService;
 
     public SaleService(SaleRepository saleRepository, ONGRepository ONGRepository, PurchaseDetailService purchaseDetailService, 
-    ONGRouter ONGRouter, SaleStateService saleStateService, UserService userService){
+    ONGRouter ONGRouter, SaleStateService saleStateService, UserService userService, ProductService productService, NeighborhoodService neighborhoodService,
+    CollectionPointService collectionPointService){
         this.saleRepository = saleRepository;
         this.ONGRepository = ONGRepository;
         this.detailService = purchaseDetailService;
         this.ONGRouter = ONGRouter;
         this.saleStateService = saleStateService;
         this.userService = userService;
+        this.productService = productService;
+        this.neighborhoodService = neighborhoodService;
+        this.collectionPointService = collectionPointService;
     }
     
 
@@ -54,6 +63,24 @@ public class SaleService {
                                             );});
         
         }
+
+
+    public Mono<List<CollectionPointSalesDTO>> obtenerVentasProductorPorCollectionPoint(UUID idProductor){
+        return productService.getProductsByProducer(idProductor)
+                             .flatMap(product -> Mono.just(product.getFkLocality()))
+                             .flatMap(fkLocality -> {return neighborhoodService.getNeighborhoodOfLocality(fkLocality);})
+                             .flatMap(neighborhood -> { return collectionPointService.getCollectionPointByFkNeighborhood(neighborhood.getIdNeighborhood())})
+                             .flatMap(collectionPoint -> {
+                                return saleRepository.getSalesSummary(collectionPoint.getIdCollectionPoint())
+                                                        .flatMap(sales -> { CollectionPointSalesDTO cpSales = CollectionPointSalesDTO.builder()
+                                                                                                                                    .collectionPoint(collectionPoint)
+                                                                                                                                    .sales(sales)
+                                                                                                                                    .build();
+                                                                            return cpSales;});
+                            })
+                            .collectList();
+
+    }    
             
             
     }

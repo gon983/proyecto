@@ -30,6 +30,7 @@ public class LocalityService {
                 .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)));
     }
 
+
     public Mono<LocalityEntity> saveNewLocality(LocalityCreateDTO locality) {
         LocalityEntity localityEntity = LocalityEntity.builder()
                 .idLocality(UUID.randomUUID())

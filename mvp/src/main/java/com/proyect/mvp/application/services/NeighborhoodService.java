@@ -30,6 +30,13 @@ public class NeighborhoodService {
                 .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)));
     }
 
+    public Flux<NeighborhoodEntity> getNeighborhoodOfLocality(UUID id) {
+        return neighborhoodRepository.findByFkLocality(id)
+                .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)));
+    }
+
+
+
     public Mono<NeighborhoodEntity> saveNewNeighborhood(NeighborhoodCreateDTO neighborhood) {
         NeighborhoodEntity neighborhoodEntity = NeighborhoodEntity.builder()
                 .idNeighborhood(UUID.randomUUID())

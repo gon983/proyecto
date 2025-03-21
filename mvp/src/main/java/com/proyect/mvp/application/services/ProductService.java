@@ -31,15 +31,7 @@ public class ProductService {
     }
 
     public Flux<ProductEntity> getProductsByProducer(UUID fkProductor) {
-        return productRepository.findByFkProductor(fkProductor)
-                .flatMap(product -> {
-                    return productHistoryService.getProductHistory(product.getIdProduct())
-                            .collectList()
-                            .flatMap(historyList -> {
-                                product.addHistory(historyList);
-                                return Mono.just(product);
-                            });
-                });
+        return productRepository.findByFkProductor(fkProductor);
     }
 
     public Mono<ProductEntity> getProductByIdWithHistory(UUID id) {

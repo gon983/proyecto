@@ -24,7 +24,7 @@ public class SaleEntity {
     @Id
     
     @Column( "id_sale")
-    private String idSale;
+    private UUID idSale;
 
     @Column( "amount")
     private double amount;

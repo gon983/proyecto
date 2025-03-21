@@ -27,4 +27,6 @@ public interface CollectionPointRepository extends R2dbcRepository<CollectionPoi
             @Param("ubication") byte[] ubication, // Store as WKB
             @Param("description") String description
     );
+
+    Mono<CollectionPointEntity> getCollectionPointByFkNeighborhood(UUID idNeighborhood);
 }

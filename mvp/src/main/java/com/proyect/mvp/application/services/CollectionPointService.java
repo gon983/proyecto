@@ -62,6 +62,10 @@ public class CollectionPointService {
                 });
     }
 
+    public Mono<CollectionPointEntity> getCollectionPointByFkNeighborhood(UUID idNeighborhood){
+        return collectionPointRepository.getCollectionPointByFkNeighborhood(idNeighborhood);
+    }
+
         public Mono<CollectionPointEntity> saveNewCollectionPoint(CollectionPointCreateDTO collectionPointDTO) {
             // Create JTS Point object
             Double latitude = collectionPointDTO.getUbication().getY();
