@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import com.proyect.mvp.domain.repository.ONGRepository;
+import com.proyect.mvp.infrastructure.routes.SaleRouter;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,18 +25,24 @@ import reactor.core.publisher.Mono;
 @Service
 public class DefaultProductxCollectionPointxWeekService {
 
+    private final SaleRouter saleRouter;
+
     private final ONGRepository ONGRepository;
     private final DefaultProductxCollectionPointxWeekRepository pxCpRepository;
     private final ProductService productService;
     private final UserService userService;
     private final CollectionPointService collectionPointService;
+    private final PurchaseDetailService purchaseDetailService;
 
-    public DefaultProductxCollectionPointxWeekService(DefaultProductxCollectionPointxWeekRepository pxCpRepository, ProductService productService, UserService userService, CollectionPointService collectionPointService, ONGRepository ONGRepository){
+    public DefaultProductxCollectionPointxWeekService(DefaultProductxCollectionPointxWeekRepository pxCpRepository, ProductService productService, UserService userService,
+     CollectionPointService collectionPointService, ONGRepository ONGRepository, PurchaseDetailService purchaseDetailService, SaleRouter saleRouter){
         this.pxCpRepository = pxCpRepository;
         this.productService = productService;
         this.userService = userService;
         this.collectionPointService = collectionPointService;
         this.ONGRepository = ONGRepository;
+        this.purchaseDetailService = purchaseDetailService;
+        this.saleRouter = saleRouter;
     }
 
     // public Flux<DefaultProductxCollectionPointxWeekEntity> findAllFromCollectionPointAndDate(UUID fkCollectionPoint){
@@ -127,9 +134,20 @@ public class DefaultProductxCollectionPointxWeekService {
         return pxCpRepository.findAllWhereDateIsNearWithFkCollectionPointAndFkProductNull(fkCollectionPoint, OffsetDateTime.now().minusDays(4), OffsetDateTime.now());
     }
 
+    public Flux<DefaultProductxCollectionPointxWeekEntity> getAllDefaultProductsxCpLastWeek(UUID fkCollectionPoint){
+        return pxCpRepository.findAllByFkCollectionPointAndDateRange(fkCollectionPoint, OffsetDateTime.now().minusDays(7), OffsetDateTime.now());
+    } 
+
     public Mono<DefaultProductxCollectionPointxWeekEntity> update(DefaultProductxCollectionPointxWeekEntity dp){
         System.out.println("Entre al update");
         return pxCpRepository.save(dp); // Retornar el Mono para encadenarlo
+    }
+
+    public Mono<List<DefaultProductxCollectionPointxWeekEntity>> seeProductsToCalificate(UUID idPurchase, UUID idCollectionPoint){
+        return this.getAllDefaultProductsxCpLastWeek(idCollectionPoint)
+                    .collectList()
+                    .flatMap(dpcpList ->
+                        purchaseDetailService.filterDpCpByPurchase(idPurchase, dpcpList));
     }
         
     

@@ -23,6 +23,7 @@ public class PurchaseDetailRouter {
     public RouterFunction<ServerResponse> purchaseDetailRoutes(PurchaseDetailService purchaseDetailService){
         return route(POST("/purchases/{purchaseId}/details"), request-> createPurchaseDetail(request, purchaseDetailService));
 
+
     }
 
     public Mono<ServerResponse> createPurchaseDetail(ServerRequest request, PurchaseDetailService purchaseDetailService){
@@ -31,6 +32,9 @@ public class PurchaseDetailRouter {
                         .flatMap(purchaseDetailDto-> purchaseDetailService.createPurchaseDetail(fkPurchase, purchaseDetailDto))
                         .flatMap(savedPurchaseDetail -> ServerResponse.ok().bodyValue(savedPurchaseDetail));
     }
+
+    
+    }
     
     
-}
+

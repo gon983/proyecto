@@ -8,6 +8,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 
 import com.proyect.mvp.application.dtos.create.DefaultProductxCollectionPointxWeekCreateDTO;
 import com.proyect.mvp.application.services.DefaultProductxCollectionPointxWeekService;
+import com.proyect.mvp.application.services.PurchaseDetailService;
 import com.proyect.mvp.domain.model.entities.DefaultProductxCollectionPointxWeekEntity;
 
 import reactor.core.publisher.Mono;
@@ -24,7 +25,8 @@ public class DefaultProductxCollectionPointxWeekRouter {
     RouterFunction<ServerResponse> defaultProductxCpRoutes(DefaultProductxCollectionPointxWeekService defaultProductxCpService){
     return route(GET("/defaultProductsxCp/{idUser}"), request -> getDefaultProductsxCpxWeek(request, defaultProductxCpService))
                 .andRoute(GET("/defaultProductsxCpToVote/{idCollectionPoint}"), request -> getDefaultProductsxCpToVote(request, defaultProductxCpService))
-                .andRoute(GET("/renewalProductsManual/{collectionPointId}"), request -> renewalProductsManual(request, defaultProductxCpService));
+                .andRoute(GET("/renewalProductsManual/{collectionPointId}"), request -> renewalProductsManual(request, defaultProductxCpService))
+                .andRoute(GET("/seeProductsToCalificate/{idPurchase}/{idCollectionPoint}"), request -> seeProductsToCalificate(request, defaultProductxCpService));
 
 }
 
@@ -52,6 +54,13 @@ public class DefaultProductxCollectionPointxWeekRouter {
         UUID collectionPointId = UUID.fromString(request.pathVariable("collectionPointId"));
         return defaultProductxCollectionPointxWeekService.renewProductsForCollectionPoint(collectionPointId)
                 .then(ServerResponse.ok().build());
+    }
+
+     public Mono<ServerResponse> seeProductsToCalificate(ServerRequest request, DefaultProductxCollectionPointxWeekService dpcpService){
+        UUID fkPurchase = UUID.fromString(request.pathVariable("idPurchase"));
+        UUID fkCollectionPoint = UUID.fromString(request.pathVariable("idCollectionPoint"));
+        return dpcpService.seeProductsToCalificate(fkPurchase, fkCollectionPoint)
+                                    .flatMap(products -> ServerResponse.ok().bodyValue(products));
     }
 
     
