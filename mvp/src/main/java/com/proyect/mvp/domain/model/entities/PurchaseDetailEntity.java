@@ -68,4 +68,8 @@ public class PurchaseDetailEntity {
                 "unitPrice" + unitPrice +
                 "quantity" + quantity + "|";
     }
+
+    public void setFkCurrentState(UUID currentState){
+        this.fkState = currentState;
+    }
 }

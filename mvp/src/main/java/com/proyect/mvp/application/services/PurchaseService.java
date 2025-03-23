@@ -50,7 +50,9 @@ import java.util.List;
 import java.util.UUID;
 import com.mercadopago.resources.preference.Preference;
 import com.proyect.mvp.application.dtos.create.PurchaseCreateDTO;
+import com.proyect.mvp.application.dtos.requests.ReceivePurchaseDTO;
 import com.proyect.mvp.domain.model.entities.PurchaseDetailEntity;
+import com.proyect.mvp.domain.model.entities.PurchaseDetailStateEntity;
 import com.proyect.mvp.domain.model.entities.PurchaseEntity;
 import com.proyect.mvp.domain.model.entities.PurchaseStateEntity;
 import com.proyect.mvp.domain.model.entities.StockMovementEntity;
@@ -64,6 +66,8 @@ import reactor.core.scheduler.Schedulers;
 
 @Service
 public class PurchaseService {
+
+    private final PurchaseDetailStateService purchaseDetailStateService;
     private final PurchaseRepository purchaseRepository;
     private final PurchaseStateService purchaseStateService;
     private final PurchaseDetailService purchaseDetailService;
@@ -75,7 +79,7 @@ public class PurchaseService {
     
 
     public PurchaseService(PurchaseRepository purchaseRepository, PurchaseStateService purchaseStateService, PurchaseDetailService purchaseDetailService,
-     UserService userService, EncryptionService encryptionService, StockMovementService stockMovementService, SaleService saleService) {
+     UserService userService, EncryptionService encryptionService, StockMovementService stockMovementService, SaleService saleService, PurchaseDetailStateService purchaseDetailStateService) {
         this.purchaseRepository = purchaseRepository;
         this.purchaseStateService = purchaseStateService;
         this.purchaseDetailService = purchaseDetailService;
@@ -83,6 +87,7 @@ public class PurchaseService {
         this.encryptionService = encryptionService;
         this.stockMovementService = stockMovementService;
         this.saleService = saleService;
+        this.purchaseDetailStateService = purchaseDetailStateService;
     }
 
     public Mono<PurchaseEntity> createPurchase(PurchaseCreateDTO purchaseDto) {
@@ -445,6 +450,25 @@ public class PurchaseService {
             .doFinally(signal -> System.out.println("=========== FIN registrarVentas con señal: " + signal + " ==========="))
             .then();
     }
-    
+
+    public Mono<List<PurchaseDetailEntity>> receivePurchase(UUID idPurchase, ReceivePurchaseDTO listReceived) {
+        return purchaseDetailService.getDetailsFromPurchase(idPurchase)
+                .flatMap(detail -> {
+                    if (listReceived.contains(detail.getIdPurchaseDetail())) {
+                        return purchaseDetailStateService.findByName("received")
+                                .map(state -> {
+                                    detail.setFkCurrentState(state.getIdPurchaseDetailState());
+                                    return detail;
+                                });
+                    } else {
+                        return purchaseDetailStateService.findByName("not received")
+                                .map(state -> {
+                                    detail.setFkCurrentState(state.getIdPurchaseDetailState());
+                                    return detail;
+                                });
+                    }
+                })
+                .collectList();
+    }  
     
 }

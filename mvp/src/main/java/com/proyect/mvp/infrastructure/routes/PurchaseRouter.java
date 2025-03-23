@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mercadopago.net.HttpStatus;
 import com.proyect.mvp.application.dtos.create.PurchaseCreateDTO;
 import com.proyect.mvp.application.dtos.other.MercadoPagoNotificationDTO;
+import com.proyect.mvp.application.dtos.requests.ReceivePurchaseDTO;
 import com.proyect.mvp.application.services.PurchaseService;
 import com.proyect.mvp.infrastructure.config.middlewares.ConfirmPurchaseMiddleware;
 
@@ -30,7 +31,8 @@ public class PurchaseRouter {
                 .andRoute(GET("/purchases/{idPurchase}"), request -> getPurchaseWithDetails(request, purchaseService))
                 .andRoute(POST("/confirmPurchase/{idPurchase}"), request -> confirmPurchase(request, purchaseService))
                 .andRoute(POST("/confirmPayment"), request ->  confirmPurchaseMiddleware.validate(request)
-                                                                        .flatMap(valid -> valid ? confirmPayment(request, purchaseService) : ServerResponse.status(401).build()));
+                                                                        .flatMap(valid -> valid ? confirmPayment(request, purchaseService) : ServerResponse.status(401).build()))
+                .andRoute(POST("/receivePurchase/{idPurchase}"), request -> receivePurchase(request, purchaseService));
     }
 
     private Mono<ServerResponse> createPurchase(ServerRequest request, PurchaseService purchaseService) {
@@ -91,6 +93,15 @@ public class PurchaseRouter {
             System.err.println("No se encontró el cuerpo cacheado");
             return ServerResponse.status(HttpStatus.BAD_REQUEST).build();
         }
+    }
+
+    private Mono<ServerResponse> receivePurchase(ServerRequest request, PurchaseService purchaseService){
+        UUID idPurchase = UUID.fromString(request.pathVariable("idPurchase"));
+
+        return request.bodyToMono(ReceivePurchaseDTO.class)
+                      .flatMap(purchase-> purchaseService.receivePurchase(idPurchase, purchase))
+                      .flatMap(details-> ServerResponse.ok().bodyValue(details));
+
     }
     
 }
