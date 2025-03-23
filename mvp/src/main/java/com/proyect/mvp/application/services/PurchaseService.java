@@ -454,7 +454,7 @@ public class PurchaseService {
     public Mono<List<PurchaseDetailEntity>> receivePurchase(UUID idPurchase, ReceivePurchaseDTO listReceived) {
         return purchaseDetailService.getDetailsFromPurchase(idPurchase)
                 .flatMap(detail -> {
-                    if (listReceived.contains(detail.getIdPurchaseDetail())) {
+                    if (listReceived.contains(UUID.fromString(detail.getIdPurchaseDetail()))) {
                         return purchaseDetailStateService.findByName("received")
                                 .map(state -> {
                                     detail.setFkCurrentState(state.getIdPurchaseDetailState());
