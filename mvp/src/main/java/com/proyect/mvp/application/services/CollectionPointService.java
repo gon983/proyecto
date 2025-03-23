@@ -24,14 +24,14 @@ import java.util.UUID;
 public class CollectionPointService {
 
     private final CollectionPointRepository collectionPointRepository;
-    private final CollectionPointHistoryService collectionPointHistoryService;
+   
     private final GeometryFactory geometryFactory;
     private final SpatialConverter spatialConverter;
 
     public CollectionPointService(CollectionPointRepository collectionPointRepository,
-                                CollectionPointHistoryService collectionPointHistoryService, GeometryFactory geometryFactory, SpatialConverter spatialConverter) {
+                                GeometryFactory geometryFactory, SpatialConverter spatialConverter) {
         this.collectionPointRepository = collectionPointRepository;
-        this.collectionPointHistoryService = collectionPointHistoryService;
+        
         this.geometryFactory = geometryFactory;
         this.spatialConverter = spatialConverter;
         

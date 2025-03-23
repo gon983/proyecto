@@ -15,12 +15,12 @@ import java.util.UUID;
 public class ProductService {
 
     private final ProductRepository productRepository;
-    private final ProductHistoryService productHistoryService;
+   
     private final UserService userService;
 
-    public ProductService(ProductRepository productRepository, ProductHistoryService productHistoryService, UserService userService) {
+    public ProductService(ProductRepository productRepository, UserService userService) {
         this.productRepository = productRepository;
-        this.productHistoryService = productHistoryService;
+        
         this.userService = userService;
     }
 
