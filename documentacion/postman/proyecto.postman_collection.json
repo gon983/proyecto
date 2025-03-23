@@ -1225,6 +1225,24 @@
 								"header": []
 							},
 							"response": []
+						},
+						{
+							"name": "2.Calificar un DpCP",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/calificateProduct/d9e4a5d4-3ec1-4b8e-9795-5ed7eba30291",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"calificateProduct",
+										"d9e4a5d4-3ec1-4b8e-9795-5ed7eba30291"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},

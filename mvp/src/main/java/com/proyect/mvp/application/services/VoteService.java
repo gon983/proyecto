@@ -6,8 +6,10 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.UUID;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.proyect.mvp.application.dtos.create.VoteCreateDTO;
 import com.proyect.mvp.domain.model.entities.DefaultProductxCollectionPointxWeekEntity;
@@ -42,6 +44,7 @@ public class VoteService {
                                     .fkUser(fkUser)
                                     .fkDefaultProductCollectionPointWeek(voteDto.getFkDefaultProductCollectionPointWeek())
                                     .date(OffsetDateTime.now())
+                                    .calification(voteDto.getCalification())
                                     .build();
         
         return voteRepository.save(vote);
@@ -82,6 +85,26 @@ public class VoteService {
                 )
                 .flatMap(defaultProduct -> dpxcpService.update(defaultProduct)); // Ahora encadena la actualización
     }
+
+    public Mono<DefaultProductxCollectionPointxWeekEntity> calificateProduct(VoteCreateDTO voteDto, UUID idUser) {
+        return validateUserDontVoteYet(voteDto.getFkDefaultProductCollectionPointWeek(), idUser)
+                .filter(Boolean::booleanValue)
+                .flatMap(canVote -> voteProduct(voteDto, idUser)
+                        .flatMap(savedVote -> dpxcpService.updateCalification(
+                                voteDto.getFkDefaultProductCollectionPointWeek(), 
+                                voteDto.getCalification())))
+                .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, 
+                        "User already voted for this product")));
+    }
+
+    public Mono<Boolean> validateUserDontVoteYet(UUID fkDpCp , UUID idUser){
+        return voteRepository.findVoteByFkUserAndFkDefaultProductCollectionPointWeek(idUser, fkDpCp)
+                            .map(found -> false)  // Si encuentra algo, el usuario ya votó
+                            .defaultIfEmpty(true);
+
+    }
+
+
     
     
     

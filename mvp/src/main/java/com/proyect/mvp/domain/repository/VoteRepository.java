@@ -21,5 +21,8 @@ public interface VoteRepository extends R2dbcRepository<VoteEntity, UUID> {
        " LIMIT 1")  // En lugar de LIMIT 1 para compatibilidad
     Mono<UUID> getMostVotedProductForDefaultProduct(@Param("idDefaultProductxCollectionPoint") UUID idDefaultProductxCollectionPoint);
 
+    @Query("SELECT 1 from Vote where fk_user = :idUser and fk_default_product_x_collection_point_x_week = :idDpCp")
+    Mono<Boolean> findVoteByFkUserAndFkDefaultProductCollectionPointWeek(UUID idUser, UUID idDpCp);
+
     
 }

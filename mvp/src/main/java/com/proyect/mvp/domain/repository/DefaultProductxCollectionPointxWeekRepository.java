@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import com.proyect.mvp.domain.model.entities.DefaultProductxCollectionPointxWeekEntity;
 
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 public interface DefaultProductxCollectionPointxWeekRepository extends R2dbcRepository<DefaultProductxCollectionPointxWeekEntity, UUID> {
     
@@ -30,5 +31,8 @@ public interface DefaultProductxCollectionPointxWeekRepository extends R2dbcRepo
     Flux<DefaultProductxCollectionPointxWeekEntity> findAllWhereDateIsNearWithFkCollectionPointAndFkProductNull(@Param("fkCollectionPoint") UUID fkCollectionPoint,
                                                                                                                   @Param("startDate") OffsetDateTime startDate,
                                                                                                                   @Param("endDate") OffsetDateTime endDate);
+
+   @Query("UPDATE default_product_x_collection_point_x_week SET rating = ((rating * n_votes) + :calification) / (n_votes + 1), n_votes = (n_votes + 1) WHERE id_default_product_x_collection_point = :id")
+   Mono<Void> updateCalification(@Param("id") UUID id, @Param("calification") int calification);
 
 }

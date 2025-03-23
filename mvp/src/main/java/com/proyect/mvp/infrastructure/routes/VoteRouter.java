@@ -32,7 +32,8 @@ public class VoteRouter {
     @Bean
     public RouterFunction<ServerResponse> voteRoutes(VoteService voteService) {
         return route(POST("/voteProduct/{idUser}"), request -> voteProduct(request, voteService))
-        .andRoute(GET("/selectProductByVotationManual/{idCollectionPoint}"), request -> selectProduct(request,voteService));
+        .andRoute(GET("/selectProductByVotationManual/{idCollectionPoint}"), request -> selectProduct(request,voteService))
+        .andRoute(POST("/calificateProduct/{idUser}"), request -> calificateProduct(request, voteService));
     }
 
     private Mono<ServerResponse> voteProduct(ServerRequest request, VoteService voteService) {
@@ -47,6 +48,15 @@ public class VoteRouter {
         UUID idCollectionPoint =UUID.fromString(request.pathVariable("idCollectionPoint"));
         return voteService.countVotesAndSelectProduct(idCollectionPoint)
                           .then(ServerResponse.ok().build());
+    }
+
+
+    private Mono<ServerResponse> calificateProduct(ServerRequest request, VoteService voteService){
+        UUID idUser = UUID.fromString(request.pathVariable("idUser"));
+        return request.bodyToMono(VoteCreateDTO.class)
+                      .flatMap(vote-> voteService.calificateProduct(vote, idUser))
+                      .flatMap(savedVote -> ServerResponse.ok().bodyValue(savedVote))
+                    .onErrorResume(ResponseStatusException.class, e -> ServerResponse.status(e.getStatusCode()).bodyValue(e.getMessage()));
     }
     
 }

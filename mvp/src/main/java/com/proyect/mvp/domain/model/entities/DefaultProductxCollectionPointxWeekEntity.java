@@ -30,6 +30,8 @@ public class DefaultProductxCollectionPointxWeekEntity {
     OffsetDateTime dateRenewalDefaultProducts;
     @Column("rating")
     double rating;
+    @Column("n_votes")
+    int nVotes;
 
     public void setFkProduct(UUID fkProduct){
         

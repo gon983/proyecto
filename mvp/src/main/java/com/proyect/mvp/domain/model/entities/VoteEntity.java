@@ -33,5 +33,8 @@ public class VoteEntity {
 
     @Column("fk_default_product_x_collection_point_x_week")
     private UUID fkDefaultProductCollectionPointWeek;
+
+    @Column("calification")
+    private int calification;
 }
 

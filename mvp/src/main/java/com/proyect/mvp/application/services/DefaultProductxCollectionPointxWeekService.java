@@ -149,6 +149,12 @@ public class DefaultProductxCollectionPointxWeekService {
                     .flatMap(dpcpList ->
                         purchaseDetailService.filterDpCpByPurchase(idPurchase, dpcpList));
     }
+
+    public Mono<DefaultProductxCollectionPointxWeekEntity> updateCalification(UUID idDpCp, int calification){
+        return pxCpRepository.updateCalification(idDpCp, calification)
+                             .then(pxCpRepository.findById(idDpCp));
+
+    }
         
     
     
