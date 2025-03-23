@@ -3,9 +3,9 @@ package com.proyect.mvp.application.services;
 import com.proyect.mvp.application.dtos.create.CollectionPointCreateDTO;
 import com.proyect.mvp.application.dtos.update.CollectionPointUpdateDTO;
 import com.proyect.mvp.domain.model.entities.CollectionPointEntity;
-import com.proyect.mvp.domain.model.entities.CollectionPointHistoryEntity;
+
 import com.proyect.mvp.infrastructure.config.converters.SpatialConverter;
-import com.proyect.mvp.domain.repository.CollectionPointHistoryRepository;
+
 import com.proyect.mvp.domain.repository.CollectionPointRepository;
 
 import org.locationtech.jts.geom.Coordinate;
@@ -38,28 +38,12 @@ public class CollectionPointService {
     }
 
     public Flux<CollectionPointEntity> getAllCollectionPoints() {
-        return collectionPointRepository.findAll()
-                .flatMap(collectionPoint -> {
-                    return collectionPointHistoryService.getCollectionPointHistory(collectionPoint.getIdCollectionPoint())
-                            .collectList()
-                            .flatMap(historyList -> {
-                                collectionPoint.addHistory(historyList);
-                                return Mono.just(collectionPoint);
-                            });
-                });
+        return collectionPointRepository.findAll();
     }
     
 
     public Mono<CollectionPointEntity> getCollectionPointById(UUID id) {
-        return collectionPointRepository.findById(id)
-                .flatMap(existingCollectionPoint -> {
-                    return collectionPointHistoryService.getCollectionPointHistory(id)
-                            .collectList()
-                            .flatMap(historyList -> {
-                                existingCollectionPoint.addHistory(historyList); // Asumiendo que addHistory ahora acepta List
-                                return Mono.just(existingCollectionPoint);
-                            });
-                });
+        return collectionPointRepository.findById(id);
     }
 
     public Mono<CollectionPointEntity> getCollectionPointByFkNeighborhood(UUID idNeighborhood){

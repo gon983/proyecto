@@ -46,12 +46,8 @@ public class CollectionPointEntity {
     private DayOfWeek collectionRecurrentDay;
 
     private String description;
-    @Transient
-    private List<CollectionPointHistoryEntity> history; 
+    
 
-    public void addHistory(List<CollectionPointHistoryEntity> history){
-        this.history = history;
-
-    }
+  
     
 }

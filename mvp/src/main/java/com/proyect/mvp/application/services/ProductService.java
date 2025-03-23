@@ -34,17 +34,7 @@ public class ProductService {
         return productRepository.findByFkProductor(fkProductor);
     }
 
-    public Mono<ProductEntity> getProductByIdWithHistory(UUID id) {
-        return productRepository.findById(id)
-                .flatMap(product -> {
-                    return productHistoryService.getProductHistory(product.getIdProduct())
-                            .collectList()
-                            .flatMap(historyList -> {
-                                product.addHistory(historyList);
-                                return Mono.just(product);
-                            });
-                });
-    }
+    
 
     public Mono<ProductEntity> getProductById(UUID id){
         return productRepository.findById(id);
