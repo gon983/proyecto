@@ -53,6 +53,8 @@ public class DefaultProductxCollectionPointxWeekRouter {
         return defaultProductxCollectionPointxWeekService.renewProductsForCollectionPoint(collectionPointId)
                 .then(ServerResponse.ok().build());
     }
+
+    
     
             
     }
