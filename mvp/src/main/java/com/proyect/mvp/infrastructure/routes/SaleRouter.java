@@ -22,7 +22,7 @@ public class SaleRouter {
     @Bean
     RouterFunction<ServerResponse> saleRoutes(SaleService saleService){
         return route(GET("/salesProductor/{idProductor}"), request -> obtenerVentasProductorSinAbonar(request, saleService))
-            .andRoute(GET("salesProductor/{idProductor}/{idCollectionPoint}"), request -> obtenerVentasCollectionPointDeProductorSinAbonar(request, saleService));
+            .andRoute(GET("/salesProductor/{idProductor}/{idCollectionPoint}"), request -> obtenerVentasCollectionPointDeProductorSinAbonar(request, saleService));
     }
     
     private Mono<ServerResponse> obtenerVentasProductorSinAbonar(ServerRequest request, SaleService saleService ){
