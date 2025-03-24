@@ -81,9 +81,8 @@ public Mono<List<CollectionPointSalesDTO>> obtenerVentasProductorPorCollectionPo
         
                 // Para cada punto, obtenemos las ventas y creamos el DTO
                 .flatMap(collectionPoint -> {
-                    return this.getSalesSummary(collectionPoint.getIdCollectionPoint())
+                    return this.getSalesSummary(collectionPoint.getIdCollectionPoint(), idProductor)
                         .map(salesList -> {
-                            System.out.println("  - Ventas para punto " + collectionPoint.getIdCollectionPoint() + ": " + salesList.size());
                             return CollectionPointSalesDTO.builder()
                                     .collectionPoint(collectionPoint)
                                     .sales(salesList)
@@ -95,28 +94,44 @@ public Mono<List<CollectionPointSalesDTO>> obtenerVentasProductorPorCollectionPo
         
 }
 
-public Mono<List<SaleSummaryDTO>> getSalesSummary(UUID idCollectionPoint) {
-    return saleRepository.getSalesForCollectionPoint(idCollectionPoint)
-        .flatMap(sale -> productService.getProductById(sale.getFkProduct())
-            .map(product -> new SaleSummaryDTO(
-                product.getIdProduct(),
-                product.getName(),
-                product.getStock(),
-                product.getUnitMeasurement(),
-                sale.getQuantity(),
-                sale.getAmount()
-            ))
-        )
-        .collect(Collectors.toMap(
-            SaleSummaryDTO::getIdProduct,  // 🔹 Agrupamos por idProduct
-            saleSummary -> saleSummary,    // 🔹 Mantenemos el primer objeto tal cual
-            (existing, newSale) -> {       // 🔥 Merge: Sumamos cantidades y montos sin perder datos
-                existing.setTotalQuantity(existing.getTotalQuantity() + newSale.getTotalQuantity());
-                existing.setTotalAmount(existing.getTotalAmount() + newSale.getTotalAmount());
-                return existing;
-            }
-        ))
-        .map(groupedMap -> new ArrayList<>(groupedMap.values())); // Convertimos Map a List
+public Mono<CollectionPointSalesDTO> obtenerVentasProductorDeCollectionPoint(UUID idProductor, UUID idCollectionPoint) {
+    return getSalesSummary(idCollectionPoint, idProductor)
+                            .map(salesList -> {
+                                return CollectionPointSalesDTO.builder()
+                                        .sales(salesList)
+                                        .build();
+                            });
+            
+}
+
+public Mono<List<SaleSummaryDTO>> getSalesSummary(UUID idCollectionPoint, UUID idProducer) {
+    return saleStateService.findSaleStateByName("pending_payment")
+                            .flatMap(state -> {
+                                return saleRepository.getSalesPendingPaymentForCollectionPointAndProducer(idCollectionPoint, idProducer, state.getIdSaleState())
+                                        .flatMap(sale -> productService.getProductById(sale.getFkProduct())
+                                            .map(product -> new SaleSummaryDTO(
+                                                product.getIdProduct(),
+                                                product.getName(),
+                                                product.getStock(),
+                                                product.getUnitMeasurement(),
+                                                sale.getQuantity(),
+                                                sale.getAmount()
+                                            ))
+                                        )
+                                        .collect(Collectors.toMap(
+                                            SaleSummaryDTO::getIdProduct,  // 🔹 Agrupamos por idProduct
+                                            saleSummary -> saleSummary,    // 🔹 Mantenemos el primer objeto tal cual
+                                            (existing, newSale) -> {       // 🔥 Merge: Sumamos cantidades y montos sin perder datos
+                                                existing.setTotalQuantity(existing.getTotalQuantity() + newSale.getTotalQuantity());
+                                                existing.setTotalAmount(existing.getTotalAmount() + newSale.getTotalAmount());
+                                                return existing;
+                                            }
+                                        ))
+                                        .map(groupedMap -> new ArrayList<>(groupedMap.values())); // Convertimos Map a List
+                                                            });
+    
+    
+    
 }
 
 

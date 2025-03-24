@@ -21,17 +21,22 @@ public class SaleRouter {
 
     @Bean
     RouterFunction<ServerResponse> saleRoutes(SaleService saleService){
-        return route(GET("/sales/{idProductor}"), request -> obtenerVentasProductor(request, saleService));
+        return route(GET("/salesProductor/{idProductor}"), request -> obtenerVentasProductorSinAbonar(request, saleService))
+            .andRoute(GET("salesProductor/{idProductor}/{idCollectionPoint}"), request -> obtenerVentasCollectionPointDeProductorSinAbonar(request, saleService));
     }
     
-    private Mono<ServerResponse> obtenerVentasProductor(ServerRequest request, SaleService saleService ){
+    private Mono<ServerResponse> obtenerVentasProductorSinAbonar(ServerRequest request, SaleService saleService ){
         UUID idProductor = UUID.fromString(request.pathVariable("idProductor"));
         return saleService.obtenerVentasProductorPorCollectionPoint(idProductor)
                             .flatMap(sales -> ServerResponse.ok().bodyValue(sales));
         
     }
     
-    // obtener ventas productor las tiene q clasificar por collection point, si fuera posible 
-    // recordando en la fecha en la q se tienen q entregar, y ademas debe sumar todas las cantidades de los productos 
-    // y todos sus amounts
+    private Mono<ServerResponse> obtenerVentasCollectionPointDeProductorSinAbonar(ServerRequest request, SaleService saleService ){
+        UUID idProductor = UUID.fromString(request.pathVariable("idProductor"));
+        UUID idCollectionPoint = UUID.fromString(request.pathVariable("idCollectionPoint"));
+        return saleService.obtenerVentasProductorDeCollectionPoint(idProductor, idCollectionPoint)
+                            .flatMap(sales -> ServerResponse.ok().bodyValue(sales));
+        
+    }
 }
