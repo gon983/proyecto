@@ -9,8 +9,10 @@ import java.util.stream.Collectors;
 import com.proyect.mvp.infrastructure.routes.ONGRouter;
 import org.springframework.stereotype.Service;
 
+import com.proyect.mvp.application.dtos.requests.ProductsPayedDTO;
 import com.proyect.mvp.application.dtos.response.CollectionPointSalesDTO;
 import com.proyect.mvp.application.dtos.response.SaleSummaryDTO;
+import com.proyect.mvp.domain.model.entities.BigSaleEntity;
 import com.proyect.mvp.domain.model.entities.ProductEntity;
 import com.proyect.mvp.domain.model.entities.PurchaseDetailEntity;
 import com.proyect.mvp.domain.model.entities.SaleEntity;
@@ -103,6 +105,27 @@ public Mono<CollectionPointSalesDTO> obtenerVentasProductorDeCollectionPoint(UUI
                             });
             
 }
+
+public Mono<CollectionPointSalesDTO> registrarPagoVentasCollectionPointDeProductor(
+    UUID idProductor, 
+    UUID idCollectionPoint, 
+    ProductsPayedDTO listPayedProducts
+) {
+    return saleStateService.findSaleStateByName("payed")
+        .flatMap(state -> 
+            Flux.fromIterable(listPayedProducts.getProductsPayed())
+                .flatMap(product -> 
+                    saleService.registerSalesAsPayed(idProductor, idCollectionPoint, product.getIdProduct())
+                )
+                .collectList()
+                .map(savedSales -> {
+                    CollectionPointSalesDTO salesDTO = new CollectionPointSalesDTO();
+                    // Configurar DTO
+                    return salesDTO;
+                })
+        );
+}
+
 
 public Mono<List<SaleSummaryDTO>> getSalesSummary(UUID idCollectionPoint, UUID idProducer) {
     return saleStateService.findSaleStateByName("pending_payment")
