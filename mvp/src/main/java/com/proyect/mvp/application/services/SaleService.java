@@ -72,44 +72,27 @@ public class SaleService {
         }
 
 
-        public Mono<List<CollectionPointSalesDTO>> obtenerVentasProductorPorCollectionPoint(UUID idProductor) {
-        return productService.getProductsByProducer(idProductor)
-            .collectList()
-            // Tomamos solo el primer producto (ya que todos tienen la misma localidad)
-            .flatMap(productList -> {
-                
-                // Obtenemos la localidad del primer producto
-                UUID locality = productList.get(0).getFkLocality();
-                System.out.println("Procesando localidad: " + locality);
-                
-                // Obtenemos todos los barrios de esta localidad
-                return neighborhoodService.getNeighborhoodsOfLocality(locality)
-                    .doOnNext(neighborhoods -> {
-                        System.out.println("Barrios encontrados: " + neighborhoods.size());
-                        neighborhoods.forEach(n -> System.out.println("  - Barrio: " + n.getIdNeighborhood()));
-                    })
-                    // Convertimos la lista de barrios a un Flux para procesarlos
-                    .flatMapMany(neighborhoods -> Flux.fromIterable(neighborhoods))
-                    // Para cada barrio, obtenemos los puntos de recolección
-                    .flatMap(neighborhood -> {
-                        System.out.println("Procesando barrio: " + neighborhood.getIdNeighborhood());
-                        return collectionPointService.getCollectionPointByFkNeighborhood(neighborhood.getIdNeighborhood())
-                            .doOnNext(cp -> System.out.println("  - Punto encontrado: " + cp.getIdCollectionPoint()));
-                    })
-                    // Para cada punto, obtenemos las ventas y creamos el DTO
-                    .flatMap(collectionPoint -> {
-                        return this.getSalesSummary(collectionPoint.getIdCollectionPoint())
-                            .map(salesList -> {
-                                System.out.println("  - Ventas para punto " + collectionPoint.getIdCollectionPoint() + ": " + salesList.size());
-                                return CollectionPointSalesDTO.builder()
-                                        .collectionPoint(collectionPoint)
-                                        .sales(salesList)
-                                        .build();
-                            });
-                    })
-                    // Combinamos todos los resultados en una lista
-                    .collectList();
-            });
+
+
+
+
+public Mono<List<CollectionPointSalesDTO>> obtenerVentasProductorPorCollectionPoint(UUID idProductor) {
+    return productService.getCollectionsPointsThatCouldSellTheProduct(idProductor)
+        
+                // Para cada punto, obtenemos las ventas y creamos el DTO
+                .flatMap(collectionPoint -> {
+                    return this.getSalesSummary(collectionPoint.getIdCollectionPoint())
+                        .map(salesList -> {
+                            System.out.println("  - Ventas para punto " + collectionPoint.getIdCollectionPoint() + ": " + salesList.size());
+                            return CollectionPointSalesDTO.builder()
+                                    .collectionPoint(collectionPoint)
+                                    .sales(salesList)
+                                    .build();
+                        });
+                })
+                // Combinamos todos los resultados en una lista
+                .collectList();
+        
 }
 
 public Mono<List<SaleSummaryDTO>> getSalesSummary(UUID idCollectionPoint) {

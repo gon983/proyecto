@@ -36,9 +36,8 @@ public class NeighborhoodService {
                 .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)));
     }
 
-    public Mono<List<NeighborhoodEntity>> getNeighborhoodsOfLocality(UUID id) {
-        return neighborhoodRepository.findByFkLocality(id)
-                .collectList();
+    public Flux<NeighborhoodEntity> getNeighborhoodsOfLocality(UUID id) {
+        return neighborhoodRepository.findByFkLocality(id);
     }
 
 
