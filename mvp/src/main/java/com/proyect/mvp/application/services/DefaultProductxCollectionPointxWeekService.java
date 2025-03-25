@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import com.proyect.mvp.domain.repository.ONGRepository;
-import com.proyect.mvp.infrastructure.routes.SaleRouter;
+
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +25,6 @@ import reactor.core.publisher.Mono;
 @Service
 public class DefaultProductxCollectionPointxWeekService {
 
-    private final SaleRouter saleRouter;
 
     private final ONGRepository ONGRepository;
     private final DefaultProductxCollectionPointxWeekRepository pxCpRepository;
@@ -35,14 +34,14 @@ public class DefaultProductxCollectionPointxWeekService {
     private final PurchaseDetailService purchaseDetailService;
 
     public DefaultProductxCollectionPointxWeekService(DefaultProductxCollectionPointxWeekRepository pxCpRepository, ProductService productService, UserService userService,
-     CollectionPointService collectionPointService, ONGRepository ONGRepository, PurchaseDetailService purchaseDetailService, SaleRouter saleRouter){
+     CollectionPointService collectionPointService, ONGRepository ONGRepository, PurchaseDetailService purchaseDetailService){
         this.pxCpRepository = pxCpRepository;
         this.productService = productService;
         this.userService = userService;
         this.collectionPointService = collectionPointService;
         this.ONGRepository = ONGRepository;
         this.purchaseDetailService = purchaseDetailService;
-        this.saleRouter = saleRouter;
+ 
     }
 
     // public Flux<DefaultProductxCollectionPointxWeekEntity> findAllFromCollectionPointAndDate(UUID fkCollectionPoint){

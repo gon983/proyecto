@@ -14,7 +14,7 @@ import static org.springframework.web.reactive.function.server.RequestPredicates
 import com.proyect.mvp.application.dtos.create.PurchaseDetailCreateDTO;
 import com.proyect.mvp.application.dtos.requests.ProductsPayedDTO;
 import com.proyect.mvp.application.services.PurchaseDetailService;
-import com.proyect.mvp.application.services.SaleService;
+
 
 import reactor.core.publisher.Mono;
 
@@ -26,7 +26,7 @@ public class PurchaseDetailRouter {
         return route(POST("/purchases/{purchaseId}/details"), request-> createPurchaseDetail(request, purchaseDetailService))
         .andRoute(GET("/salesProductor/{idProductor}"), request -> obtenerVentasProductorSinAbonar(request, purchaseDetailService))
         .andRoute(GET("/salesProductor/{idProductor}/{idCollectionPoint}"), request -> obtenerVentasCollectionPointDeProductorSinAbonar(request, purchaseDetailService))
-        .andRoute(POST("registerPaymentSales/{idProductor}/{idCollectionPoint}"), request -> registrarPagoVentasCollectionPointDeProductor(request, purchaseDetailService));
+        .andRoute(POST("/registerPaymentSales/{idProductor}/{idCollectionPoint}"), request -> registrarPagoVentasCollectionPointDeProductor(request, purchaseDetailService));
 
 
     }

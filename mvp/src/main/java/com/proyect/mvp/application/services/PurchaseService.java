@@ -343,7 +343,7 @@ public class PurchaseService {
     
                 System.out.println("Llamando a procesarPagoAprobado...");
                 return purchaseRepository.findById(purchaseId)
-                                        .flatMapMany(purchase -> {
+                                        .flatMap(purchase -> {
                                             String preferenceId = purchase.getMpPreferenceId();
                                             System.out.println("PreferenceId obtenido de la base de datos: " + preferenceId);
                                             return procesarPagoAprobado(preferenceId, payment);
@@ -366,35 +366,26 @@ public class PurchaseService {
         .doFinally(signal -> System.out.println("=========== FIN procesarNotificacionPago con señal: " + signal + " ==========="));
     }
     
-    private Flux<Void> procesarPagoAprobado(String preferenceId, Payment payment) {
+    private Mono<Void> procesarPagoAprobado(String preferenceId, Payment payment) {
         return findByMpPreferenceId(preferenceId)
-                .switchIfEmpty(Mono.error(new RuntimeException("Compra no encontrada para preferenceId: " + preferenceId)))
                 .flatMap(purchase -> {
                     // Buscar el estado 'confirmed'
                     return purchaseStateService.findByName("confirmed")
-                            .switchIfEmpty(Mono.error(new RuntimeException("Estado 'confirmed' no encontrado")))
                             .flatMap(state -> {
-                                System.out.println("Estado 'confirmed' encontrado: " + state.getIdPurchaseState());
     
                                 // Actualizar la compra
                                 purchase.setFkCurrentState(state.getIdPurchaseState());
                                 purchase.setMpPaymentId(payment.getId().toString());
                                 purchase.setPaymentDate(payment.getDateApproved());
     
-                                System.out.println("Compra actualizada: " + purchase.getIdPurchase());
                                 
-                                return registrarVentas(purchase.getIdPurchase(), purchase.getDetails())
-                                                        .flatMap(updatedPurchase -> purchaseRepository.save(updatedPurchase));
+                                return purchaseRepository.save(purchase)
+                                                        .then(registrarVentaDeDetalles(purchase.getDetails())); 
                                 
-                                });
                             });
-                })
-                
-                .doOnSuccess(v -> System.out.println("Procesamiento de pago aprobado completado"))
-                .doOnError(e -> System.err.println("ERROR en procesarPagoAprobado: " + e.getMessage()))
-                .doFinally(signal -> System.out.println("FIN procesarPagoAprobado: " + signal))
-                .then();
-    }
+                });
+            }                
+    
 
     private Mono<PurchaseEntity> findByMpPreferenceId(String idPreference){
         return purchaseRepository.findByMpPreferenceId(idPreference)
@@ -414,32 +405,21 @@ public class PurchaseService {
     }
     
 
-    private Mono<PurchaseEntity> registrarVenta(UUID idSale, List<PurchaseDetailEntity> details){
-        return purchaseStateService.findByName("confirmed")
-                                    .flatMap(state -> {
-                                        return purchaseRepository.findByIdPurchase(idSale)
-                                                          .flatMap(purchase -> {
-                                                            purchase.setFkCurrentState(state.getIdPurchaseState())
-                                                            return purchaseRepository.save(purchase);
-                                                        });});
-                                        
-                                        
+  
 
-    }
-
-    private Flux<Void> registrarVentaDeDetalles(List<PurchaseDetailEntity> details) {
-        return purchaseDetailStateService.findByName("confirmed")
-                                         .flatMapMany(state -> {
-
-                                            return Flux.fromIterable(details)
-                                                        .flatMap(detail -> {
-                                                            detail.setFkCurrentState(state.getIdPurchaseDetailState());
-                                                            return purchaseDetailService.save(detail)
-                                                                                        .flatMap(savedDetail -> 
-                                                                                        {return stockMovementService.registrarMovimientoPorCompra(detail.getFkBuyer(), detail.getIdPurchaseDetail());});
-                                                        });
-                                                       
-                                         });}
+    private Mono<Void> registrarVentaDeDetalles(List<PurchaseDetailEntity> details) {
+    return purchaseDetailStateService.findByName("confirmed")
+                                     .flatMapMany(state -> 
+                                        Flux.fromIterable(details)
+                                            .flatMap(detail -> {
+                                                detail.setFkCurrentState(state.getIdPurchaseDetailState());
+                                                return purchaseDetailService.save(detail)
+                                                                            .flatMap(savedDetail -> 
+                                                                            stockMovementService.registrarMovimientoPorCompra(detail.getFkBuyer(), detail.getIdPurchaseDetail()));
+                                            })
+                                     )
+                                     .then(); // Convierte Flux<Void> a Mono<Void>
+}
 
     public Mono<List<PurchaseDetailEntity>> receivePurchase(UUID idPurchase, ReceivePurchaseDTO listReceived) {
         return purchaseDetailService.getDetailsFromPurchase(idPurchase)

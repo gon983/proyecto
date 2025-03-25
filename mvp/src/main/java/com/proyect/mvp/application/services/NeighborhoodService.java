@@ -3,7 +3,7 @@ package com.proyect.mvp.application.services;
 import com.proyect.mvp.application.dtos.create.NeighborhoodCreateDTO;
 import com.proyect.mvp.domain.model.entities.NeighborhoodEntity;
 import com.proyect.mvp.domain.repository.NeighborhoodRepository;
-import com.proyect.mvp.infrastructure.routes.SaleRouter;
+
 import io.netty.util.internal.SocketUtils;
 
 import org.springframework.http.HttpStatus;
@@ -18,13 +18,13 @@ import java.util.UUID;
 @Service
 public class NeighborhoodService {
 
-    private final SaleRouter saleRouter;
+ 
 
     private final NeighborhoodRepository neighborhoodRepository;
 
-    public NeighborhoodService(NeighborhoodRepository neighborhoodRepository, SaleRouter saleRouter) {
+    public NeighborhoodService(NeighborhoodRepository neighborhoodRepository) {
         this.neighborhoodRepository = neighborhoodRepository;
-        this.saleRouter = saleRouter;
+       
     }
 
     public Flux<NeighborhoodEntity> getAllNeighborhoods() {
