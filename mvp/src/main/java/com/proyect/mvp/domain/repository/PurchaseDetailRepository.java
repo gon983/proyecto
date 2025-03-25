@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.proyect.mvp.domain.model.entities.PurchaseDetailEntity;
 import com.proyect.mvp.domain.model.entities.PurchaseDetailStateEntity;
-import com.proyect.mvp.domain.model.entities.SaleEntity;
+
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;

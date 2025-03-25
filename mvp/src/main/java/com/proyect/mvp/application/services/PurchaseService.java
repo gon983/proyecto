@@ -72,21 +72,21 @@ public class PurchaseService {
     private final PurchaseStateService purchaseStateService;
     private final PurchaseDetailService purchaseDetailService;
     private final UserService userService;
-    private final EncryptionService encryptionService;
+   
     private final StockMovementService stockMovementService;
-    private final SaleService saleService;
+
     static String NOTIFICATION_URL = "https://662b-196-32-67-187.ngrok-free.app/confirmPayment";
     
 
     public PurchaseService(PurchaseRepository purchaseRepository, PurchaseStateService purchaseStateService, PurchaseDetailService purchaseDetailService,
-     UserService userService, EncryptionService encryptionService, StockMovementService stockMovementService, SaleService saleService, PurchaseDetailStateService purchaseDetailStateService) {
+     UserService userService,  StockMovementService stockMovementService, PurchaseDetailStateService purchaseDetailStateService) {
         this.purchaseRepository = purchaseRepository;
         this.purchaseStateService = purchaseStateService;
         this.purchaseDetailService = purchaseDetailService;
         this.userService = userService;
-        this.encryptionService = encryptionService;
+      
         this.stockMovementService = stockMovementService;
-        this.saleService = saleService;
+ 
         this.purchaseDetailStateService = purchaseDetailStateService;
     }
 
@@ -413,43 +413,16 @@ public class PurchaseService {
     }
     
     private Mono<Void> registrarVentas(List<PurchaseDetailEntity> details, Payment payment, UUID fkUser) {
-        System.out.println("=========== INICIO registrarVentas ===========");
-        System.out.println("Detalles recibidos: " + details.size() + ", paymentId: " + payment.getId());
-        
-        return Flux.fromIterable(details)
-            .doOnNext(detail -> System.out.println("Procesando detalle: " + detail.toString()))
-            .flatMap(detail -> {
-                UUID productorId = detail.getProduct() != null ? detail.getProduct().getFkProductor() : null;
-                
-                if (productorId == null) {
-                    System.err.println("Detalle sin productor válido: " + detail.getIdPurchaseDetail());
-                    return Mono.empty();
-                }
-                
-                System.out.println("Registrando venta del detalle: " + detail.toString() + 
-                                   " para productor: " + productorId);
-                
-                // Usamos cast explícito para resolver posibles problemas de inferencia
-                return saleService.registrarVenta(detail.getIdPurchaseDetail(), productorId, fkUser)
-                    .flatMap(resultado -> {
-                        System.out.println("Venta registrada correctamente");
-                        return stockMovementService.registrarMovimientoPorCompra(fkUser, detail.getIdPurchaseDetail())
-                            .doOnSuccess(v -> System.out.println("Movimiento de stock registrado correctamente"))
-                            .onErrorResume(e -> {
-                                System.err.println("Error al registrar movimiento de stock: " + e.getMessage());
-                                return Mono.empty();
-                            });
-                    })
-                    .onErrorResume(e -> {
-                        System.err.println("Error al registrar venta: " + e.getMessage());
-                        return Mono.empty();
-                    });
-            })
-            .doOnComplete(() -> System.out.println("Todas las ventas procesadas"))
-            .doOnError(e -> System.err.println("ERROR general en registrarVentas: " + e.getMessage()))
-            .doFinally(signal -> System.out.println("=========== FIN registrarVentas con señal: " + signal + " ==========="))
-            .then();
-    }
+        return purchaseDetailStateService.findByName("ordered")
+                                         .flatMapMany(state -> {
+                                            return Flux.fromIterable(details)
+                                                        .flatMap(detail -> {
+                                                            detail.setFkCurrentState(state.getIdPurchaseDetailState());
+                                                            return purchaseDetailService.save(detail)
+                                                                                        .flatMap(savedDetail -> stockMovementService.registrarMovimientoPorCompra(fkUser, detail.getIdPurchaseDetail()));
+                                                        });
+                                                       
+                                         });
 
     public Mono<List<PurchaseDetailEntity>> receivePurchase(UUID idPurchase, ReceivePurchaseDTO listReceived) {
         return purchaseDetailService.getDetailsFromPurchase(idPurchase)

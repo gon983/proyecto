@@ -17,12 +17,11 @@ import java.util.UUID;
 @Service
 public class UserService {
     private final UserRepository userRepository;
-    private final EncryptionService encryptionService;
     private final NeighborhoodService neighborhoodService;
 
-    public UserService(UserRepository userRepository, EncryptionService encryptionService, NeighborhoodService neighborhoodService) {
+    public UserService(UserRepository userRepository, NeighborhoodService neighborhoodService) {
         this.userRepository = userRepository;
-        this.encryptionService = encryptionService;
+      
         this.neighborhoodService = neighborhoodService;
     }
 
@@ -70,8 +69,6 @@ public class UserService {
                             .phone(userDto.getPhone())
                             .roleOne(userDto.getRoleOne())
                             .fkCollectionPointSuscribed(userDto.getFkCollectionPointSuscribed())
-                            .mpAccessTokenEncrypted(encryptionService.encrypt(userDto.getMpAccessToken()))
-                            .mpPublicKeyEncrypted(encryptionService.encrypt(userDto.getMpPublicKey()))
                             .build();
                     
 
@@ -86,16 +83,9 @@ public class UserService {
                 .flatMap(neighborhood -> Mono.just(neighborhood.getFkLocality()));
     }
 
-    public Mono<String> getMpAccessToken(UUID userId) {
-        return userRepository.findById(userId)
-                             .switchIfEmpty(Mono.error(new RuntimeException("Usuario no encontrado: " + userId)))
-                             .map(user -> encryptionService.decrypt(user.getMpAccessTokenEncrypted()));
-    }
+    
 
-    public Mono<? extends Void> saveProducerMpData(UUID productorId, String accessTokenProductor, String userProductorMpId,
-            String refreshProductorToken) {
-        return userRepository.saveProducerMpData(productorId, accessTokenProductor, userProductorMpId,refreshProductorToken);
-    }
+   
 
     public Mono<String> getMpProductorUserId(UUID productorId) {
         return userRepository.findById(productorId)
