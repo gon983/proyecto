@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.proyect.mvp.application.dtos.requests.ProductsPayedDTO;
 import com.proyect.mvp.application.dtos.response.CollectionPointSalesDTO;
+import com.proyect.mvp.application.dtos.response.JustPayedSalesDto;
 import com.proyect.mvp.application.dtos.response.SaleSummaryDTO;
 import com.proyect.mvp.domain.model.entities.BigSaleEntity;
 import com.proyect.mvp.domain.model.entities.ProductEntity;
@@ -106,27 +107,24 @@ public Mono<CollectionPointSalesDTO> obtenerVentasProductorDeCollectionPoint(UUI
             
 }
 
-public Mono<CollectionPointSalesDTO> registrarPagoVentasCollectionPointDeProductor(
-    UUID idProductor, 
-    UUID idCollectionPoint, 
-    ProductsPayedDTO listPayedProducts
-) {
+public Flux<JustPayedSalesDto> registrarPagoVentasCollectionPointDeProductor(UUID idProductor, UUID idCollectionPoint, ProductsPayedDTO listPayedProducts) {
     return saleStateService.findSaleStateByName("payed")
-        .flatMap(state -> 
-            Flux.fromIterable(listPayedProducts.getProductsPayed())
-                .flatMap(idProduct -> 
-                    registerSalesAsPayed(idProductor, idCollectionPoint, idProduct, state.getIdSaleState())
-                )
-                .collectList()
-                .map(savedSales -> {
-                    CollectionPointSalesDTO salesDTO = CollectionPointSalesDTO.builder()
-                                                                                .sales(savedSales)
-                                                                                .build();
-
-                    // Configurar DTO
-                    return salesDTO;
-                })
-        );
+        .flatMapMany(state -> {
+            return Flux.fromIterable(listPayedProducts.getProductsPayed())
+                .flatMap(idProduct -> {return registerSalesAsPayed(idProductor, idCollectionPoint, idProduct, state.getIdSaleState())
+                                                    .collectList()
+                                                    .map(savedSales -> {
+                                                        JustPayedSalesDto salesDTO = JustPayedSalesDto.builder()
+                                                                                                        .idProduct(idProduct)
+                                                                                                        .sales(savedSales)
+                                                                                                        .build();
+    
+                        // Configurar DTO
+                                                    return salesDTO;
+                                                });
+                });
+                
+            });
 }
 
 public Flux<SaleEntity> registerSalesAsPayed(UUID idProductor,UUID idCollectionPoint, UUID idProduct, UUID idSaleState){
