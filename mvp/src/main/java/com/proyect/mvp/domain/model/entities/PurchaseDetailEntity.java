@@ -44,6 +44,12 @@ public class PurchaseDetailEntity {
     private LocalDateTime createdAt;
     @Column("updated_at")
     private LocalDateTime updatedAt;
+    @Column("fk_buyer")
+    private UUID fkBuyer;
+    @Column("fk_productor")
+    private UUID fkProductor;
+    @Column("fk_collection_point")
+    private UUID fkCollectionPoint;
 
     
     public void addProduct(ProductEntity productEntity){

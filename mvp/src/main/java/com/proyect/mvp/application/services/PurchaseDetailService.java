@@ -1,5 +1,6 @@
 package com.proyect.mvp.application.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -10,9 +11,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.proyect.mvp.application.dtos.create.PurchaseDetailCreateDTO;
+import com.proyect.mvp.application.dtos.requests.ProductsPayedDTO;
+import com.proyect.mvp.application.dtos.response.CollectionPointSalesDTO;
+import com.proyect.mvp.application.dtos.response.JustPayedSalesDto;
+import com.proyect.mvp.application.dtos.response.SaleSummaryDTO;
 import com.proyect.mvp.domain.model.entities.DefaultProductxCollectionPointxWeekEntity;
 import com.proyect.mvp.domain.model.entities.PurchaseDetailEntity;
 import com.proyect.mvp.domain.model.entities.PurchaseDetailStateEntity;
+import com.proyect.mvp.domain.model.entities.SaleEntity;
 import com.proyect.mvp.domain.repository.ONGRepository;
 import com.proyect.mvp.domain.repository.PurchaseDetailRepository;
 
@@ -87,7 +93,117 @@ public class PurchaseDetailService {
                     .filter(dpcp -> productIds.contains(dpcp.getFkProduct()))
                     .collect(Collectors.toList());
             });
+ 
 }
+
+    public Mono<List<CollectionPointSalesDTO>> obtenerVentasProductorPorCollectionPoint(UUID idProductor) {
+    return productService.getCollectionsPointsThatCouldSellTheProduct(idProductor)
+        
+                // Para cada punto, obtenemos las ventas y creamos el DTO
+                .flatMap(collectionPoint -> {
+                    return getSalesSummary(collectionPoint.getIdCollectionPoint(), idProductor)
+                        .map(salesList -> {
+                            return CollectionPointSalesDTO.builder()
+                                    .collectionPoint(collectionPoint)
+                                    .sales(salesList)
+                                    .build();
+                        });
+                })
+                // Combinamos todos los resultados en una lista
+                .collectList();
+        
+}
+
+public Mono<CollectionPointSalesDTO> obtenerVentasProductorDeCollectionPoint(UUID idProductor, UUID idCollectionPoint) {
+    return getSalesSummary(idCollectionPoint, idProductor)
+                            .map(salesList -> {
+                                return CollectionPointSalesDTO.builder()
+                                        .sales(salesList)
+                                        .build();
+                            });
+            
+}
+
+
+public Flux<JustPayedSalesDto> registrarPagoVentasCollectionPointDeProductor(UUID idProductor, UUID idCollectionPoint, ProductsPayedDTO listPayedProducts) {
+    System.out.println("START: registrarPagoVentasCollectionPointDeProductor");
+    System.out.println("Input - Producer ID: " + idProductor);
+    System.out.println("Input - Collection Point ID: " + idCollectionPoint);
+    System.out.println("Input - Products to Pay: " + (listPayedProducts != null ? listPayedProducts.getProductsPayed() : "NULL"));
+
+    return purchaseDetailStateService.findByName("payed")
+        .doOnNext(statel -> System.out.println("Found Sale State - ID: " + statel.getIdPurchaseDetailState()))
+        .doOnError(error -> System.err.println("Error finding sale state: " + error.getMessage()))
+        .flatMapMany(state -> {
+            System.out.println("Processing products for sale state: " + state.getIdPurchaseDetailState());
+            
+            return Flux.fromIterable(listPayedProducts.getProductsPayed())
+                .flatMap(idProduct -> {
+                    System.out.println("Processing product: " + idProduct);
+                    
+                    return registerSalesAsPayed(idProductor, idCollectionPoint, idProduct, state.getIdPurchaseDetailState())
+                        .collectList()
+                        .doOnError(error -> System.err.println("Error registering sales for product " + idProduct + ": " + error.getMessage()))
+                        .map(savedSales -> {
+                            System.out.println("Saved sales for product " + idProduct + ": " + savedSales.size() + " sales");
+                            
+                            JustPayedSalesDto salesDTO = JustPayedSalesDto.builder()
+                                .idProduct(idProduct)
+                                .sales(savedSales)
+                                .build();
+                            
+                            System.out.println("Created JustPayedSalesDto for product: " + idProduct);
+                            return salesDTO;
+                        });
+                })
+                .doOnError(error -> System.err.println("Error in product processing: " + error.getMessage()));
+        })
+        .doOnError(error -> System.err.println("Overall method error: " + error.getMessage()))
+        .doOnComplete(() -> System.out.println("Method completed successfully"));
+}
+
+public Flux<PurchaseDetailEntity> registerSalesAsPayed(UUID idProductor,UUID idCollectionPoint, UUID idProduct, UUID idSaleState){
+    return purchaseDetailStateService.findByName("pending_payment")
+                            .flatMapMany(state ->{
+                                    return purchaseDetailRepository.getSalesPendingPaymentForProductAndCollectionPointAndProducer( idCollectionPoint, idProductor,state.getIdPurchaseDetailState(),idProduct)
+                                                                        .flatMap(sale -> {
+                                                                            sale.setFkCurrentState(idSaleState);
+                                                                            return purchaseDetailRepository.save(sale);
+                                                                        });
+                                                                    });
+}
+
+
+public Mono<List<SaleSummaryDTO>> getSalesSummary(UUID idCollectionPoint, UUID idProducer) {
+    return purchaseDetailStateService.findByName("pending_payment")
+                            .flatMap(state -> {
+                                return purchaseDetailRepository.getSalesPendingPaymentForCollectionPointAndProducer(idCollectionPoint, idProducer, state.getIdPurchaseDetailState())
+                                        .flatMap(sale -> productService.getProductById(sale.getFkProduct())
+                                            .map(product -> new SaleSummaryDTO(
+                                                product.getIdProduct(),
+                                                product.getName(),
+                                                product.getStock(),
+                                                product.getUnitMeasurement(),
+                                                sale.getQuantity(),
+                                                sale.calculatePrice()
+                                            ))
+                                        )
+                                        .collect(Collectors.toMap(
+                                            SaleSummaryDTO::getIdProduct,  // 🔹 Agrupamos por idProduct
+                                            saleSummary -> saleSummary,    // 🔹 Mantenemos el primer objeto tal cual
+                                            (existing, newSale) -> {       // 🔥 Merge: Sumamos cantidades y montos sin perder datos
+                                                existing.setTotalQuantity(existing.getTotalQuantity() + newSale.getTotalQuantity());
+                                                existing.setTotalAmount(existing.getTotalAmount() + newSale.getTotalAmount());
+                                                return existing;
+                                            }
+                                        ))
+                                        .map(groupedMap -> new ArrayList<>(groupedMap.values())); // Convertimos Map a List
+                                                            });
+    
+    
+    
+}
+
 
     
             

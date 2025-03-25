@@ -3,6 +3,7 @@ package com.proyect.mvp.application.dtos.response;
 import java.util.List;
 import java.util.UUID;
 
+import com.proyect.mvp.domain.model.entities.PurchaseDetailEntity;
 import com.proyect.mvp.domain.model.entities.SaleEntity;
 
 import lombok.AllArgsConstructor;
@@ -18,6 +19,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class JustPayedSalesDto {
     UUID idProduct;
-    List<SaleEntity> sales;
+    List<PurchaseDetailEntity> sales;
     
 }

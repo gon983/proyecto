@@ -12,7 +12,9 @@ import java.util.UUID;
 import static org.springframework.web.reactive.function.server.RequestPredicates.*;
 
 import com.proyect.mvp.application.dtos.create.PurchaseDetailCreateDTO;
+import com.proyect.mvp.application.dtos.requests.ProductsPayedDTO;
 import com.proyect.mvp.application.services.PurchaseDetailService;
+import com.proyect.mvp.application.services.SaleService;
 
 import reactor.core.publisher.Mono;
 
@@ -21,7 +23,10 @@ public class PurchaseDetailRouter {
 
     @Bean
     public RouterFunction<ServerResponse> purchaseDetailRoutes(PurchaseDetailService purchaseDetailService){
-        return route(POST("/purchases/{purchaseId}/details"), request-> createPurchaseDetail(request, purchaseDetailService));
+        return route(POST("/purchases/{purchaseId}/details"), request-> createPurchaseDetail(request, purchaseDetailService))
+        .andRoute(GET("/salesProductor/{idProductor}"), request -> obtenerVentasProductorSinAbonar(request, purchaseDetailService))
+        .andRoute(GET("/salesProductor/{idProductor}/{idCollectionPoint}"), request -> obtenerVentasCollectionPointDeProductorSinAbonar(request, purchaseDetailService))
+        .andRoute(POST("registerPaymentSales/{idProductor}/{idCollectionPoint}"), request -> registrarPagoVentasCollectionPointDeProductor(request, purchaseDetailService));
 
 
     }
@@ -31,6 +36,31 @@ public class PurchaseDetailRouter {
         return request.bodyToMono(PurchaseDetailCreateDTO.class)
                         .flatMap(purchaseDetailDto-> purchaseDetailService.createPurchaseDetail(fkPurchase, purchaseDetailDto))
                         .flatMap(savedPurchaseDetail -> ServerResponse.ok().bodyValue(savedPurchaseDetail));
+    }
+
+    private Mono<ServerResponse> obtenerVentasProductorSinAbonar(ServerRequest request, PurchaseDetailService saleService ){
+        UUID idProductor = UUID.fromString(request.pathVariable("idProductor"));
+        return saleService.obtenerVentasProductorPorCollectionPoint(idProductor)
+                            .flatMap(sales -> ServerResponse.ok().bodyValue(sales));
+        
+    }
+    
+    private Mono<ServerResponse> obtenerVentasCollectionPointDeProductorSinAbonar(ServerRequest request, PurchaseDetailService saleService ){
+        UUID idProductor = UUID.fromString(request.pathVariable("idProductor"));
+        UUID idCollectionPoint = UUID.fromString(request.pathVariable("idCollectionPoint"));
+        return saleService.obtenerVentasProductorDeCollectionPoint(idProductor, idCollectionPoint)
+                            .flatMap(sales -> ServerResponse.ok().bodyValue(sales));
+        
+    }
+
+    private Mono<ServerResponse> registrarPagoVentasCollectionPointDeProductor(ServerRequest request, PurchaseDetailService saleService ){
+        UUID idProductor = UUID.fromString(request.pathVariable("idProductor"));
+        UUID idCollectionPoint = UUID.fromString(request.pathVariable("idCollectionPoint"));
+        return request.bodyToMono(ProductsPayedDTO.class)
+                      .flatMapMany(listPayedProduct -> saleService.registrarPagoVentasCollectionPointDeProductor(idProductor, idCollectionPoint, listPayedProduct))
+                      .collectList()
+                      .flatMap(sales -> ServerResponse.ok().bodyValue(sales));
+        
     }
 
     
