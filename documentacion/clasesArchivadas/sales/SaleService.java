@@ -108,42 +108,42 @@ public Mono<CollectionPointSalesDTO> obtenerVentasProductorDeCollectionPoint(UUI
 }
 
 
-public Flux<JustPayedSalesDto> registrarPagoVentasCollectionPointDeProductor(UUID idProductor, UUID idCollectionPoint, ProductsPayedDTO listPayedProducts) {
-    System.out.println("START: registrarPagoVentasCollectionPointDeProductor");
-    System.out.println("Input - Producer ID: " + idProductor);
-    System.out.println("Input - Collection Point ID: " + idCollectionPoint);
-    System.out.println("Input - Products to Pay: " + (listPayedProducts != null ? listPayedProducts.getProductsPayed() : "NULL"));
+// public Flux<JustPayedSalesDto> registrarPagoVentasCollectionPointDeProductor(UUID idProductor, UUID idCollectionPoint, ProductsPayedDTO listPayedProducts) {
+//     System.out.println("START: registrarPagoVentasCollectionPointDeProductor");
+//     System.out.println("Input - Producer ID: " + idProductor);
+//     System.out.println("Input - Collection Point ID: " + idCollectionPoint);
+//     System.out.println("Input - Products to Pay: " + (listPayedProducts != null ? listPayedProducts.getProductsPayed() : "NULL"));
 
-    return saleStateService.findSaleStateByName("payed")
-        .doOnNext(statel -> System.out.println("Found Sale State - ID: " + statel.getIdSaleState()))
-        .doOnError(error -> System.err.println("Error finding sale state: " + error.getMessage()))
-        .flatMapMany(state -> {
-            System.out.println("Processing products for sale state: " + state.getIdSaleState());
+//     return saleStateService.findSaleStateByName("payed")
+//         .doOnNext(statel -> System.out.println("Found Sale State - ID: " + statel.getIdSaleState()))
+//         .doOnError(error -> System.err.println("Error finding sale state: " + error.getMessage()))
+//         .flatMapMany(state -> {
+//             System.out.println("Processing products for sale state: " + state.getIdSaleState());
             
-            return Flux.fromIterable(listPayedProducts.getProductsPayed())
-                .flatMap(idProduct -> {
-                    System.out.println("Processing product: " + idProduct);
+//             return Flux.fromIterable(listPayedProducts.getProductsPayed())
+//                 .flatMap(idProduct -> {
+//                     System.out.println("Processing product: " + idProduct);
                     
-                    return registerSalesAsPayed(idProductor, idCollectionPoint, idProduct, state.getIdSaleState())
-                        .collectList()
-                        .doOnError(error -> System.err.println("Error registering sales for product " + idProduct + ": " + error.getMessage()))
-                        .map(savedSales -> {
-                            System.out.println("Saved sales for product " + idProduct + ": " + savedSales.size() + " sales");
+//                     return registerSalesAsPayed(idProductor, idCollectionPoint, idProduct, state.getIdSaleState())
+//                         .collectList()
+//                         .doOnError(error -> System.err.println("Error registering sales for product " + idProduct + ": " + error.getMessage()))
+//                         .map(savedSales -> {
+//                             System.out.println("Saved sales for product " + idProduct + ": " + savedSales.size() + " sales");
                             
-                            JustPayedSalesDto salesDTO = JustPayedSalesDto.builder()
-                                .idProduct(idProduct)
-                                .sales(savedSales)
-                                .build();
+//                             JustPayedSalesDto salesDTO = JustPayedSalesDto.builder()
+//                                 .idProduct(idProduct)
+//                                 .sales(savedSales)
+//                                 .build();
                             
-                            System.out.println("Created JustPayedSalesDto for product: " + idProduct);
-                            return salesDTO;
-                        });
-                })
-                .doOnError(error -> System.err.println("Error in product processing: " + error.getMessage()));
-        })
-        .doOnError(error -> System.err.println("Overall method error: " + error.getMessage()))
-        .doOnComplete(() -> System.out.println("Method completed successfully"));
-}
+//                             System.out.println("Created JustPayedSalesDto for product: " + idProduct);
+//                             return salesDTO;
+//                         });
+//                 })
+//                 .doOnError(error -> System.err.println("Error in product processing: " + error.getMessage()));
+//         })
+//         .doOnError(error -> System.err.println("Overall method error: " + error.getMessage()))
+//         .doOnComplete(() -> System.out.println("Method completed successfully"));
+// }
 
 public Flux<SaleEntity> registerSalesAsPayed(UUID idProductor,UUID idCollectionPoint, UUID idProduct, UUID idSaleState){
     return saleStateService.findSaleStateByName("pending_payment")

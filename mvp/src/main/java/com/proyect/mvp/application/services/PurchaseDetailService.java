@@ -49,6 +49,9 @@ public class PurchaseDetailService {
                                                                 .quantity(purchaseDetailDto.getQuantity())
                                                                 .unitPrice(purchaseDetailDto.getUnitPrice())
                                                                 .fkState(purchaseState.getIdPurchaseDetailState())
+                                                                .fkBuyer(purchaseDetailDto.getFkBuyer())
+                                                                .fkProductor(purchaseDetailDto.getFkProductor())
+                                                                .fkCollectionPoint(purchaseDetailDto.getFkCollectionPoint())
                                                                 .build();
         return purchaseDetailRepository.save(purchaseDetail)
                                 .thenReturn(purchaseDetail)

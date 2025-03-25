@@ -10,5 +10,8 @@ public class PurchaseDetailCreateDTO{
     UUID fkProduct;
     double quantity;
     double unitPrice;
+    UUID fkProductor;
+    UUID fkBuyer;
+    UUID fkCollectionPoint;
 }
 
