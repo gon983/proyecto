@@ -158,10 +158,20 @@
 					"name": "Consultar Ventas por Collection Point de Productor",
 					"item": [
 						{
-							"name": "obtener ventas por Collection Point de Productor",
+							"name": "obtener ventas acumuladas sin abonar por Collection Point de Productor",
 							"request": {
 								"method": "GET",
-								"header": []
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/salesProductor/b088c879-3fe7-4bcd-a6fc-89efb341c602",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"salesProductor",
+										"b088c879-3fe7-4bcd-a6fc-89efb341c602"
+									]
+								}
 							},
 							"response": []
 						}
@@ -1247,8 +1257,56 @@
 					]
 				},
 				{
-					"name": "Pagar y registrar Total Sale Por CP",
-					"item": []
+					"name": "Registrar Pago de Conjunto de Ventas para un CP de un productor",
+					"item": [
+						{
+							"name": "obtener ventas acumuladas de un Collection Point de un Productor",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/sales/b088c879-3fe7-4bcd-a6fc-89efb341c602/c446f03c-490c-4fe9-a63a-ad407c981c29",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"sales",
+										"b088c879-3fe7-4bcd-a6fc-89efb341c602",
+										"c446f03c-490c-4fe9-a63a-ad407c981c29"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Registrar Pago Conjunto de ventas para un Cp de un prdouctor",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"productsPayed\":[\"1a6acd60-a74e-4724-96a8-6ad7359c2fd0\"]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/registerPaymentSales/b088c879-3fe7-4bcd-a6fc-89efb341c602/c446f03c-490c-4fe9-a63a-ad407c981c29",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"registerPaymentSales",
+										"b088c879-3fe7-4bcd-a6fc-89efb341c602",
+										"c446f03c-490c-4fe9-a63a-ad407c981c29"
+									]
+								}
+							},
+							"response": []
+						}
+					]
 				},
 				{
 					"name": "Generar Neighborhood Package",
