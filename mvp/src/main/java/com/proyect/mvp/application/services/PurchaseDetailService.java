@@ -18,7 +18,7 @@ import com.proyect.mvp.application.dtos.response.SaleSummaryDTO;
 import com.proyect.mvp.domain.model.entities.DefaultProductxCollectionPointxWeekEntity;
 import com.proyect.mvp.domain.model.entities.PurchaseDetailEntity;
 import com.proyect.mvp.domain.model.entities.PurchaseDetailStateEntity;
-import com.proyect.mvp.domain.model.entities.SaleEntity;
+
 import com.proyect.mvp.domain.repository.ONGRepository;
 import com.proyect.mvp.domain.repository.PurchaseDetailRepository;
 

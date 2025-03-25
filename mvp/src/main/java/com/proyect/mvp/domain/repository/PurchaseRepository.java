@@ -19,4 +19,6 @@ public interface PurchaseRepository extends R2dbcRepository<PurchaseEntity,UUID>
     @Query("Select * from purchase where mp_preference_id = :mpPreferenceId")
     Mono<PurchaseEntity> findByMpPreferenceId(@Param("mpPreferenceId")String mpPreferenceId);
 
+    Mono<PurchaseEntity> findByIdPurchase(UUID idPurchase);
+
 }

@@ -29,7 +29,7 @@ public class StockMovementEntity {
     private UUID fkProduct;
 
     @Column("fk_user")
-    private UUID fkUser;
+    private UUID fkUser; //el buyer
 
     @Column( "quantity")
     private double quantity;
