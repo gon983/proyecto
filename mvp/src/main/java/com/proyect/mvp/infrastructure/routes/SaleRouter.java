@@ -46,7 +46,8 @@ public class SaleRouter {
         UUID idProductor = UUID.fromString(request.pathVariable("idProductor"));
         UUID idCollectionPoint = UUID.fromString(request.pathVariable("idCollectionPoint"));
         return request.bodyToMono(ProductsPayedDTO.class)
-                      .flatMap(listPayedProduct -> saleService.registrarPagoVentasCollectionPointDeProductor(idProductor, idCollectionPoint, listPayedProduct))
+                      .flatMapMany(listPayedProduct -> saleService.registrarPagoVentasCollectionPointDeProductor(idProductor, idCollectionPoint, listPayedProduct))
+                      .collectList()
                       .flatMap(sales -> ServerResponse.ok().bodyValue(sales));
         
     }
