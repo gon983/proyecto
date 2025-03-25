@@ -23,7 +23,7 @@ public class PurchaseDetailRouter {
 
     @Bean
     public RouterFunction<ServerResponse> purchaseDetailRoutes(PurchaseDetailService purchaseDetailService){
-        return route(POST("/purchases/{purchaseId}/details"), request-> createPurchaseDetail(request, purchaseDetailService))
+        return route(POST("/purchases/details/{purchaseId}/{idCollectionPoint}/{idUser}"), request-> createPurchaseDetail(request, purchaseDetailService))
         .andRoute(GET("/salesProductor/{idProductor}"), request -> obtenerVentasProductorSinAbonar(request, purchaseDetailService))
         .andRoute(GET("/salesProductor/{idProductor}/{idCollectionPoint}"), request -> obtenerVentasCollectionPointDeProductorSinAbonar(request, purchaseDetailService))
         .andRoute(POST("/registerPaymentSales/{idProductor}/{idCollectionPoint}"), request -> registrarPagoVentasCollectionPointDeProductor(request, purchaseDetailService));
@@ -33,8 +33,10 @@ public class PurchaseDetailRouter {
 
     public Mono<ServerResponse> createPurchaseDetail(ServerRequest request, PurchaseDetailService purchaseDetailService){
         UUID fkPurchase = UUID.fromString(request.pathVariable("purchaseId"));
+        UUID fkCollectionPoint = UUID.fromString(request.pathVariable("idCollectionPoint"));
+        UUID fkBuyer = UUID.fromString(request.pathVariable("idUser"));
         return request.bodyToMono(PurchaseDetailCreateDTO.class)
-                        .flatMap(purchaseDetailDto-> purchaseDetailService.createPurchaseDetail(fkPurchase, purchaseDetailDto))
+                        .flatMap(purchaseDetailDto-> purchaseDetailService.createPurchaseDetail(fkBuyer, fkCollectionPoint, fkPurchase, purchaseDetailDto))
                         .flatMap(savedPurchaseDetail -> ServerResponse.ok().bodyValue(savedPurchaseDetail));
     }
 

@@ -75,7 +75,7 @@ public class PurchaseService {
    
     private final StockMovementService stockMovementService;
 
-    static String NOTIFICATION_URL = "https://662b-196-32-67-187.ngrok-free.app/confirmPayment";
+    static String NOTIFICATION_URL = "https://3280-196-32-67-187.ngrok-free.app/confirmPayment";
     
 
     public PurchaseService(PurchaseRepository purchaseRepository, PurchaseStateService purchaseStateService, PurchaseDetailService purchaseDetailService,
@@ -367,24 +367,38 @@ public class PurchaseService {
     }
     
     private Mono<Void> procesarPagoAprobado(String preferenceId, Payment payment) {
+        System.out.println("Iniciando procesamiento de pago para preferenceId: " + preferenceId);
+        
         return findByMpPreferenceId(preferenceId)
                 .flatMap(purchase -> {
+                    System.out.println("Compra encontrada: " + purchase.getIdPurchase());
+                    
                     // Buscar el estado 'confirmed'
                     return purchaseStateService.findByName("confirmed")
                             .flatMap(state -> {
+                                System.out.println("Estado 'confirmed' encontrado: " + state.getIdPurchaseState());
     
                                 // Actualizar la compra
                                 purchase.setFkCurrentState(state.getIdPurchaseState());
                                 purchase.setMpPaymentId(payment.getId().toString());
                                 purchase.setPaymentDate(payment.getDateApproved());
     
+                                System.out.println("Actualizando compra con nuevos datos:");
+                                System.out.println("- Nuevo estado: " + state.getIdPurchaseState());
+                                System.out.println("- ID de pago MP: " + payment.getId());
+                                System.out.println("- Fecha de pago: " + payment.getDateApproved());
                                 
                                 return purchaseRepository.save(purchase)
-                                                        .then(registrarVentaDeDetalles(purchase.getDetails())); 
-                                
+                                        .doOnSuccess(savedPurchase -> 
+                                            System.out.println("Compra guardada exitosamente: " + savedPurchase.getIdPurchase()))
+                                        .then(registrarVentaDeDetalles(purchase.getDetails())
+                                            .doOnSuccess(v -> 
+                                                System.out.println("Detalles de venta registrados exitosamente"))); 
                             });
-                });
-            }                
+                })
+                .doOnError(error -> 
+                    System.err.println("Error en el procesamiento del pago: " + error.getMessage()));
+    }          
     
 
     private Mono<PurchaseEntity> findByMpPreferenceId(String idPreference){

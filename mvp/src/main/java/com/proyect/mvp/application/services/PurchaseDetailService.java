@@ -40,8 +40,12 @@ public class PurchaseDetailService {
         this.ONGRepository = ONGRepository;
     }
 
-    public Mono<PurchaseDetailEntity> createPurchaseDetail(UUID fkPurchase, PurchaseDetailCreateDTO purchaseDetailDto){
-        return purchaseDetailStateService.findByName("pending")
+    public Mono<PurchaseDetailEntity> createPurchaseDetail(UUID fkBuyer, UUID fkCollectionPoint, UUID fkPurchase, PurchaseDetailCreateDTO purchaseDetailDto){
+        return productService.getProductById(purchaseDetailDto.getFkProduct())
+                             .flatMap(product -> {
+                            
+
+                                return purchaseDetailStateService.findByName("pending")
                                   .flatMap(purchaseState ->{
         PurchaseDetailEntity purchaseDetail = PurchaseDetailEntity.builder()
                                                                 .fkProduct(purchaseDetailDto.getFkProduct())
@@ -49,14 +53,18 @@ public class PurchaseDetailService {
                                                                 .quantity(purchaseDetailDto.getQuantity())
                                                                 .unitPrice(purchaseDetailDto.getUnitPrice())
                                                                 .fkState(purchaseState.getIdPurchaseDetailState())
-                                                                .fkBuyer(purchaseDetailDto.getFkBuyer())
+                                                                .fkBuyer(fkBuyer)
                                                                 .fkProductor(purchaseDetailDto.getFkProductor())
-                                                                .fkCollectionPoint(purchaseDetailDto.getFkCollectionPoint())
+                                                                .fkCollectionPoint(fkCollectionPoint)
+                                                                .fkProductor(product.getFkProductor())
                                                                 .build();
         return purchaseDetailRepository.save(purchaseDetail)
                                 .thenReturn(purchaseDetail)
                                 .onErrorMap(error -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error Saving purchase detail", error));
         });        
+
+                             });
+        
     }
 
     public Flux<PurchaseDetailEntity> getDetailsFromPurchase(UUID idPurchase){
@@ -166,9 +174,9 @@ public Flux<JustPayedSalesDto> registrarPagoVentasCollectionPointDeProductor(UUI
 }
 
 public Flux<PurchaseDetailEntity> registerSalesAsPayed(UUID idProductor,UUID idCollectionPoint, UUID idProduct, UUID idSaleState){
-    return purchaseDetailStateService.findByName("pending_payment")
+    return purchaseDetailStateService.findByName("confirmed")
                             .flatMapMany(state ->{
-                                    return purchaseDetailRepository.getSalesPendingPaymentForProductAndCollectionPointAndProducer( idCollectionPoint, idProductor,state.getIdPurchaseDetailState(),idProduct)
+                                    return purchaseDetailRepository.getSalesConfirmedForProductAndCollectionPointAndProducer( idCollectionPoint, idProductor,state.getIdPurchaseDetailState(),idProduct)
                                                                         .flatMap(sale -> {
                                                                             sale.setFkCurrentState(idSaleState);
                                                                             return purchaseDetailRepository.save(sale);
@@ -178,9 +186,9 @@ public Flux<PurchaseDetailEntity> registerSalesAsPayed(UUID idProductor,UUID idC
 
 
 public Mono<List<SaleSummaryDTO>> getSalesSummary(UUID idCollectionPoint, UUID idProducer) {
-    return purchaseDetailStateService.findByName("pending_payment")
+    return purchaseDetailStateService.findByName("confirmed")
                             .flatMap(state -> {
-                                return purchaseDetailRepository.getSalesPendingPaymentForCollectionPointAndProducer(idCollectionPoint, idProducer, state.getIdPurchaseDetailState())
+                                return purchaseDetailRepository.getSalesConfirmedForCollectionPointAndProducer(idCollectionPoint, idProducer, state.getIdPurchaseDetailState())
                                         .flatMap(sale -> productService.getProductById(sale.getFkProduct())
                                             .map(product -> new SaleSummaryDTO(
                                                 product.getIdProduct(),
