@@ -215,6 +215,54 @@ public Mono<List<SaleSummaryDTO>> getSalesSummary(UUID idCollectionPoint, UUID i
     
 }
 
+public Mono<List<SaleSummaryDTO>> getSalesSummary(UUID idCollectionPoint) {
+    return purchaseDetailStateService.findByName("confirmed")
+                            .flatMap(stateA -> {
+                                return purchaseDetailStateService.findByName("payed")
+                                .flatMap(stateB -> {
+                                    return purchaseDetailRepository.getSalesConfirmedOrPayedForCollectionPoint(idCollectionPoint, stateA.getIdPurchaseDetailState(), stateB.getIdPurchaseDetailState())
+                                            .flatMap(sale -> productService.getProductById(sale.getFkProduct())
+                                                .map(product -> new SaleSummaryDTO(
+                                                    product.getIdProduct(),
+                                                    product.getName(),
+                                                    product.getStock(),
+                                                    product.getUnitMeasurement(),
+                                                    sale.getQuantity(),
+                                                    sale.calculatePrice()
+                                                ))
+                                            )
+                                            .collect(Collectors.toMap(
+                                                SaleSummaryDTO::getIdProduct,  // 🔹 Agrupamos por idProduct
+                                                saleSummary -> saleSummary,    // 🔹 Mantenemos el primer objeto tal cual
+                                                (existing, newSale) -> {       // 🔥 Merge: Sumamos cantidades y montos sin perder datos
+                                                    existing.setTotalQuantity(existing.getTotalQuantity() + newSale.getTotalQuantity());
+                                                    existing.setTotalAmount(existing.getTotalAmount() + newSale.getTotalAmount());
+                                                    return existing;
+                                                }
+                                            ))
+                                            .map(groupedMap -> new ArrayList<>(groupedMap.values())); // Convertimos Map a List
+                                                                });
+                            });
+                            
+    
+    
+    
+}
+
+
+
+
+public Mono<CollectionPointSalesDTO> obtenerTodasLasVentasConfirmadasOPagadasDeUnCpSumarizadasPorProduct(UUID idCollectionPoint){
+    return getSalesSummary(idCollectionPoint)
+                          .map(sales -> {
+                            CollectionPointSalesDTO dto = CollectionPointSalesDTO.builder() 
+                                                                                 .sales(sales)
+                                                                                 .build();
+                            return dto;
+                          });
+
+}
+
 
     
             

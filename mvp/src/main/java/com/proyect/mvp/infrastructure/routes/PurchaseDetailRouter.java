@@ -26,7 +26,8 @@ public class PurchaseDetailRouter {
         return route(POST("/purchases/details/{purchaseId}/{idCollectionPoint}/{idUser}"), request-> createPurchaseDetail(request, purchaseDetailService))
         .andRoute(GET("/salesProductor/{idProductor}"), request -> obtenerVentasProductorSinAbonar(request, purchaseDetailService))
         .andRoute(GET("/salesProductor/{idProductor}/{idCollectionPoint}"), request -> obtenerVentasCollectionPointDeProductorSinAbonar(request, purchaseDetailService))
-        .andRoute(POST("/registerPaymentSales/{idProductor}/{idCollectionPoint}"), request -> registrarPagoVentasCollectionPointDeProductor(request, purchaseDetailService));
+        .andRoute(POST("/registerPaymentSales/{idProductor}/{idCollectionPoint}"), request -> registrarPagoVentasCollectionPointDeProductor(request, purchaseDetailService))
+        .andRoute(GET("/neighborhoodPackage/{idCollectionPoint}"), request -> obtenerTodasLasVentasConfirmadasOPagadasDeUnCpSumarizadasPorStandarProduct(request, purchaseDetailService));
 
 
     }
@@ -63,6 +64,13 @@ public class PurchaseDetailRouter {
                       .collectList()
                       .flatMap(sales -> ServerResponse.ok().bodyValue(sales));
         
+    }
+
+
+    private Mono<ServerResponse> obtenerTodasLasVentasConfirmadasOPagadasDeUnCpSumarizadasPorStandarProduct(ServerRequest request, PurchaseDetailService purchaseDetailService){
+        UUID idCollectionPoint = UUID.fromString(request.pathVariable("idCollectionPoint"));
+        return purchaseDetailService.obtenerTodasLasVentasConfirmadasOPagadasDeUnCpSumarizadasPorProduct(idCollectionPoint)
+                                    .flatMap(dto -> ServerResponse.ok().bodyValue(dto));
     }
 
     

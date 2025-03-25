@@ -26,6 +26,9 @@ public interface PurchaseDetailRepository extends R2dbcRepository<PurchaseDetail
                                                                                 @Param("fk_productor") UUID fkProducer, 
                                                                                 @Param("fk_current_state") UUID fk_current_state,
                                                                                 @Param("fk_product") UUID fkProduct);
+
+    @Query("SELECT * from purchase_detail where fk_collection_point = :collectionPoint and  (fk_state = :fk_stateA OR fk_state = :fk_stateB)") 
+    Flux<PurchaseDetailEntity> getSalesConfirmedOrPayedForCollectionPoint(@Param("collectionPoint") UUID collectionPoint, @Param("fk_stateA") UUID fkStateA, @Param("fk_stateB") UUID fkStateB);
     
 
 }
