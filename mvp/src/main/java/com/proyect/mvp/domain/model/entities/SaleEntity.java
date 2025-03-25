@@ -43,4 +43,8 @@ public class SaleEntity {
     UUID fkBuyer;
     @Column("fk_collection_point")
     UUID fkCollectionPoint;
+
+    public void setCurrentState(UUID state){
+        this.fkCurrentState = state;
+    }
 }

@@ -24,7 +24,7 @@ public class SaleRouter {
     RouterFunction<ServerResponse> saleRoutes(SaleService saleService){
         return route(GET("/salesProductor/{idProductor}"), request -> obtenerVentasProductorSinAbonar(request, saleService))
             .andRoute(GET("/salesProductor/{idProductor}/{idCollectionPoint}"), request -> obtenerVentasCollectionPointDeProductorSinAbonar(request, saleService))
-            .andRoute(POST("registerPaymentSales/{idProductor}/{idCollectionPoint}"), request -> registrarPagoVentasCollectionPointDeProductor(request, saleService)));
+            .andRoute(POST("registerPaymentSales/{idProductor}/{idCollectionPoint}"), request -> registrarPagoVentasCollectionPointDeProductor(request, saleService));
     }
     
     private Mono<ServerResponse> obtenerVentasProductorSinAbonar(ServerRequest request, SaleService saleService ){

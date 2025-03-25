@@ -16,9 +16,15 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface SaleRepository extends R2dbcRepository<SaleEntity,UUID> {
-
     @Query("SELECT * from sale where fk_collection_point = :collectionPoint and fk_productor = :fk_productor and fk_current_state = :fk_current_state") 
     Flux<SaleEntity> getSalesPendingPaymentForCollectionPointAndProducer(@Param("collectionPoint") UUID collectionPoint, @Param("fk_productor") UUID fkProducer, @Param("fk_current_state") UUID fk_current_state);
+
+    @Query("SELECT * from sale where fk_collection_point = :collectionPoint and fk_productor = :fk_productor and fk_current_state = :fk_current_state and fk_product = :fk_product") 
+    Flux<SaleEntity> getSalesPendingPaymentForProductAndCollectionPointAndProducer(@Param("collectionPoint") UUID collectionPoint, 
+                                                                                @Param("fk_productor") UUID fkProducer, 
+                                                                                @Param("fk_current_state") UUID fk_current_state,
+                                                                                @Param("fk_product") UUID fkProduct);
+    
 
 }
 

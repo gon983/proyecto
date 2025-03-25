@@ -114,16 +114,30 @@ public Mono<CollectionPointSalesDTO> registrarPagoVentasCollectionPointDeProduct
     return saleStateService.findSaleStateByName("payed")
         .flatMap(state -> 
             Flux.fromIterable(listPayedProducts.getProductsPayed())
-                .flatMap(product -> 
-                    saleService.registerSalesAsPayed(idProductor, idCollectionPoint, product.getIdProduct())
+                .flatMap(idProduct -> 
+                    registerSalesAsPayed(idProductor, idCollectionPoint, idProduct, state.getIdSaleState())
                 )
                 .collectList()
                 .map(savedSales -> {
-                    CollectionPointSalesDTO salesDTO = new CollectionPointSalesDTO();
+                    CollectionPointSalesDTO salesDTO = CollectionPointSalesDTO.builder()
+                                                                                .sales(savedSales)
+                                                                                .build();
+
                     // Configurar DTO
                     return salesDTO;
                 })
         );
+}
+
+public Flux<SaleEntity> registerSalesAsPayed(UUID idProductor,UUID idCollectionPoint, UUID idProduct, UUID idSaleState){
+    return saleStateService.findSaleStateByName("pending_payment")
+                            .flatMapMany(state ->{
+                                    return saleRepository.getSalesPendingPaymentForProductAndCollectionPointAndProducer(idProductor, idCollectionPoint,state.getIdSaleState(),idProduct)
+                                                                        .flatMap(sale -> {
+                                                                            sale.setCurrentState(idSaleState);
+                                                                            return saleRepository.save(sale);
+                                                                        });
+                                                                    });
 }
 
 
