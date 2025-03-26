@@ -11,6 +11,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 
+import com.proyect.mvp.infrastructure.security.handlers.JsonAuthenticationEntryPoint;
+import com.proyect.mvp.infrastructure.security.handlers.JsonAuthenticationFailureHandler;
+import com.proyect.mvp.infrastructure.security.handlers.JsonAuthenticationSuccessHandler;
+
 @Configuration
 @EnableWebFluxSecurity
 public class SecurityConfig {
@@ -37,10 +41,14 @@ public class SecurityConfig {
             )
             .httpBasic(Customizer.withDefaults())
             .formLogin(formLogin -> formLogin
-                .authenticationManager(authenticationManager)
-            )
-            .build();
-    }
+            .loginPage("/login")
+            .authenticationSuccessHandler(new JsonAuthenticationSuccessHandler())
+            .authenticationFailureHandler(new JsonAuthenticationFailureHandler())
+        )
+        .exceptionHandling(handling -> handling
+            .authenticationEntryPoint(new JsonAuthenticationEntryPoint())
+        )
+        .build();
 
     
-}
+}}
