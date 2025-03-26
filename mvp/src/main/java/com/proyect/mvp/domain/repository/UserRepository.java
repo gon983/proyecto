@@ -8,9 +8,12 @@ import com.proyect.mvp.infrastructure.security.UserDTO;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
 import reactor.core.publisher.Mono;
 import java.util.UUID;
 
+@Repository
 public interface UserRepository extends R2dbcRepository<UserEntity, UUID> {
     @Query("INSERT INTO users " +
     "(id_user, username, email, created_at, first_name, last_name, " +

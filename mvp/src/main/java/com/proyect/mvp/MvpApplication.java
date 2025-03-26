@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import io.github.cdimascio.dotenv.Dotenv;
 
-@SpringBootApplication(scanBasePackages = {"com.proyect.mvp.infrastructure.routes", "com.proyect.mvp.infrastructure.config", "com.proyect.mvp.application.services"})
+@SpringBootApplication(scanBasePackages = {"com.proyect.mvp.infrastructure.routes", "com.proyect.mvp.infrastructure.config", "com.proyect.mvp.application.services", "com.proyect.mvp.infrastructure.security"})
 public class MvpApplication {
 
     public static void main(String[] args) {

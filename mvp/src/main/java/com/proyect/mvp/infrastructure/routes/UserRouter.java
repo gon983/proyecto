@@ -3,13 +3,16 @@ package com.proyect.mvp.infrastructure.routes;
 
 
 import com.proyect.mvp.application.dtos.create.UserCreateDTO;
+import com.proyect.mvp.application.dtos.requests.LoginRequest;
 import com.proyect.mvp.application.dtos.update.UserUpdateDTO;
 import com.proyect.mvp.application.services.UserService;
 import com.proyect.mvp.domain.model.entities.UserEntity;
+import com.proyect.mvp.infrastructure.security.CustomReactiveAuthenticationManager;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
@@ -22,13 +25,15 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 
 @Configuration
 public class UserRouter {
+    
 
     @Bean
-    public RouterFunction<ServerResponse> userRoutes(UserService userService) {
+    public RouterFunction<ServerResponse> userRoutes(UserService userService, CustomReactiveAuthenticationManager authenticationManager ) {
         return route(GET("/users"), request -> getAllUsers(userService))
                 .andRoute(GET("/users/{id}"), request -> getUserById(request, userService))
                 .andRoute(POST("/users"), request -> createUser(request, userService))
-                .andRoute(PUT("/users/{id}"), request -> updateUser(request, userService));
+                .andRoute(PUT("/users/{id}"), request -> updateUser(request, userService))
+                .andRoute(POST("/login"), request -> login(request, authenticationManager));
     }
 
     private Mono<ServerResponse> getAllUsers(UserService userService) {
@@ -61,6 +66,19 @@ public class UserRouter {
         } catch (IllegalArgumentException e) {
             return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid UUID format"));
         }
+    }
+
+    private Mono<ServerResponse> login(ServerRequest request, CustomReactiveAuthenticationManager authenticationManager) {
+        return request.bodyToMono(LoginRequest.class)
+            .flatMap(loginRequest -> {
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                    loginRequest.getUsername(), 
+                    loginRequest.getPassword()
+                );
+                return authenticationManager.authenticate(authToken)
+                    .flatMap(auth -> ServerResponse.ok().bodyValue(auth));
+            })
+            .onErrorResume(ex -> ServerResponse.status(HttpStatus.UNAUTHORIZED).build());
     }
 }
 
