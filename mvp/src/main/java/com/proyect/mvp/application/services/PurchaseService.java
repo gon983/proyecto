@@ -57,6 +57,7 @@ import com.proyect.mvp.domain.model.entities.PurchaseEntity;
 import com.proyect.mvp.domain.model.entities.PurchaseStateEntity;
 import com.proyect.mvp.domain.model.entities.StockMovementEntity;
 import com.proyect.mvp.domain.repository.PurchaseRepository;
+import com.proyect.mvp.infrastructure.config.EnvConfigLoader;
 
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
@@ -75,7 +76,8 @@ public class PurchaseService {
    
     private final StockMovementService stockMovementService;
 
-    static String NOTIFICATION_URL = "https://3280-196-32-67-187.ngrok-free.app/confirmPayment";
+    static String NOTIFICATION_URL = EnvConfigLoader.getNotificationUrl();
+    static String ACCESS_TOKEN = EnvConfigLoader.getAccessToken();
     
 
     public PurchaseService(PurchaseRepository purchaseRepository, PurchaseStateService purchaseStateService, PurchaseDetailService purchaseDetailService,
@@ -141,7 +143,7 @@ public class PurchaseService {
                     try {
                         System.out.println("Configurando token de acceso de MercadoPago");
                         // Configuramos el token de acceso principal
-                        MercadoPagoConfig.setAccessToken("APP_USR-2552125444382264-030609-9af3f586d7ec8eb52060f4db865e5014-447529108");
+                        MercadoPagoConfig.setAccessToken(ACCESS_TOKEN);
                         System.out.println("Token configurado exitosamente");
                     
                         // Creamos los items para la preferencia
@@ -311,7 +313,7 @@ public class PurchaseService {
             System.out.println("=========== INICIO defer ===========");
             try {
                 System.out.println("Configurando token de acceso");
-                MercadoPagoConfig.setAccessToken("APP_USR-2552125444382264-030609-9af3f586d7ec8eb52060f4db865e5014-447529108");
+                MercadoPagoConfig.setAccessToken(ACCESS_TOKEN);
                 System.out.println("Token configurado correctamente");
     
                 System.out.println("Creando PaymentClient");

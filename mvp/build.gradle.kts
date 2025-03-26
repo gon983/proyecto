@@ -28,7 +28,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
-	implementation("io.github.cdimascio:dotenv-java:3.0.0")
+	implementation("io.github.cdimascio:java-dotenv:5.2.2")
 	implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
     implementation("org.postgresql:r2dbc-postgresql:1.0.7.RELEASE")
 	implementation("org.springframework.security:spring-security-crypto")
