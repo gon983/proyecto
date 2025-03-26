@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
+import java.util.Arrays;
 import java.util.stream.Collectors;
 
 @Component
@@ -33,9 +34,10 @@ public class CustomReactiveAuthenticationManager implements ReactiveAuthenticati
             .flatMap(user -> {
                 if (passwordEncoder.matches(password, user.getPassword())) {
                     // Crear autenticación con roles
-                    var authorities = user.getRoles().stream()
-                        .map(SimpleGrantedAuthority::new)
-                        .collect(Collectors.toList());
+                    var authorities = Arrays.stream(user.getRol().split(","))
+                                            .map(String::trim)
+                                            .map(SimpleGrantedAuthority::new)
+                                            .collect(Collectors.toList());
                     
                     return Mono.just(new UsernamePasswordAuthenticationToken(
                         user, 

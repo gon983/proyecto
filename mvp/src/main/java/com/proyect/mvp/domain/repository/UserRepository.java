@@ -36,15 +36,6 @@ public interface UserRepository extends R2dbcRepository<UserEntity, UUID> {
         @Param("newAccessToken")String newAccessToken, 
         @Param("newRefreshToken") String newRefreshToken);
 
-        @Query("""
-            SELECT u.id_user, u.username, u.email, u.password,
-                   ARRAY_AGG(DISTINCT r.name) AS roles
-            FROM users u
-            LEFT JOIN role r1 ON u.fk_role_one = r1.id_role
-            LEFT JOIN role r2 ON u.fk_role_two = r2.id_role
-            LEFT JOIN role r3 ON u.fk_role_three = r3.id_role
-            WHERE u.username = :username
-            GROUP BY u.id_user, u.username, u.email, u.password
-        """)
+        @Query("SELECT u.id_user, u.username, u.email, u.password, u.rol from  users where username = :username")
         Mono<UserDTO> findByUsername(@Param("username") String username);
 }
