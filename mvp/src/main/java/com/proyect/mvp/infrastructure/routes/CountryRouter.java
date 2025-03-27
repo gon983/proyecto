@@ -24,7 +24,7 @@ public class CountryRouter {
 
     @Bean
     public RouterFunction<ServerResponse> countryRoutes(CountryService countryService) {
-        return route(GET("/countries"), request -> getAllCountries(countryService))
+        return route(GET("/public/countries"), request -> getAllCountries(countryService))
                 .andRoute(GET("/countries/{id}"), request -> getCountryById(request, countryService))
                 .andRoute(POST("/countries"), request -> createCountry(request, countryService))
                 .andRoute(PUT("/countries/{id}"), request -> updateCountry(request, countryService))

@@ -1,9 +1,10 @@
 package com.proyect.mvp.infrastructure.security;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.security.Key;
 import java.util.Date;
 import java.util.stream.Collectors;
-
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.security.core.Authentication;
@@ -13,11 +14,25 @@ import io.jsonwebtoken.security.Keys;
 
 @Service
 public class JwtService {
+    private static final Logger log = LoggerFactory.getLogger(JwtService.class);
     private final Key secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-
+  
     public String generateToken(Authentication authentication) {
-        return Jwts.builder()
-            .setSubject(authentication.getName())
+        String username;
+        Object principal = authentication.getPrincipal();
+        
+        if (principal instanceof UserAuthenticationDTO) {
+            username = ((UserAuthenticationDTO) principal).getUsername();
+        } else if (principal instanceof String) {
+            username = (String) principal;
+        } else {
+            username = authentication.getName();
+        }
+
+        log.debug("Generando token para usuario: {}", username);
+
+        String token = Jwts.builder()
+            .setSubject(username)
             .setIssuedAt(new Date())
             .setExpiration(new Date(System.currentTimeMillis() + 864_000_000)) // 10 days
             .claim("roles", authentication.getAuthorities().stream()
@@ -25,15 +40,26 @@ public class JwtService {
                 .collect(Collectors.toList()))
             .signWith(secretKey)
             .compact();
+        
+        log.debug("Token generado: {}", token);
+        return token;
     }
 
     public String extractUsername(String token) {
-        return Jwts.parserBuilder()
-            .setSigningKey(secretKey)
-            .build()
-            .parseClaimsJws(token)
-            .getBody()
-            .getSubject();
+        try {
+            String username = Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
+            
+            log.debug("Username extraído de token: {}", username);
+            return username;
+        } catch (Exception e) {
+            log.error("Error extrayendo username del token: {}", e.getMessage());
+            throw e;
+        }
     }
 
     public boolean validateToken(String token) {
@@ -42,11 +68,11 @@ public class JwtService {
                 .setSigningKey(secretKey)
                 .build()
                 .parseClaimsJws(token);
+            log.debug("Token validado correctamente");
             return true;
         } catch (Exception e) {
+            log.error("Token inválido: {}", e.getMessage());
             return false;
         }
     }
 }
-    
-

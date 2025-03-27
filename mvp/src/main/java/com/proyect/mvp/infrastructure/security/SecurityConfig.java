@@ -11,7 +11,10 @@ import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.web.server.context.NoOpServerSecurityContextRepository;
+import org.springframework.security.web.server.context.WebSessionServerSecurityContextRepository;
 
+import com.proyect.mvp.infrastructure.security.handlers.JsonAccessDeniedHandler;
 import com.proyect.mvp.infrastructure.security.handlers.JsonAuthenticationEntryPoint;
 import com.proyect.mvp.infrastructure.security.handlers.JsonAuthenticationFailureHandler;
 import com.proyect.mvp.infrastructure.security.handlers.JsonAuthenticationSuccessHandler;
@@ -33,19 +36,23 @@ public class SecurityConfig {
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
         return http
             .csrf(csrf -> csrf.disable())
-            .addFilterAt(jwtAuthenticationFilter, SecurityWebFiltersOrder.HTTP_BASIC)
+            .addFilterAt(jwtAuthenticationFilter, SecurityWebFiltersOrder.AUTHENTICATION)
             .authenticationManager(authenticationManager)
+            .securityContextRepository(NoOpServerSecurityContextRepository.getInstance())
             .authorizeExchange(exchanges -> exchanges
                 .pathMatchers("/public/**").permitAll()
                 .pathMatchers("/login").permitAll()
-                .pathMatchers("/api/admin/**").hasRole("ADMIN")
-                .pathMatchers("/api/consumidor/**").hasRole("CONSUMIDOR")
-                .pathMatchers("/api/cp_owner/**").hasRole("CP_OWNER")
-                .pathMatchers("/api/productor/**").hasRole("PRODUCTOR")
+                .pathMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
+                .pathMatchers("/api/consumidor/**").hasAuthority("ROLE_CONSUMIDOR")
+                .pathMatchers("/api/cp_owner/**").hasAuthority("ROLE_CP_OWNER")
+                .pathMatchers("/api/productor/**").hasAuthority("ROLE_PRODUCTOR")
                 .anyExchange().authenticated()
             )
             .httpBasic(Customizer.withDefaults())
-            .exceptionHandling(handling -> handling.authenticationEntryPoint(new JsonAuthenticationEntryPoint())
+            .exceptionHandling(handling -> handling
+            .accessDeniedHandler(new JsonAccessDeniedHandler())
+            .authenticationEntryPoint(new JsonAuthenticationEntryPoint())
+            
         )
         .build();
 

@@ -21,7 +21,7 @@ public class CategoryRouter {
     
     @Bean
     public RouterFunction<ServerResponse> categoryRoutes( CategoryService categoryService ) {
-        return route(GET("/categories"), request -> getAllCategories(request, categoryService))
+        return route(GET("/api/admin/categories"), request -> getAllCategories(request, categoryService))
                 .andRoute(GET("/categories/{id}"), request -> getCategoryById(request, categoryService))
                 .andRoute(POST("/categories"), request -> createCategory(request, categoryService));
     }

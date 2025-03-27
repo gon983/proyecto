@@ -1,7 +1,7 @@
 package com.proyect.mvp.infrastructure.security;
 
-
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -10,17 +10,15 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-
 import com.proyect.mvp.domain.repository.UserRepository;
-
 import reactor.core.publisher.Mono;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
 public class CustomReactiveAuthenticationManager implements ReactiveAuthenticationManager {
+    private static final Logger log = LoggerFactory.getLogger(CustomReactiveAuthenticationManager.class);
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     
@@ -32,45 +30,78 @@ public class CustomReactiveAuthenticationManager implements ReactiveAuthenticati
         this.passwordEncoder = passwordEncoder;
     }
 
+    
     @Override
     public Mono<Authentication> authenticate(Authentication authentication) {
-    if (authentication == null) {
-        return Mono.error(new BadCredentialsException("Authentication cannot be null"));
+    log.debug("Iniciando autenticación para: {}", authentication.getName());
+    
+    // Autenticación JWT (sin credenciales de password)
+    if (authentication.getCredentials() == null || 
+        authentication.getCredentials() instanceof String) {  // Modificado aquí
+        log.debug("Autenticación JWT detectada");
+        String username;
+        
+        if (authentication.getPrincipal() instanceof UserAuthenticationDTO) {
+            username = ((UserAuthenticationDTO) authentication.getPrincipal()).getUsername();
+            log.debug("Extraído username de UserAuthenticationDTO: {}", username);
+        } else {
+            username = authentication.getName();
+            log.debug("Username obtenido directamente: {}", username);
+        }
+        
+        return userRepository.findByUsername(username)
+            .doOnNext(user -> log.debug("Usuario encontrado en DB: {}", user.getUsername()))
+            .switchIfEmpty(Mono.defer(() -> {
+                log.error("Usuario no encontrado: {}", username);
+                return Mono.error(new UsernameNotFoundException("Usuario no encontrado: " + username));
+            }))
+            .map(user -> {
+                List<SimpleGrantedAuthority> authorities = Arrays.stream(user.getRole().split(","))
+                    .map(String::trim)
+                    .map(SimpleGrantedAuthority::new)
+                    .collect(Collectors.toList());
+                
+                log.debug("Roles asignados: {}", authorities);
+                return (Authentication) new UsernamePasswordAuthenticationToken(
+                    user, 
+                    null,  // Credentials a null para JWT
+                    authorities
+                );
+            });
     }
     
-    String username = authentication.getName();
-    System.out.println("UserName: " + username);
-    Object credentials = authentication.getCredentials();
-    
-    if (credentials == null) {
-        return Mono.error(new BadCredentialsException("Credentials cannot be null"));
-    }
-    
-    String password = credentials.toString();
-
-    return userRepository.findByUsername(username)
-          .doOnNext(user -> {
-        System.out.println("Found user: " + user.getUsername());
-        System.out.println("Stored password: " + user.getPassword());
-        System.out.println("Entered password: " + password);
-        System.out.println("Password matches: " + passwordEncoder.matches(password, user.getPassword()));
-    })
-        .switchIfEmpty(Mono.error(new UsernameNotFoundException("User not found")))
-        .flatMap(user -> {
-            if (!passwordEncoder.matches(password, user.getPassword())) {
-                return Mono.error(new BadCredentialsException("Invalid credentials"));
-            }
-            
-            List<SimpleGrantedAuthority> authorities = Arrays.stream(user.getRole().split(","))
-                .map(String::trim)
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
-            
-            return Mono.just(new UsernamePasswordAuthenticationToken(
-                user.getId(), 
-                null, // Don't store password after authentication
-                authorities
-            ));
-        });
+    log.debug("Autenticación estándar (login) detectada");
+    return standardAuthenticate(authentication);
 }
+
+    private Mono<Authentication> standardAuthenticate(Authentication authentication) {
+        String username = authentication.getName();
+        String password = authentication.getCredentials().toString();
+        log.debug("Autenticando usuario estándar: {}", username);
+
+        return userRepository.findByUsername(username)
+            .flatMap(user -> {
+                log.debug("Comparando contraseñas para usuario: {}", username);
+                if (passwordEncoder.matches(password, user.getPassword())) {
+                    List<SimpleGrantedAuthority> authorities = Arrays.stream(user.getRole().split(","))
+                        .map(String::trim)
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toList());
+                    
+                    log.debug("Autenticación exitosa para: {}", username);
+                    return Mono.just((Authentication) new UsernamePasswordAuthenticationToken(
+                        user, 
+                        authentication.getCredentials(),
+                        authorities
+                    ));
+                } else {
+                    log.error("Credenciales inválidas para usuario: {}", username);
+                    return Mono.error(new BadCredentialsException("Credenciales inválidas"));
+                }
+            })
+            .switchIfEmpty(Mono.defer(() -> {
+                log.error("Usuario no encontrado en DB: {}", username);
+                return Mono.error(new UsernameNotFoundException("Usuario no encontrado"));
+            }));
+    }
 }
