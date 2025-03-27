@@ -35,7 +35,7 @@ public class VoteRouter {
     public RouterFunction<ServerResponse> voteRoutes(VoteService voteService, UserContextService userContext) {
         return route(POST("/api/user/voteProduct"), request -> voteProduct(request, voteService, userContext))
         .andRoute(GET("/api/admin/selectProductByVotationManual/{idCollectionPoint}"), request -> selectProduct(request,voteService))
-        .andRoute(POST("/api/user/calificateProduct/{idUser}"), request -> calificateProduct(request, voteService));
+        .andRoute(POST("/api/user/calificateProduct/{idUser}"), request -> calificateProduct(request, voteService, userContext));
     }
 
     private Mono<ServerResponse> voteProduct(ServerRequest request, VoteService voteService, UserContextService userContext) {

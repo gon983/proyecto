@@ -23,7 +23,7 @@ import java.util.UUID;
 public class DefaultProductxCollectionPointxWeekRouter {
 
     @Bean
-    RouterFunction<ServerResponse> defaultProductxCpRoutes(DefaultProductxCollectionPointxWeekService defaultProductxCpService, UserContextService userCOntext ){
+    RouterFunction<ServerResponse> defaultProductxCpRoutes(DefaultProductxCollectionPointxWeekService defaultProductxCpService, UserContextService userContext ){
         
     return route(GET("/api/user/defaultProductsxCp"), request -> getDefaultProductsxCpxWeek(request, defaultProductxCpService, userContext))
                 .andRoute(GET("/api/user/defaultProductsxCpToVote/{idCollectionPoint}"), request -> getDefaultProductsxCpToVote(request, defaultProductxCpService))
