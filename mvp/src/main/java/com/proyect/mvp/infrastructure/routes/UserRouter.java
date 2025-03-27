@@ -8,6 +8,8 @@ import com.proyect.mvp.application.dtos.update.UserUpdateDTO;
 import com.proyect.mvp.application.services.UserService;
 import com.proyect.mvp.domain.model.entities.UserEntity;
 import com.proyect.mvp.infrastructure.security.CustomReactiveAuthenticationManager;
+import com.proyect.mvp.infrastructure.security.UserAuthenticationDTO;
+
 import com.proyect.mvp.infrastructure.security.handlers.JsonAuthenticationFailureHandler;
 import com.proyect.mvp.infrastructure.security.handlers.JsonAuthenticationSuccessHandler;
 
@@ -20,6 +22,7 @@ import org.springframework.web.reactive.function.server.HandlerFunction;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -32,12 +35,14 @@ public class UserRouter {
     
 
     @Bean
-    public RouterFunction<ServerResponse> userRoutes(UserService userService, CustomReactiveAuthenticationManager authenticationManager, JsonAuthenticationSuccessHandler successHandler, JsonAuthenticationFailureHandler failureHandler ) {
+    public RouterFunction<ServerResponse> userRoutes(UserService userService, CustomReactiveAuthenticationManager authenticationManager, 
+    JsonAuthenticationSuccessHandler successHandler, JsonAuthenticationFailureHandler failureHandler ) {
         return route(GET("/users"), request -> getAllUsers(userService))
                 .andRoute(GET("/users/{id}"), request -> getUserById(request, userService))
                 .andRoute(POST("/users"), request -> createUser(request, userService))
                 .andRoute(PUT("/users/{id}"), request -> updateUser(request, userService))
-                .andRoute(POST("/login"), request -> login(request, authenticationManager, successHandler, failureHandler));
+                .andRoute(POST("/login"), request -> login(request, authenticationManager, successHandler, failureHandler))
+                .andRoute(POST("/public/register"), request -> register(request, userService));
     }
 
     private Mono<ServerResponse> getAllUsers(UserService userService) {
@@ -85,6 +90,14 @@ public class UserRouter {
                     .flatMap(auth -> successHandler.createResponse(auth))
                     .onErrorResume(e -> failureHandler.createResponse(e));
             });
+
+        }
+
+        private Mono<ServerResponse> register(ServerRequest request, UserService userService){
+            return request.bodyToMono(UserAuthenticationDTO.class)
+                        .flatMap(dto-> userService.register(dto))
+                        .flatMap(mono -> ServerResponse.ok().build());
+
 
         }
     }

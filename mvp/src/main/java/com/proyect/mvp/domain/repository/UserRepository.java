@@ -3,7 +3,8 @@
 package com.proyect.mvp.domain.repository;
 
 import com.proyect.mvp.domain.model.entities.UserEntity;
-import com.proyect.mvp.infrastructure.security.UserDTO;
+import com.proyect.mvp.infrastructure.security.UserAuthenticationDTO;
+
 
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
@@ -39,6 +40,12 @@ public interface UserRepository extends R2dbcRepository<UserEntity, UUID> {
         @Param("newAccessToken")String newAccessToken, 
         @Param("newRefreshToken") String newRefreshToken);
 
-        @Query("SELECT (u.id_user, u.username, u.email, u.password, u.role) from  users u where username = :username")
-        Mono<UserDTO> findByUsername(@Param("username") String username);
+    @Query("SELECT * from  users u where username = :username")
+    Mono<UserAuthenticationDTO> findByUsername(@Param("username") String username);
+
+
+    @Query("UPDATE users SET password = :password WHERE email = :email")
+    Mono<Void> updatePassword(@Param("email") String email, @Param("password") String password);
+
+
 }

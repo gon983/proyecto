@@ -39,6 +39,7 @@ public class CustomReactiveAuthenticationManager implements ReactiveAuthenticati
     }
     
     String username = authentication.getName();
+    System.out.println("UserName: " + username);
     Object credentials = authentication.getCredentials();
     
     if (credentials == null) {
@@ -48,13 +49,19 @@ public class CustomReactiveAuthenticationManager implements ReactiveAuthenticati
     String password = credentials.toString();
 
     return userRepository.findByUsername(username)
+          .doOnNext(user -> {
+        System.out.println("Found user: " + user.getUsername());
+        System.out.println("Stored password: " + user.getPassword());
+        System.out.println("Entered password: " + password);
+        System.out.println("Password matches: " + passwordEncoder.matches(password, user.getPassword()));
+    })
         .switchIfEmpty(Mono.error(new UsernameNotFoundException("User not found")))
         .flatMap(user -> {
             if (!passwordEncoder.matches(password, user.getPassword())) {
                 return Mono.error(new BadCredentialsException("Invalid credentials"));
             }
             
-            List<SimpleGrantedAuthority> authorities = Arrays.stream(user.getRol().split(","))
+            List<SimpleGrantedAuthority> authorities = Arrays.stream(user.getRole().split(","))
                 .map(String::trim)
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());

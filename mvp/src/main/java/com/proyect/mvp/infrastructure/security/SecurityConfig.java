@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,15 +21,19 @@ import com.proyect.mvp.infrastructure.security.handlers.JsonAuthenticationSucces
 public class SecurityConfig {
 
     private final CustomReactiveAuthenticationManager authenticationManager;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    public SecurityConfig(CustomReactiveAuthenticationManager authenticationManager) {
+    public SecurityConfig(CustomReactiveAuthenticationManager authenticationManager, JwtAuthenticationFilter jwtAuthenticationFilter) {
         this.authenticationManager = authenticationManager;
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+        
     }
 
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
         return http
             .csrf(csrf -> csrf.disable())
+            .addFilterAt(jwtAuthenticationFilter, SecurityWebFiltersOrder.HTTP_BASIC)
             .authenticationManager(authenticationManager)
             .authorizeExchange(exchanges -> exchanges
                 .pathMatchers("/public/**").permitAll()

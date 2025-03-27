@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.lang.Nullable;
+
+import com.proyect.mvp.infrastructure.security.UserAuthenticationDTO;
+
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.annotation.Transient; // Import correcto para Spring Data R2DBC
 
@@ -71,7 +74,10 @@ public class UserEntity {
     
     
     @Column("role")
-    private UUID role;
+    private String role;
+
+    @Column("password")
+    private String password;
     
     
     
@@ -100,7 +106,16 @@ public class UserEntity {
 
     
 
-    
+    public UserAuthenticationDTO toUserAuthenticationDTO(){
+        UserAuthenticationDTO dto = UserAuthenticationDTO.builder()
+                                                        .id(idUser)
+                                                        .username(username)
+                                                        .email(email)
+                                                        .role(role)
+                                                        .password(password)
+                                                        .build();
+        return dto;
+    }
 
  
 }

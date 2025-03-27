@@ -1,6 +1,7 @@
 package com.proyect.mvp.infrastructure.security.handlers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.proyect.mvp.infrastructure.security.JwtService;
 
 import org.codehaus.plexus.component.annotations.Component;
 import org.springframework.context.annotation.Configuration;
@@ -20,12 +21,21 @@ import java.util.stream.Collectors;
 
 @Configuration
 public class JsonAuthenticationSuccessHandler {
+    private JwtService jwtService;
+
+    public JsonAuthenticationSuccessHandler(JwtService jwtService){
+        this.jwtService = jwtService;
+    }
     
     public Mono<ServerResponse> createResponse(Authentication authentication) {
+        String token = jwtService.generateToken(authentication);
+        
+
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put("status", "success");
         responseBody.put("message", "Authentication successful");
         responseBody.put("username", authentication.getName());
+        responseBody.put("token", token);
         responseBody.put("roles", authentication.getAuthorities().stream()
             .map(GrantedAuthority::getAuthority)
             .collect(Collectors.toList()));

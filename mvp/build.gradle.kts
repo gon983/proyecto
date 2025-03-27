@@ -49,6 +49,7 @@ dependencies {
 
 
 	implementation("org.springframework.boot:spring-boot-starter-security")
+	
     
     // JWT Support (opcional pero recomendado)
     implementation("io.jsonwebtoken:jjwt-api:0.11.5")

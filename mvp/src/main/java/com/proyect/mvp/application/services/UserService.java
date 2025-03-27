@@ -4,8 +4,11 @@ import com.proyect.mvp.application.dtos.create.UserCreateDTO;
 import com.proyect.mvp.application.dtos.update.UserUpdateDTO;
 import com.proyect.mvp.domain.model.entities.UserEntity;
 import com.proyect.mvp.domain.repository.UserRepository;
+import com.proyect.mvp.infrastructure.security.UserAuthenticationDTO;
+
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
@@ -18,10 +21,11 @@ import java.util.UUID;
 public class UserService {
     private final UserRepository userRepository;
     private final NeighborhoodService neighborhoodService;
+    private final PasswordEncoder encoder;
 
-    public UserService(UserRepository userRepository, NeighborhoodService neighborhoodService) {
+    public UserService(UserRepository userRepository, NeighborhoodService neighborhoodService, PasswordEncoder encoder) {
         this.userRepository = userRepository;
-      
+        this.encoder = encoder;
         this.neighborhoodService = neighborhoodService;
     }
 
@@ -99,6 +103,10 @@ public class UserService {
 
     public Mono<Void> updateProducerMpTokens(UUID productorId,String newAccessToken,String newRefreshToken){
         return userRepository.updateProducerMpTokens(productorId, newAccessToken, newRefreshToken);
+    }
+
+    public Mono<Void> register(UserAuthenticationDTO credentialsUser){
+        return userRepository.updatePassword(credentialsUser.getEmail(), encoder.encode(credentialsUser.getPassword()));
     }
 
 

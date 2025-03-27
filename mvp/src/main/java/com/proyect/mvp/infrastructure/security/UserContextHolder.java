@@ -16,7 +16,7 @@ public class UserContextHolder {
                 Object principal = context.getAuthentication().getPrincipal();
                 if (principal instanceof UserDetails) {
                     // Asume que tienes un método getId() en tu UserDTO
-                    return ((UserDTO) principal).getId();
+                    return ((UserAuthenticationDTO) principal).getId();
                 }
                 return null;
             });
