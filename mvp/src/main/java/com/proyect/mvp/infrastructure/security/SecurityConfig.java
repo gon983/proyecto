@@ -40,13 +40,7 @@ public class SecurityConfig {
                 .anyExchange().authenticated()
             )
             .httpBasic(Customizer.withDefaults())
-            .formLogin(formLogin -> formLogin
-            .loginPage("/login")
-            .authenticationSuccessHandler(new JsonAuthenticationSuccessHandler())
-            .authenticationFailureHandler(new JsonAuthenticationFailureHandler())
-        )
-        .exceptionHandling(handling -> handling
-            .authenticationEntryPoint(new JsonAuthenticationEntryPoint())
+            .exceptionHandling(handling -> handling.authenticationEntryPoint(new JsonAuthenticationEntryPoint())
         )
         .build();
 

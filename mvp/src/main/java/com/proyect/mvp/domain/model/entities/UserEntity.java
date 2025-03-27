@@ -59,8 +59,7 @@ public class UserEntity {
     @Column("photo")
     private String photo;
 
-    @Column("fk_role_one")
-    private UUID roleOne;
+    
 
     @Column("level")
     private int level;
@@ -70,13 +69,11 @@ public class UserEntity {
     @Column("fk_collection_point_suscribed")
     private UUID fkCollectionPointSuscribed;
     
-    @Nullable
-    @Column("fk_role_two")
-    private UUID roleTwo;
     
-    @Nullable
-    @Column("fk_role_three")
-    private UUID roleThree;
+    @Column("role")
+    private UUID role;
+    
+    
     
     @Nullable
     @Column("minimal_sale")

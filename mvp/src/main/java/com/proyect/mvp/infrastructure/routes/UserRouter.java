@@ -8,11 +8,15 @@ import com.proyect.mvp.application.dtos.update.UserUpdateDTO;
 import com.proyect.mvp.application.services.UserService;
 import com.proyect.mvp.domain.model.entities.UserEntity;
 import com.proyect.mvp.infrastructure.security.CustomReactiveAuthenticationManager;
+import com.proyect.mvp.infrastructure.security.handlers.JsonAuthenticationFailureHandler;
+import com.proyect.mvp.infrastructure.security.handlers.JsonAuthenticationSuccessHandler;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.web.reactive.function.server.HandlerFunction;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
@@ -28,12 +32,12 @@ public class UserRouter {
     
 
     @Bean
-    public RouterFunction<ServerResponse> userRoutes(UserService userService, CustomReactiveAuthenticationManager authenticationManager ) {
+    public RouterFunction<ServerResponse> userRoutes(UserService userService, CustomReactiveAuthenticationManager authenticationManager, JsonAuthenticationSuccessHandler successHandler, JsonAuthenticationFailureHandler failureHandler ) {
         return route(GET("/users"), request -> getAllUsers(userService))
                 .andRoute(GET("/users/{id}"), request -> getUserById(request, userService))
                 .andRoute(POST("/users"), request -> createUser(request, userService))
                 .andRoute(PUT("/users/{id}"), request -> updateUser(request, userService))
-                .andRoute(POST("/login"), request -> login(request, authenticationManager));
+                .andRoute(POST("/login"), request -> login(request, authenticationManager, successHandler, failureHandler));
     }
 
     private Mono<ServerResponse> getAllUsers(UserService userService) {
@@ -68,17 +72,20 @@ public class UserRouter {
         }
     }
 
-    private Mono<ServerResponse> login(ServerRequest request, CustomReactiveAuthenticationManager authenticationManager) {
+        private Mono<ServerResponse> login(ServerRequest request, CustomReactiveAuthenticationManager authenticationManager, JsonAuthenticationSuccessHandler successHandler, JsonAuthenticationFailureHandler failureHandler){
         return request.bodyToMono(LoginRequest.class)
+            .switchIfEmpty(Mono.error(new BadCredentialsException("Credentials cannot be empty")))
             .flatMap(loginRequest -> {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                     loginRequest.getUsername(), 
                     loginRequest.getPassword()
                 );
+                
                 return authenticationManager.authenticate(authToken)
-                    .flatMap(auth -> ServerResponse.ok().bodyValue(auth));
-            })
-            .onErrorResume(ex -> ServerResponse.status(HttpStatus.UNAUTHORIZED).build());
+                    .flatMap(auth -> successHandler.createResponse(auth))
+                    .onErrorResume(e -> failureHandler.createResponse(e));
+            });
+
+        }
     }
-}
 

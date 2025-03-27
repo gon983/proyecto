@@ -44,5 +44,5 @@ public class UserCreateDTO {
     
     private String photo;
 
-    private UUID roleOne;
+    private UUID role;
 }

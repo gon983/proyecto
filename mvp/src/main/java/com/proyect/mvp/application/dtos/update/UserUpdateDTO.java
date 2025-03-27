@@ -46,7 +46,7 @@ public class UserUpdateDTO {
     
     private String photo;
 
-    private UUID roleOne;
+    private UUID role;
     private String mpPublicKey;
 
     private String mpAccessToken;

@@ -39,6 +39,6 @@ public interface UserRepository extends R2dbcRepository<UserEntity, UUID> {
         @Param("newAccessToken")String newAccessToken, 
         @Param("newRefreshToken") String newRefreshToken);
 
-        @Query("SELECT u.id_user, u.username, u.email, u.password, u.rol from  users where username = :username")
+        @Query("SELECT (u.id_user, u.username, u.email, u.password, u.role) from  users u where username = :username")
         Mono<UserDTO> findByUsername(@Param("username") String username);
 }

@@ -45,7 +45,7 @@ public class UserService {
                 .documentNumber(userDto.getDocumentNumber())
                 .fkNeighborhood(userDto.getFkNeighborhood())
                 .phone(userDto.getPhone())
-                .roleOne(userDto.getRoleOne())
+                .role(userDto.getRole())
                 .fkCollectionPointSuscribed(userDto.getFkCollectionPointSuscribed())
                 .build();
         return userRepository.save(userEntity)
@@ -67,7 +67,7 @@ public class UserService {
                             .documentNumber(userDto.getDocumentNumber())
                             .fkNeighborhood(userDto.getFkNeighborhood())
                             .phone(userDto.getPhone())
-                            .roleOne(userDto.getRoleOne())
+                            .role(userDto.getRole())
                             .fkCollectionPointSuscribed(userDto.getFkCollectionPointSuscribed())
                             .build();
                     
