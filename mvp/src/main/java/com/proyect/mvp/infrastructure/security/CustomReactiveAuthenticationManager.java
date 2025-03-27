@@ -67,7 +67,7 @@ public class CustomReactiveAuthenticationManager implements ReactiveAuthenticati
                 .collect(Collectors.toList());
             
             return Mono.just(new UsernamePasswordAuthenticationToken(
-                user, 
+                user.getId(), 
                 null, // Don't store password after authentication
                 authorities
             ));

@@ -34,7 +34,6 @@ public class JsonAuthenticationSuccessHandler {
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put("status", "success");
         responseBody.put("message", "Authentication successful");
-        responseBody.put("username", authentication.getName());
         responseBody.put("token", token);
         responseBody.put("roles", authentication.getAuthorities().stream()
             .map(GrantedAuthority::getAuthority)
