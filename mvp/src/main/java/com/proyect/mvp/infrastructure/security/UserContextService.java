@@ -21,7 +21,7 @@ import reactor.core.publisher.Mono;
 @Service
 public class UserContextService {
     
-    public Mono<String> getCurrentUsername() {
+    public Mono<String> getCurrentIdUser() {
         return ReactiveSecurityContextHolder.getContext()
             .map(securityContext -> {
                 Authentication authentication = securityContext.getAuthentication();
@@ -29,13 +29,7 @@ public class UserContextService {
             });
     }
     
-    public Mono<Object> getCurrentUser() {
-        return ReactiveSecurityContextHolder.getContext()
-            .map(securityContext -> {
-                Authentication authentication = securityContext.getAuthentication();
-                return authentication != null ? authentication.getPrincipal() : null;
-            });
-    }
+   
     
     public Mono<List<String>> getCurrentUserRoles() {
         return ReactiveSecurityContextHolder.getContext()
