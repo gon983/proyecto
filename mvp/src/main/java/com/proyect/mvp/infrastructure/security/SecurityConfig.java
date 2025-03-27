@@ -43,7 +43,7 @@ public class SecurityConfig {
                 .pathMatchers("/public/**").permitAll()
                 .pathMatchers("/login").permitAll()
                 .pathMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
-                .pathMatchers("/api/consumidor/**").hasAuthority("ROLE_CONSUMIDOR")
+                .pathMatchers("/api/consumidor/**").hasAuthority("ROLE_USER")
                 .pathMatchers("/api/cp_owner/**").hasAuthority("ROLE_CP_OWNER")
                 .pathMatchers("/api/productor/**").hasAuthority("ROLE_PRODUCTOR")
                 .anyExchange().authenticated()
