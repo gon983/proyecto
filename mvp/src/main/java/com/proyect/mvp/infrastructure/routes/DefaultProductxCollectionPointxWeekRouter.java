@@ -10,6 +10,7 @@ import com.proyect.mvp.application.dtos.create.DefaultProductxCollectionPointxWe
 import com.proyect.mvp.application.services.DefaultProductxCollectionPointxWeekService;
 import com.proyect.mvp.application.services.PurchaseDetailService;
 import com.proyect.mvp.domain.model.entities.DefaultProductxCollectionPointxWeekEntity;
+import com.proyect.mvp.infrastructure.security.UserContextService;
 
 import reactor.core.publisher.Mono;
 
@@ -22,8 +23,9 @@ import java.util.UUID;
 public class DefaultProductxCollectionPointxWeekRouter {
 
     @Bean
-    RouterFunction<ServerResponse> defaultProductxCpRoutes(DefaultProductxCollectionPointxWeekService defaultProductxCpService){
-    return route(GET("/api/user/defaultProductsxCp/{idUser}"), request -> getDefaultProductsxCpxWeek(request, defaultProductxCpService))
+    RouterFunction<ServerResponse> defaultProductxCpRoutes(DefaultProductxCollectionPointxWeekService defaultProductxCpService, UserContextService userCOntext ){
+        
+    return route(GET("/api/user/defaultProductsxCp"), request -> getDefaultProductsxCpxWeek(request, defaultProductxCpService, userContext))
                 .andRoute(GET("/api/user/defaultProductsxCpToVote/{idCollectionPoint}"), request -> getDefaultProductsxCpToVote(request, defaultProductxCpService))
                 .andRoute(GET("/api/admin/renewalProductsManual/{collectionPointId}"), request -> renewalProductsManual(request, defaultProductxCpService))
                 .andRoute(GET("/api/user/seeProductsToCalificate/{idPurchase}/{idCollectionPoint}"), request -> seeProductsToCalificate(request, defaultProductxCpService));
@@ -36,11 +38,14 @@ public class DefaultProductxCollectionPointxWeekRouter {
     //                    .flatMap(saved -> ServerResponse.ok().bodyValue(saved));
     // } En teoria este endpoint no se tiene q usar, lo hice para probar las purchases
 
-    Mono<ServerResponse> getDefaultProductsxCpxWeek(ServerRequest request, DefaultProductxCollectionPointxWeekService defaultProductxCpService){
-        UUID idUser = UUID.fromString(request.pathVariable("idUser"));
-        return defaultProductxCpService.getAllProductsForCpWithLevelPrice(idUser)
+    Mono<ServerResponse> getDefaultProductsxCpxWeek(ServerRequest request, DefaultProductxCollectionPointxWeekService defaultProductxCpService, UserContextService userContext){
+        return userContext.getCurrentIdUser()
+                          .flatMap(idUser ->
+        defaultProductxCpService.getAllProductsForCpWithLevelPrice(UUID.fromString(idUser))
             .collectList()
-            .flatMap(productList -> ServerResponse.ok().bodyValue(productList));
+            .flatMap(productList -> ServerResponse.ok().bodyValue(productList))
+
+    );        
     }
 
     Mono<ServerResponse> getDefaultProductsxCpToVote(ServerRequest request, DefaultProductxCollectionPointxWeekService defaultProductxCpService){

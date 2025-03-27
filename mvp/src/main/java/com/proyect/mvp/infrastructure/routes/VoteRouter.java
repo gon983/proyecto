@@ -2,6 +2,8 @@ package com.proyect.mvp.infrastructure.routes;
 
 import java.util.UUID;
 import com.proyect.mvp.domain.repository.ONGRepository;
+import com.proyect.mvp.infrastructure.security.UserContextService;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.server.RouterFunction;
@@ -30,18 +32,20 @@ public class VoteRouter {
     }
     
     @Bean
-    public RouterFunction<ServerResponse> voteRoutes(VoteService voteService) {
-        return route(POST("/api/user/voteProduct/{idUser}"), request -> voteProduct(request, voteService))
+    public RouterFunction<ServerResponse> voteRoutes(VoteService voteService, UserContextService userContext) {
+        return route(POST("/api/user/voteProduct"), request -> voteProduct(request, voteService, userContext))
         .andRoute(GET("/api/admin/selectProductByVotationManual/{idCollectionPoint}"), request -> selectProduct(request,voteService))
         .andRoute(POST("/api/user/calificateProduct/{idUser}"), request -> calificateProduct(request, voteService));
     }
 
-    private Mono<ServerResponse> voteProduct(ServerRequest request, VoteService voteService) {
-        UUID idUser = UUID.fromString(request.pathVariable("idUser"));
-        return request.bodyToMono(VoteCreateDTO.class)
-                        .flatMap(vote -> voteService.voteProduct(vote, idUser))
+    private Mono<ServerResponse> voteProduct(ServerRequest request, VoteService voteService, UserContextService userContext) {
+        return userContext.getCurrentIdUser()
+                          .flatMap(idUser ->
+        request.bodyToMono(VoteCreateDTO.class)
+                        .flatMap(vote -> voteService.voteProduct(vote, UUID.fromString(idUser)))
                         .flatMap(savedVote -> ServerResponse.ok().bodyValue(savedVote))
-                        .onErrorResume(ResponseStatusException.class, e -> ServerResponse.status(e.getStatusCode()).bodyValue(e.getMessage()));
+                        .onErrorResume(ResponseStatusException.class, e -> ServerResponse.status(e.getStatusCode()).bodyValue(e.getMessage()))
+                          );
     }
 
     private Mono<ServerResponse> selectProduct(ServerRequest request, VoteService voteService){
@@ -51,12 +55,14 @@ public class VoteRouter {
     }
 
 
-    private Mono<ServerResponse> calificateProduct(ServerRequest request, VoteService voteService){
-        UUID idUser = UUID.fromString(request.pathVariable("idUser"));
-        return request.bodyToMono(VoteCreateDTO.class)
-                      .flatMap(vote-> voteService.calificateProduct(vote, idUser))
+    private Mono<ServerResponse> calificateProduct(ServerRequest request, VoteService voteService, UserContextService userContext){
+        return userContext.getCurrentIdUser()
+                          .flatMap(idUser ->
+        request.bodyToMono(VoteCreateDTO.class)
+                      .flatMap(vote-> voteService.calificateProduct(vote,UUID.fromString(idUser)))
                       .flatMap(savedVote -> ServerResponse.ok().bodyValue(savedVote))
-                    .onErrorResume(ResponseStatusException.class, e -> ServerResponse.status(e.getStatusCode()).bodyValue(e.getMessage()));
+                    .onErrorResume(ResponseStatusException.class, e -> ServerResponse.status(e.getStatusCode()).bodyValue(e.getMessage()))
+                          );
     }
     
 }

@@ -29,7 +29,7 @@ public class ProductRouter {
                 .andRoute(POST("/api/productor/products"), request -> createProduct(request, productService))
                 .andRoute(PUT("/api/productor/products/{idProduct}"), request -> updateProduct(request, productService))
                 .andRoute(GET("/api/user/products"), request -> getAllProducts(request, productService))
-                .andRoute(GET("/api/user/optionsForStandarProduct/{idStandarProduct}/{idUser}"), request -> getOptionsForStandarProduct(request, productService));
+                .andRoute(GET("/api/user/optionsForStandarProduct/{idStandarProduct}"), request -> getOptionsForStandarProduct(request, productService, userContext));
     }
 
     private Mono<ServerResponse> getProductsByProducer(ServerRequest request, ProductService productService, UserContextService userContext) {
@@ -54,12 +54,14 @@ public class ProductRouter {
         return ServerResponse.ok().body(productService.getAllProducts(), ProductEntity.class);
     }
 
-    private Mono<ServerResponse> getOptionsForStandarProduct(ServerRequest request, ProductService productService){
+    private Mono<ServerResponse> getOptionsForStandarProduct(ServerRequest request, ProductService productService, UserContextService userContext){
         UUID idStandarProduct = UUID.fromString(request.pathVariable("idStandarProduct"));
-        UUID idUser = UUID.fromString(request.pathVariable("idUser"));
-        return productService.getOptionsForStandarProduct(idStandarProduct, idUser)
+        return userContext.getCurrentIdUser()
+                          .flatMap(idUser ->
+        productService.getOptionsForStandarProduct(idStandarProduct, UUID.fromString(idUser))
                             .collectList()
-                            .flatMap(productsList -> ServerResponse.ok().body(Mono.just(productsList), List.class));                                                
+                            .flatMap(productsList -> ServerResponse.ok().body(Mono.just(productsList), List.class))
+    );                                               
 
     }
 }
