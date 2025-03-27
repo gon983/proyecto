@@ -18,23 +18,16 @@ public class JwtService {
     private final Key secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
   
     public String generateToken(Authentication authentication) {
-        String username;
-        Object principal = authentication.getPrincipal();
+        UserAuthenticationDTO principal = (UserAuthenticationDTO) authentication.getPrincipal();
+        String username = principal.getUsername();
+        String idUser = principal.getIdUser().toString();
         
-        if (principal instanceof UserAuthenticationDTO) {
-            username = ((UserAuthenticationDTO) principal).getUsername();
-        } else if (principal instanceof String) {
-            username = (String) principal;
-        } else {
-            username = authentication.getName();
-        }
-
-        log.debug("Generando token para usuario: {}", username);
 
         String token = Jwts.builder()
             .setSubject(username)
             .setIssuedAt(new Date())
             .setExpiration(new Date(System.currentTimeMillis() + 864_000_000)) // 10 days
+            .claim("idUser", idUser)
             .claim("roles", authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList()))

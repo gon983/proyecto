@@ -21,11 +21,12 @@ public class UserContextService {
         return ReactiveSecurityContextHolder.getContext()
             .map(securityContext -> {
                 Authentication authentication = securityContext.getAuthentication();
-                if (authentication != null) {
-                    log.debug("Obteniendo current user: {}", authentication.getName());
-                    return authentication.getName();
+                if (authentication != null && authentication.getPrincipal() instanceof UserAuthenticationDTO) {
+                    UserAuthenticationDTO userDetails = (UserAuthenticationDTO) authentication.getPrincipal();
+                    log.debug("Obteniendo current user ID desde Principal: {}", userDetails.getIdUser());
+                    return userDetails.getIdUser().toString();
                 }
-                log.warn("No se encontró autenticación en el contexto");
+                log.warn("No se encontró UserAuthenticationDTO en el contexto");
                 return null;
             });
     }

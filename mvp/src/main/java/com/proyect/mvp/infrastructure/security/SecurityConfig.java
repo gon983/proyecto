@@ -42,6 +42,7 @@ public class SecurityConfig {
             .authorizeExchange(exchanges -> exchanges
                 .pathMatchers("/public/**").permitAll()
                 .pathMatchers("/login").permitAll()
+                .pathMatchers("/confirmPayment").permitAll()
                 .pathMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
                 .pathMatchers("/api/user/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER", "ROLE_CP_OWNER", "ROLE_PRODUCTOR")
                 .pathMatchers("/api/cp_owner/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_CP_OWNER")

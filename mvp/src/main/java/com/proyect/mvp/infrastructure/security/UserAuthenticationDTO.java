@@ -14,7 +14,7 @@ import lombok.Setter;
 @Builder
 @Getter
 public class UserAuthenticationDTO {
-    private UUID id;
+    private UUID idUser;
     private String username;
     private String email;
     private String role;

@@ -16,6 +16,7 @@ import com.proyect.mvp.application.dtos.update.ProductUpdateDTO;
 import com.proyect.mvp.application.services.ProductService;
 import com.proyect.mvp.application.services.StandarProductService;
 import com.proyect.mvp.domain.model.entities.ProductEntity;
+import com.proyect.mvp.infrastructure.security.UserContextService;
 
 import reactor.core.publisher.Mono;
 
@@ -23,17 +24,18 @@ import reactor.core.publisher.Mono;
 public class ProductRouter {
     
     @Bean
-    public RouterFunction<ServerResponse> productRoutes(ProductService productService) {
-        return route(GET("/api/user/{idProducer}"), request -> getProductsByProducer(request, productService))
+    public RouterFunction<ServerResponse> productRoutes(ProductService productService, UserContextService userContext) {
+        return route(GET("/api/user/products"), request -> getProductsByProducer(request, productService, userContext))
                 .andRoute(POST("/api/productor/products"), request -> createProduct(request, productService))
                 .andRoute(PUT("/api/productor/products/{idProduct}"), request -> updateProduct(request, productService))
                 .andRoute(GET("/api/user/products"), request -> getAllProducts(request, productService))
                 .andRoute(GET("/api/user/optionsForStandarProduct/{idStandarProduct}/{idUser}"), request -> getOptionsForStandarProduct(request, productService));
     }
 
-    private Mono<ServerResponse> getProductsByProducer(ServerRequest request, ProductService productService) {
-        UUID idProducer = UUID.fromString(request.pathVariable("idProducer"));
-        return ServerResponse.ok().body(productService.getProductsByProducer(idProducer), ProductEntity.class);
+    private Mono<ServerResponse> getProductsByProducer(ServerRequest request, ProductService productService, UserContextService userContext) {
+        return userContext.getCurrentIdUser()
+                    .flatMap(idProducer -> ServerResponse.ok().body(productService.getProductsByProducer(UUID.fromString(idProducer)), ProductEntity.class));
+         
     }
 
     private Mono<ServerResponse> createProduct(ServerRequest request, ProductService productService) {

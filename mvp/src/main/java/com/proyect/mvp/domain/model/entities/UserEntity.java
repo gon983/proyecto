@@ -108,7 +108,7 @@ public class UserEntity {
 
     public UserAuthenticationDTO toUserAuthenticationDTO(){
         UserAuthenticationDTO dto = UserAuthenticationDTO.builder()
-                                                        .id(idUser)
+                                                        .idUser(idUser)
                                                         .username(username)
                                                         .email(email)
                                                         .role(role)
