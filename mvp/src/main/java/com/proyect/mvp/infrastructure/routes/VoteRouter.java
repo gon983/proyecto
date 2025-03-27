@@ -31,9 +31,9 @@ public class VoteRouter {
     
     @Bean
     public RouterFunction<ServerResponse> voteRoutes(VoteService voteService) {
-        return route(POST("/voteProduct/{idUser}"), request -> voteProduct(request, voteService))
-        .andRoute(GET("/selectProductByVotationManual/{idCollectionPoint}"), request -> selectProduct(request,voteService))
-        .andRoute(POST("/calificateProduct/{idUser}"), request -> calificateProduct(request, voteService));
+        return route(POST("/api/user/voteProduct/{idUser}"), request -> voteProduct(request, voteService))
+        .andRoute(GET("/api/admin/selectProductByVotationManual/{idCollectionPoint}"), request -> selectProduct(request,voteService))
+        .andRoute(POST("/api/user/calificateProduct/{idUser}"), request -> calificateProduct(request, voteService));
     }
 
     private Mono<ServerResponse> voteProduct(ServerRequest request, VoteService voteService) {

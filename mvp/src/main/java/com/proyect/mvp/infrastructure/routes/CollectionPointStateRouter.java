@@ -22,10 +22,10 @@ public class CollectionPointStateRouter {
 
     @Bean
     public RouterFunction<ServerResponse> collectionPointStateRoutes(CollectionPointStateService collectionPointStateService) {
-        return route(POST("/collectionPointStates"), request -> createCollectionPointState(request, collectionPointStateService))
-                .andRoute(GET("/collectionPointStates"), request -> getAllCollectionPointStates(collectionPointStateService))
-                .andRoute(GET("/collectionPointStates/{id}"), request -> getCollectionPointStateById(request, collectionPointStateService))
-                .andRoute(DELETE("/collectionPointStates/{id}"), request -> deleteCollectionPointStateById(request, collectionPointStateService)); // Ruta para eliminar
+        return route(POST("/api/admin/collectionPointStates"), request -> createCollectionPointState(request, collectionPointStateService))
+                .andRoute(GET("/api/user/collectionPointStates"), request -> getAllCollectionPointStates(collectionPointStateService))
+                .andRoute(GET("/api/user/collectionPointStates/{id}"), request -> getCollectionPointStateById(request, collectionPointStateService))
+                .andRoute(DELETE("/api/admin/collectionPointStates/{id}"), request -> deleteCollectionPointStateById(request, collectionPointStateService)); // Ruta para eliminar
     }
 
     private Mono<ServerResponse> createCollectionPointState(ServerRequest request, CollectionPointStateService collectionPointStateService) {

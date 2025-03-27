@@ -23,10 +23,10 @@ public class DefaultProductxCollectionPointxWeekRouter {
 
     @Bean
     RouterFunction<ServerResponse> defaultProductxCpRoutes(DefaultProductxCollectionPointxWeekService defaultProductxCpService){
-    return route(GET("/defaultProductsxCp/{idUser}"), request -> getDefaultProductsxCpxWeek(request, defaultProductxCpService))
-                .andRoute(GET("/defaultProductsxCpToVote/{idCollectionPoint}"), request -> getDefaultProductsxCpToVote(request, defaultProductxCpService))
-                .andRoute(GET("/renewalProductsManual/{collectionPointId}"), request -> renewalProductsManual(request, defaultProductxCpService))
-                .andRoute(GET("/seeProductsToCalificate/{idPurchase}/{idCollectionPoint}"), request -> seeProductsToCalificate(request, defaultProductxCpService));
+    return route(GET("/api/user/defaultProductsxCp/{idUser}"), request -> getDefaultProductsxCpxWeek(request, defaultProductxCpService))
+                .andRoute(GET("/api/user/defaultProductsxCpToVote/{idCollectionPoint}"), request -> getDefaultProductsxCpToVote(request, defaultProductxCpService))
+                .andRoute(GET("/api/admin/renewalProductsManual/{collectionPointId}"), request -> renewalProductsManual(request, defaultProductxCpService))
+                .andRoute(GET("/api/user/seeProductsToCalificate/{idPurchase}/{idCollectionPoint}"), request -> seeProductsToCalificate(request, defaultProductxCpService));
 
 }
 

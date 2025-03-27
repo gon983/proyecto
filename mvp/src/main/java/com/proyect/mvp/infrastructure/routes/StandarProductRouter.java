@@ -20,9 +20,9 @@ public class StandarProductRouter {
 
     @Bean
     public RouterFunction<ServerResponse> standarProductRoutes(StandarProductService standarProductService) {
-        return route(GET("/standarProducts"), request -> getAllStandarProducts(request, standarProductService))
-                .andRoute(GET("/standarProducts/{id}"), request -> getStandarProductById(request, standarProductService))
-                .andRoute(POST("/standarProducts"), request -> createStandarProduct(request, standarProductService));
+        return route(GET("/api/user/standarProducts"), request -> getAllStandarProducts(request, standarProductService))
+                .andRoute(GET("/api/user/standarProducts/{id}"), request -> getStandarProductById(request, standarProductService))
+                .andRoute(POST("/api/admin/standarProducts"), request -> createStandarProduct(request, standarProductService));
         
     }
     

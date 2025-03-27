@@ -27,12 +27,12 @@ public class PurchaseRouter {
 
     @Bean
     public RouterFunction<ServerResponse> purchaseRoutes(PurchaseService purchaseService, ConfirmPurchaseMiddleware confirmPurchaseMiddleware) {
-        return route(POST("/purchases"), request -> createPurchase(request, purchaseService))
-                .andRoute(GET("/purchases/{idPurchase}"), request -> getPurchaseWithDetails(request, purchaseService))
-                .andRoute(POST("/confirmPurchase/{idPurchase}"), request -> confirmPurchase(request, purchaseService))
+        return route(POST("/api/user/purchases"), request -> createPurchase(request, purchaseService))
+                .andRoute(GET("/api/user/purchases/{idPurchase}"), request -> getPurchaseWithDetails(request, purchaseService))
+                .andRoute(POST("/api/user/confirmPurchase/{idPurchase}"), request -> confirmPurchase(request, purchaseService))
                 .andRoute(POST("/confirmPayment"), request ->  confirmPurchaseMiddleware.validate(request)
                                                                         .flatMap(valid -> valid ? confirmPayment(request, purchaseService) : ServerResponse.status(401).build()))
-                .andRoute(POST("/receivePurchase/{idPurchase}"), request -> receivePurchase(request, purchaseService));
+                .andRoute(POST("/api/user/receivePurchase/{idPurchase}"), request -> receivePurchase(request, purchaseService));
     }
 
     private Mono<ServerResponse> createPurchase(ServerRequest request, PurchaseService purchaseService) {

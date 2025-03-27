@@ -37,10 +37,10 @@ public class UserRouter {
     @Bean
     public RouterFunction<ServerResponse> userRoutes(UserService userService, CustomReactiveAuthenticationManager authenticationManager, 
     JsonAuthenticationSuccessHandler successHandler, JsonAuthenticationFailureHandler failureHandler ) {
-        return route(GET("/users"), request -> getAllUsers(userService))
-                .andRoute(GET("/users/{id}"), request -> getUserById(request, userService))
-                .andRoute(POST("/users"), request -> createUser(request, userService))
-                .andRoute(PUT("/users/{id}"), request -> updateUser(request, userService))
+        return route(GET("/api/admin/users"), request -> getAllUsers(userService))
+                .andRoute(GET("/api/admin/users/{id}"), request -> getUserById(request, userService))
+                .andRoute(POST("/api/admin/users"), request -> createUser(request, userService))
+                .andRoute(PUT("/api/admin/users/{id}"), request -> updateUser(request, userService))
                 .andRoute(POST("/login"), request -> login(request, authenticationManager, successHandler, failureHandler))
                 .andRoute(POST("/public/register"), request -> register(request, userService));
     }

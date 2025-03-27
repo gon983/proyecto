@@ -24,11 +24,11 @@ public class ProductRouter {
     
     @Bean
     public RouterFunction<ServerResponse> productRoutes(ProductService productService) {
-        return route(GET("/products/producer/{idProducer}"), request -> getProductsByProducer(request, productService))
-                .andRoute(POST("/products"), request -> createProduct(request, productService))
-                .andRoute(PUT("/products/{idProduct}"), request -> updateProduct(request, productService))
-                .andRoute(GET("/products"), request -> getAllProducts(request, productService))
-                .andRoute(GET("/optionsForStandarProduct/{idStandarProduct}/{idUser}"), request -> getOptionsForStandarProduct(request, productService));
+        return route(GET("/api/user/{idProducer}"), request -> getProductsByProducer(request, productService))
+                .andRoute(POST("/api/productor/products"), request -> createProduct(request, productService))
+                .andRoute(PUT("/api/productor/products/{idProduct}"), request -> updateProduct(request, productService))
+                .andRoute(GET("/api/user/products"), request -> getAllProducts(request, productService))
+                .andRoute(GET("/api/user/optionsForStandarProduct/{idStandarProduct}/{idUser}"), request -> getOptionsForStandarProduct(request, productService));
     }
 
     private Mono<ServerResponse> getProductsByProducer(ServerRequest request, ProductService productService) {

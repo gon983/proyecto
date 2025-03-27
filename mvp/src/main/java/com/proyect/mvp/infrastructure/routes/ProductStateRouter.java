@@ -22,10 +22,10 @@ public class ProductStateRouter {
 
     @Bean
     public RouterFunction<ServerResponse> productStateRoutes(ProductStateService productStateService) {
-        return route(POST("/productStates"), request -> createProductState(request, productStateService))
-                .andRoute(GET("/productStates"), request -> getAllProductStates(productStateService))
-                .andRoute(GET("/productStates/{id}"), request -> getProductStateById(request, productStateService))
-                .andRoute(DELETE("/productStates/{id}"), request -> deleteProductStateById(request, productStateService));
+        return route(POST("/api/admin/productStates"), request -> createProductState(request, productStateService))
+                .andRoute(GET("/api/user/productStates"), request -> getAllProductStates(productStateService))
+                .andRoute(GET("/api/user/productStates/{id}"), request -> getProductStateById(request, productStateService))
+                .andRoute(DELETE("/api/admin/productStates/{id}"), request -> deleteProductStateById(request, productStateService));
     }
 
     private Mono<ServerResponse> createProductState(ServerRequest request, ProductStateService productStateService) {

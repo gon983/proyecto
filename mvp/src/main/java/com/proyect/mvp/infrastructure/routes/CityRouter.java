@@ -23,9 +23,9 @@ public class CityRouter {
 
     @Bean
     public RouterFunction<ServerResponse> cityRoutes(CityService cityService) {
-        return route(POST("/cities"), request -> createCity(request, cityService))
-                .andRoute(GET("/cities"), request -> getAllCities(cityService))
-                .andRoute(GET("/cities/{id}"), request -> getCityById(request, cityService));
+        return route(POST("/api/admin/cities"), request -> createCity(request, cityService))
+                .andRoute(GET("/api/user/cities"), request -> getAllCities(cityService))
+                .andRoute(GET("/api/user/cities/{id}"), request -> getCityById(request, cityService));
                 
     }
 

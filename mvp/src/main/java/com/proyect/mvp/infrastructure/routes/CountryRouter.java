@@ -24,11 +24,11 @@ public class CountryRouter {
 
     @Bean
     public RouterFunction<ServerResponse> countryRoutes(CountryService countryService) {
-        return route(GET("/public/countries"), request -> getAllCountries(countryService))
-                .andRoute(GET("/countries/{id}"), request -> getCountryById(request, countryService))
-                .andRoute(POST("/countries"), request -> createCountry(request, countryService))
-                .andRoute(PUT("/countries/{id}"), request -> updateCountry(request, countryService))
-                .andRoute(DELETE("/countries/{id}"), request -> deleteCountry(request, countryService));
+        return route(GET("/api/user/countries"), request -> getAllCountries(countryService))
+                .andRoute(GET("/api/user/countries/{id}"), request -> getCountryById(request, countryService))
+                .andRoute(POST("/api/admin/countries"), request -> createCountry(request, countryService))
+                .andRoute(PUT("/api/admin/countries/{id}"), request -> updateCountry(request, countryService))
+                .andRoute(DELETE("/api/admin/countries/{id}"), request -> deleteCountry(request, countryService));
     }
 
     private Mono<ServerResponse> getAllCountries(CountryService countryService) {

@@ -23,9 +23,9 @@ public class NeighborhoodRouter {
 
     @Bean
     public RouterFunction<ServerResponse> neighborhoodRoutes(NeighborhoodService neighborhoodService) {
-        return route(POST("/neighborhoods"), request -> createNeighborhood(request, neighborhoodService))
-                .andRoute(GET("/neighborhoods"), request -> getAllNeighborhoods(neighborhoodService))
-                .andRoute(GET("/neighborhoods/{id}"), request -> getNeighborhoodById(request, neighborhoodService));
+        return route(POST("/api/user/neighborhoods"), request -> createNeighborhood(request, neighborhoodService))
+                .andRoute(GET("/api/admin/neighborhoods"), request -> getAllNeighborhoods(neighborhoodService))
+                .andRoute(GET("/api/admin/neighborhoods/{id}"), request -> getNeighborhoodById(request, neighborhoodService));
     }
 
     private Mono<ServerResponse> createNeighborhood(ServerRequest request, NeighborhoodService neighborhoodService) {

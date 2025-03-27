@@ -20,7 +20,7 @@ public class StockMovementRouter {
 
     @Bean
     RouterFunction<ServerResponse>  stockMovementroutes(StockMovementService stockMovementService){
-        return route(POST("/stockMovement/{idUser}"), request -> createStockMovement(request, stockMovementService));
+        return route(POST("/api/productor/stockMovement/{idUser}"), request -> createStockMovement(request, stockMovementService));
 
     }
 

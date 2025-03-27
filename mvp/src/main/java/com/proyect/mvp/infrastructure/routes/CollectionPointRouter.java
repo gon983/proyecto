@@ -24,11 +24,11 @@ public class CollectionPointRouter {
 
     @Bean
     public RouterFunction<ServerResponse> collectionPointRoutes(CollectionPointService collectionPointService) {
-        return route(GET("/collectionpoints"), request -> getAllCollectionPoints(collectionPointService))
-                .andRoute(GET("/collectionpoints/{id}"), request -> getCollectionPointById(request, collectionPointService))
-                .andRoute(POST("/collectionpoints"), request -> createCollectionPoint(request, collectionPointService))
-                .andRoute(PUT("/collectionpoints/{id}"), request -> updateCollectionPoint(request, collectionPointService))
-                .andRoute(DELETE("/collectionpoints/{id}"), request -> deleteCollectionPoint(request, collectionPointService));
+        return route(GET("/api/user/collectionpoints"), request -> getAllCollectionPoints(collectionPointService))
+                .andRoute(GET("/api/user/collectionpoints/{id}"), request -> getCollectionPointById(request, collectionPointService))
+                .andRoute(POST("/api/cp_owner/collectionpoints"), request -> createCollectionPoint(request, collectionPointService))
+                .andRoute(PUT("/api/cp_owner/collectionpoints/{id}"), request -> updateCollectionPoint(request, collectionPointService))
+                .andRoute(DELETE("/api/admin/collectionpoints/{id}"), request -> deleteCollectionPoint(request, collectionPointService));
     }
 
     private Mono<ServerResponse> getAllCollectionPoints(CollectionPointService collectionPointService) {

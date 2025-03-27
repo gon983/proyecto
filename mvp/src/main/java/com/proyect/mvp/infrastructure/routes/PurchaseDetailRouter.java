@@ -23,11 +23,11 @@ public class PurchaseDetailRouter {
 
     @Bean
     public RouterFunction<ServerResponse> purchaseDetailRoutes(PurchaseDetailService purchaseDetailService){
-        return route(POST("/purchases/details/{purchaseId}/{idCollectionPoint}/{idUser}"), request-> createPurchaseDetail(request, purchaseDetailService))
-        .andRoute(GET("/salesProductor/{idProductor}"), request -> obtenerVentasProductorSinAbonar(request, purchaseDetailService))
-        .andRoute(GET("/salesProductor/{idProductor}/{idCollectionPoint}"), request -> obtenerVentasCollectionPointDeProductorSinAbonar(request, purchaseDetailService))
-        .andRoute(POST("/registerPaymentSales/{idProductor}/{idCollectionPoint}"), request -> registrarPagoVentasCollectionPointDeProductor(request, purchaseDetailService))
-        .andRoute(GET("/neighborhoodPackage/{idCollectionPoint}"), request -> obtenerTodasLasVentasConfirmadasOPagadasDeUnCpSumarizadasPorStandarProduct(request, purchaseDetailService));
+        return route(POST("/api/user/purchases/details/{purchaseId}/{idCollectionPoint}/{idUser}"), request-> createPurchaseDetail(request, purchaseDetailService))
+        .andRoute(GET("/api/user/salesProductor/{idProductor}"), request -> obtenerVentasProductorSinAbonar(request, purchaseDetailService))
+        .andRoute(GET("/api/user/salesProductor/{idProductor}/{idCollectionPoint}"), request -> obtenerVentasCollectionPointDeProductorSinAbonar(request, purchaseDetailService))
+        .andRoute(POST("/api/admin/registerPaymentSales/{idProductor}/{idCollectionPoint}"), request -> registrarPagoVentasCollectionPointDeProductor(request, purchaseDetailService))
+        .andRoute(GET("/api/user/neighborhoodPackage/{idCollectionPoint}"), request -> obtenerTodasLasVentasConfirmadasOPagadasDeUnCpSumarizadasPorStandarProduct(request, purchaseDetailService));
 
 
     }

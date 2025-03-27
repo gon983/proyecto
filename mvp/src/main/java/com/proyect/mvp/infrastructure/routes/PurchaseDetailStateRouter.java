@@ -22,10 +22,10 @@ public class PurchaseDetailStateRouter {
 
     @Bean
     public RouterFunction<ServerResponse> purchaseDetailStateRoutes(PurchaseDetailStateService purchaseDetailStateService) {
-        return route(POST("/purchaseDetailStates"), request -> createPurchaseDetailState(request, purchaseDetailStateService))
-                .andRoute(GET("/purchaseDetailStates"), request -> getAllPurchaseDetailStates(purchaseDetailStateService))
-                .andRoute(GET("/purchaseDetailStates/{id}"), request -> getPurchaseDetailStateById(request, purchaseDetailStateService))
-                .andRoute(DELETE("/purchaseDetailStates/{id}"), request -> deletePurchaseDetailStateById(request, purchaseDetailStateService));
+        return route(POST("/api/admin/purchaseDetailStates"), request -> createPurchaseDetailState(request, purchaseDetailStateService))
+                .andRoute(GET("/api/user/purchaseDetailStates"), request -> getAllPurchaseDetailStates(purchaseDetailStateService))
+                .andRoute(GET("/api/user/purchaseDetailStates/{id}"), request -> getPurchaseDetailStateById(request, purchaseDetailStateService))
+                .andRoute(DELETE("/api/admin/purchaseDetailStates/{id}"), request -> deletePurchaseDetailStateById(request, purchaseDetailStateService));
     }
 
     private Mono<ServerResponse> createPurchaseDetailState(ServerRequest request, PurchaseDetailStateService purchaseDetailStateService) {
