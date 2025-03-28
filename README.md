@@ -11,7 +11,9 @@ Primera Iteracion finalizada
 
 ## Registrar un conjunto de productos q funcionen como 'canasta básica'
 
-## Hacer q en los niveles se done (ya esta hecho el caso de uso falta esa subimplementacion)
+## Hacer q en los niveles se done (ya esta hecho el caso de uso falta esa subimplementacion
+
+## Hacer que los precios dependan del precio del collection point 
 
 
 ## Microservicios planeados a futuro
