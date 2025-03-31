@@ -39,7 +39,7 @@ public class JsonAuthenticationSuccessHandler {
             .map(GrantedAuthority::getAuthority)
             .collect(Collectors.toList()));
         
-        return ServerResponse.ok(200)
+        return ServerResponse.ok()
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(responseBody);
     }

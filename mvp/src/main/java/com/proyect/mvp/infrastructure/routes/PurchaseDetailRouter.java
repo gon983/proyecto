@@ -38,13 +38,13 @@ public class PurchaseDetailRouter {
         UUID fkBuyer = UUID.fromString(request.pathVariable("idUser"));
         return request.bodyToMono(PurchaseDetailCreateDTO.class)
                         .flatMap(purchaseDetailDto-> purchaseDetailService.createPurchaseDetail(fkBuyer, fkCollectionPoint, fkPurchase, purchaseDetailDto))
-                        .flatMap(savedPurchaseDetail -> ServerResponse.ok(200).bodyValue(savedPurchaseDetail));
+                        .flatMap(savedPurchaseDetail -> ServerResponse.ok().bodyValue(savedPurchaseDetail));
     }
 
     private Mono<ServerResponse> obtenerVentasProductorSinAbonar(ServerRequest request, PurchaseDetailService saleService ){
         UUID idProductor = UUID.fromString(request.pathVariable("idProductor"));
         return saleService.obtenerVentasProductorPorCollectionPoint(idProductor)
-                            .flatMap(sales -> ServerResponse.ok(200).bodyValue(sales));
+                            .flatMap(sales -> ServerResponse.ok().bodyValue(sales));
         
     }
     
@@ -52,7 +52,7 @@ public class PurchaseDetailRouter {
         UUID idProductor = UUID.fromString(request.pathVariable("idProductor"));
         UUID idCollectionPoint = UUID.fromString(request.pathVariable("idCollectionPoint"));
         return saleService.obtenerVentasProductorDeCollectionPoint(idProductor, idCollectionPoint)
-                            .flatMap(sales -> ServerResponse.ok(200).bodyValue(sales));
+                            .flatMap(sales -> ServerResponse.ok().bodyValue(sales));
         
     }
 
@@ -62,7 +62,7 @@ public class PurchaseDetailRouter {
         return request.bodyToMono(ProductsPayedDTO.class)
                       .flatMapMany(listPayedProduct -> saleService.registrarPagoVentasCollectionPointDeProductor(idProductor, idCollectionPoint, listPayedProduct))
                       .collectList()
-                      .flatMap(sales -> ServerResponse.ok(200).bodyValue(sales));
+                      .flatMap(sales -> ServerResponse.ok().bodyValue(sales));
         
     }
 
@@ -70,7 +70,7 @@ public class PurchaseDetailRouter {
     private Mono<ServerResponse> obtenerTodasLasVentasConfirmadasOPagadasDeUnCpSumarizadasPorStandarProduct(ServerRequest request, PurchaseDetailService purchaseDetailService){
         UUID idCollectionPoint = UUID.fromString(request.pathVariable("idCollectionPoint"));
         return purchaseDetailService.obtenerTodasLasVentasConfirmadasOPagadasDeUnCpSumarizadasPorProduct(idCollectionPoint)
-                                    .flatMap(dto -> ServerResponse.ok(200).bodyValue(dto));
+                                    .flatMap(dto -> ServerResponse.ok().bodyValue(dto));
     }
 
     

@@ -8,6 +8,7 @@ import com.proyect.mvp.domain.model.entities.CountryEntity;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
@@ -32,14 +33,14 @@ public class CountryRouter {
     }
 
     private Mono<ServerResponse> getAllCountries(CountryService countryService) {
-        return ServerResponse.ok(200).body(countryService.getAllCountries(), CountryEntity.class);
+        return ServerResponse.ok().body(countryService.getAllCountries(), CountryEntity.class);
     }
 
     private Mono<ServerResponse> getCountryById(ServerRequest request, CountryService countryService) {
         try {
             UUID id = UUID.fromString(request.pathVariable("id"));
             return countryService.getCountryById(id)
-                    .flatMap(country -> ServerResponse.ok(200).bodyValue(country));
+                    .flatMap(country -> ServerResponse.ok().bodyValue(country));
         } catch (IllegalArgumentException e) {
             return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid UUID format"));
         }
@@ -48,7 +49,7 @@ public class CountryRouter {
     private Mono<ServerResponse> createCountry(ServerRequest request, CountryService countryService) {
         return request.bodyToMono(CountryCreateDTO.class)
                 .flatMap(country -> countryService.saveNewCountry(country))
-                .flatMap(savedCountry -> ServerResponse.ok(200).bodyValue(savedCountry))
+                .flatMap(savedCountry -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).bodyValue(savedCountry))
                 .onErrorResume(ResponseStatusException.class, e -> ServerResponse.status(e.getStatusCode()).bodyValue(e.getMessage()));
     }
 
@@ -57,7 +58,7 @@ public class CountryRouter {
             UUID id = UUID.fromString(request.pathVariable("id"));
             return request.bodyToMono(CountryUpdateDTO.class)
                     .flatMap(country -> countryService.updateCountry(id, country))
-                    .flatMap(updatedCountry -> ServerResponse.ok(200).bodyValue(updatedCountry));
+                    .flatMap(updatedCountry -> ServerResponse.ok().bodyValue(updatedCountry));
         } catch (IllegalArgumentException e) {
             return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid UUID format"));
         }

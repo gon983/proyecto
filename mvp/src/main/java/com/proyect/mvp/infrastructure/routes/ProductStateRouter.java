@@ -31,19 +31,19 @@ public class ProductStateRouter {
     private Mono<ServerResponse> createProductState(ServerRequest request, ProductStateService productStateService) {
         return request.bodyToMono(ProductStateCreateDTO.class)
                 .flatMap(productState -> productStateService.saveNewProductState(productState))
-                .flatMap(savedProductState -> ServerResponse.ok(200).bodyValue(savedProductState))
+                .flatMap(savedProductState -> ServerResponse.ok().bodyValue(savedProductState))
                 .onErrorResume(ResponseStatusException.class, e ->
                         ServerResponse.status(e.getStatusCode()).bodyValue(e.getMessage()));
     }
 
     private Mono<ServerResponse> getAllProductStates(ProductStateService productStateService) {
-        return ServerResponse.ok(200).body(productStateService.getAllProductStates(), ProductStateEntity.class);
+        return ServerResponse.ok().body(productStateService.getAllProductStates(), ProductStateEntity.class);
     }
 
     private Mono<ServerResponse> getProductStateById(ServerRequest request, ProductStateService productStateService) {
         UUID id = UUID.fromString(request.pathVariable("id"));
         return productStateService.getProductStateById(id)
-                .flatMap(productState -> ServerResponse.ok(200).bodyValue(productState))
+                .flatMap(productState -> ServerResponse.ok().bodyValue(productState))
                 .onErrorResume(ResponseStatusException.class, e ->
                         ServerResponse.status(e.getStatusCode()).bodyValue(e.getMessage()));
     }

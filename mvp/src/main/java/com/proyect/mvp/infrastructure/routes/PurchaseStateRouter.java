@@ -31,19 +31,19 @@ public class PurchaseStateRouter {
     private Mono<ServerResponse> createPurchaseState(ServerRequest request, PurchaseStateService purchaseStateService) {
         return request.bodyToMono(PurchaseStateCreateDTO.class)
                 .flatMap(purchaseState -> purchaseStateService.saveNewPurchaseState(purchaseState))
-                .flatMap(savedPurchaseState -> ServerResponse.ok(200).bodyValue(savedPurchaseState))
+                .flatMap(savedPurchaseState -> ServerResponse.ok().bodyValue(savedPurchaseState))
                 .onErrorResume(ResponseStatusException.class, e ->
                         ServerResponse.status(e.getStatusCode()).bodyValue(e.getMessage()));
     }
 
     private Mono<ServerResponse> getAllPurchaseStates(PurchaseStateService purchaseStateService) {
-        return ServerResponse.ok(200).body(purchaseStateService.getAllPurchaseStates(), PurchaseStateEntity.class);
+        return ServerResponse.ok().body(purchaseStateService.getAllPurchaseStates(), PurchaseStateEntity.class);
     }
 
     private Mono<ServerResponse> getPurchaseStateById(ServerRequest request, PurchaseStateService purchaseStateService) {
         UUID id = UUID.fromString(request.pathVariable("id"));
         return purchaseStateService.getPurchaseStateById(id)
-                .flatMap(purchaseState -> ServerResponse.ok(200).bodyValue(purchaseState))
+                .flatMap(purchaseState -> ServerResponse.ok().bodyValue(purchaseState))
                 .onErrorResume(ResponseStatusException.class, e ->
                         ServerResponse.status(e.getStatusCode()).bodyValue(e.getMessage()));
     }

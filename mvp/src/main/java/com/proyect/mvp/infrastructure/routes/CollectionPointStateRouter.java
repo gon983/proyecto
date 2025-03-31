@@ -31,19 +31,19 @@ public class CollectionPointStateRouter {
     private Mono<ServerResponse> createCollectionPointState(ServerRequest request, CollectionPointStateService collectionPointStateService) {
         return request.bodyToMono(CollectionPointStateCreateDTO.class)
                 .flatMap(collectionPointState -> collectionPointStateService.saveNewCollectionPointState(collectionPointState))
-                .flatMap(savedCollectionPointState -> ServerResponse.ok(200).bodyValue(savedCollectionPointState))
+                .flatMap(savedCollectionPointState -> ServerResponse.ok().bodyValue(savedCollectionPointState))
                 .onErrorResume(ResponseStatusException.class, e ->
                         ServerResponse.status(e.getStatusCode()).bodyValue(e.getMessage()));
     }
 
     private Mono<ServerResponse> getAllCollectionPointStates(CollectionPointStateService collectionPointStateService) {
-        return ServerResponse.ok(200).body(collectionPointStateService.getAllCollectionPointStates(), CollectionPointStateEntity.class);
+        return ServerResponse.ok().body(collectionPointStateService.getAllCollectionPointStates(), CollectionPointStateEntity.class);
     }
 
     private Mono<ServerResponse> getCollectionPointStateById(ServerRequest request, CollectionPointStateService collectionPointStateService) {
         UUID id = UUID.fromString(request.pathVariable("id"));
         return collectionPointStateService.getCollectionPointStateById(id)
-                .flatMap(collectionPointState -> ServerResponse.ok(200).bodyValue(collectionPointState))
+                .flatMap(collectionPointState -> ServerResponse.ok().bodyValue(collectionPointState))
                 .onErrorResume(ResponseStatusException.class, e ->
                         ServerResponse.status(e.getStatusCode()).bodyValue(e.getMessage()));
     }

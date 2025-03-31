@@ -29,16 +29,16 @@ public class CategoryRouter {
     private Mono<ServerResponse> createCategory(ServerRequest request, CategoryService categoryService) {
         return request.bodyToMono(CategoryCreateDTO.class)
                 .flatMap(category -> categoryService.saveNewCategory(category))
-                .flatMap(savedCategory -> ServerResponse.ok(200).bodyValue(savedCategory));
+                .flatMap(savedCategory -> ServerResponse.ok().bodyValue(savedCategory));
     }
 
     private Mono<ServerResponse> getCategoryById(ServerRequest request, CategoryService categoryService) {
         UUID id = UUID.fromString(request.pathVariable("id"));
         return categoryService.getCategoryById(id)
-                .flatMap(category -> ServerResponse.ok(200).bodyValue(category));
+                .flatMap(category -> ServerResponse.ok().bodyValue(category));
     }
 
     private Mono<ServerResponse> getAllCategories(ServerRequest request, CategoryService categoryService) {
-        return ServerResponse.ok(200).body(categoryService.getAllCategories(), CategoryEntity.class);
+        return ServerResponse.ok().body(categoryService.getAllCategories(), CategoryEntity.class);
     }
 }

@@ -27,18 +27,18 @@ public class StandarProductRouter {
     }
     
     private Mono<ServerResponse> getAllStandarProducts(ServerRequest request, StandarProductService standarProductService) {
-        return ServerResponse.ok(200).body(standarProductService.getAllStandarProducts(), StandarProductEntity.class);
+        return ServerResponse.ok().body(standarProductService.getAllStandarProducts(), StandarProductEntity.class);
     }
     
     private Mono<ServerResponse> getStandarProductById(ServerRequest request, StandarProductService standarProductService) {
         UUID id = UUID.fromString(request.pathVariable("id"));
-        return ServerResponse.ok(200).body(standarProductService.getStandarProductById(id), StandarProductEntity.class);
+        return ServerResponse.ok().body(standarProductService.getStandarProductById(id), StandarProductEntity.class);
     }
     
     private Mono<ServerResponse> createStandarProduct(ServerRequest request, StandarProductService standarProductService) {
         return request.bodyToMono(StandarProductCreateDTO.class)
                         .flatMap(standarProduct-> standarProductService.createStandarProduct(standarProduct))
-                        .flatMap(savedStandarProduct -> ServerResponse.ok(200).bodyValue(savedStandarProduct));
+                        .flatMap(savedStandarProduct -> ServerResponse.ok().bodyValue(savedStandarProduct));
         
     }
 
