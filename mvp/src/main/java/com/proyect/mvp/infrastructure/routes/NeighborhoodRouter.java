@@ -31,19 +31,19 @@ public class NeighborhoodRouter {
     private Mono<ServerResponse> createNeighborhood(ServerRequest request, NeighborhoodService neighborhoodService) {
         return request.bodyToMono(NeighborhoodCreateDTO.class)
                 .flatMap(neighborhood -> neighborhoodService.saveNewNeighborhood(neighborhood))
-                .flatMap(savedNeighborhood -> ServerResponse.ok().bodyValue(savedNeighborhood))
+                .flatMap(savedNeighborhood -> ServerResponse.ok(200).bodyValue(savedNeighborhood))
                 .onErrorResume(ResponseStatusException.class, e ->
                         ServerResponse.status(e.getStatusCode()).bodyValue(e.getMessage()));
     }
 
     private Mono<ServerResponse> getAllNeighborhoods(NeighborhoodService neighborhoodService) {
-        return ServerResponse.ok().body(neighborhoodService.getAllNeighborhoods(), NeighborhoodEntity.class);
+        return ServerResponse.ok(200).body(neighborhoodService.getAllNeighborhoods(), NeighborhoodEntity.class);
     }
 
     private Mono<ServerResponse> getNeighborhoodById(ServerRequest request, NeighborhoodService neighborhoodService) {
         UUID id = UUID.fromString(request.pathVariable("id"));
         return neighborhoodService.getNeighborhoodById(id)
-                .flatMap(neighborhood -> ServerResponse.ok().bodyValue(neighborhood))
+                .flatMap(neighborhood -> ServerResponse.ok(200).bodyValue(neighborhood))
                 .onErrorResume(ResponseStatusException.class, e ->
                         ServerResponse.status(e.getStatusCode()).bodyValue(e.getMessage()));
     }

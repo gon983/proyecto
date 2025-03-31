@@ -33,17 +33,17 @@ public class ONGRouter {
                                             .build();
                                     return ongService.createONG(ong);
                                 })
-                                .flatMap(ong -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).bodyValue(ong)))
+                                .flatMap(ong -> ServerResponse.ok(200).contentType(MediaType.APPLICATION_JSON).bodyValue(ong)))
                 .GET("/ongs",
-                        req -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON)
+                        req -> ServerResponse.ok(200).contentType(MediaType.APPLICATION_JSON)
                                 .body(ongService.getAllONGs(), ONGEntity.class))
                 .GET("/ongs/{id}",
                         req -> ongService.getONG(UUID.fromString(req.pathVariable("id")))
-                                .flatMap(ong -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).bodyValue(ong)))
+                                .flatMap(ong -> ServerResponse.ok(200).contentType(MediaType.APPLICATION_JSON).bodyValue(ong)))
                 .PUT("/ongs",
                         req -> req.bodyToMono(ONGUpdateDTO.class)
                                 .flatMap(ongService::updateONG)
-                                .flatMap(ong -> ServerResponse.ok().build()))
+                                .flatMap(ong -> ServerResponse.ok(200).build()))
                 .build();
     }
 }

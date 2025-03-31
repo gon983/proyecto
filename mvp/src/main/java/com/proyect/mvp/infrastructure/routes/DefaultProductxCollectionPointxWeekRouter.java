@@ -35,7 +35,7 @@ public class DefaultProductxCollectionPointxWeekRouter {
     // Mono<ServerResponse> createDefaultProductxCp(ServerRequest request, DefaultProductxCollectionPointxWeekService defaultProductxCpService){
     //     return request.bodyToMono(DefaultProductxCollectionPointxWeekCreateDTO.class)
     //                    .flatMap(dto -> defaultProductxCpService.createDefaultProductxCollectionPointxWeek(dto))
-    //                    .flatMap(saved -> ServerResponse.ok().bodyValue(saved));
+    //                    .flatMap(saved -> ServerResponse.ok(200).bodyValue(saved));
     // } En teoria este endpoint no se tiene q usar, lo hice para probar las purchases
 
     Mono<ServerResponse> getDefaultProductsxCpxWeek(ServerRequest request, DefaultProductxCollectionPointxWeekService defaultProductxCpService, UserContextService userContext){
@@ -43,7 +43,7 @@ public class DefaultProductxCollectionPointxWeekRouter {
                           .flatMap(idUser ->
         defaultProductxCpService.getAllProductsForCpWithLevelPrice(UUID.fromString(idUser))
             .collectList()
-            .flatMap(productList -> ServerResponse.ok().bodyValue(productList))
+            .flatMap(productList -> ServerResponse.ok(200).bodyValue(productList))
 
     );        
     }
@@ -52,20 +52,20 @@ public class DefaultProductxCollectionPointxWeekRouter {
         UUID idCollectionPoint = UUID.fromString(request.pathVariable("idCollectionPoint"));
         return defaultProductxCpService.getAllDefaultProductsxCpxWeekToVote(idCollectionPoint)
                                         .collectList()
-                                        .flatMap(productList -> ServerResponse.ok().bodyValue(productList));
+                                        .flatMap(productList -> ServerResponse.ok(200).bodyValue(productList));
     }
 
     Mono<ServerResponse> renewalProductsManual(ServerRequest request, DefaultProductxCollectionPointxWeekService defaultProductxCollectionPointxWeekService) {
         UUID collectionPointId = UUID.fromString(request.pathVariable("collectionPointId"));
         return defaultProductxCollectionPointxWeekService.renewProductsForCollectionPoint(collectionPointId)
-                .then(ServerResponse.ok().build());
+                .then(ServerResponse.ok(200).build());
     }
 
      public Mono<ServerResponse> seeProductsToCalificate(ServerRequest request, DefaultProductxCollectionPointxWeekService dpcpService){
         UUID fkPurchase = UUID.fromString(request.pathVariable("idPurchase"));
         UUID fkCollectionPoint = UUID.fromString(request.pathVariable("idCollectionPoint"));
         return dpcpService.seeProductsToCalificate(fkPurchase, fkCollectionPoint)
-                                    .flatMap(products -> ServerResponse.ok().bodyValue(products));
+                                    .flatMap(products -> ServerResponse.ok(200).bodyValue(products));
     }
 
     

@@ -46,14 +46,14 @@ public class UserRouter {
     }
 
     private Mono<ServerResponse> getAllUsers(UserService userService) {
-        return ServerResponse.ok().body(userService.getAllUsers(), UserEntity.class);
+        return ServerResponse.ok(200).body(userService.getAllUsers(), UserEntity.class);
     }
 
     private Mono<ServerResponse> getUserById(ServerRequest request, UserService userService) {
         try {
             UUID id = UUID.fromString(request.pathVariable("id"));
             return userService.getUserById(id)
-                    .flatMap(user -> ServerResponse.ok().bodyValue(user));
+                    .flatMap(user -> ServerResponse.ok(200).bodyValue(user));
         } catch (IllegalArgumentException e) {
             return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid UUID format"));
         }
@@ -62,7 +62,7 @@ public class UserRouter {
     private Mono<ServerResponse> createUser(ServerRequest request, UserService userService) {
         return request.bodyToMono(UserCreateDTO.class)
                 .flatMap(user -> userService.saveNewUser(user))
-                .flatMap(savedUser -> ServerResponse.ok().bodyValue(savedUser))
+                .flatMap(savedUser -> ServerResponse.ok(200).bodyValue(savedUser))
                 .onErrorResume(ResponseStatusException.class, e -> ServerResponse.status(e.getStatusCode()).bodyValue(e.getMessage()));
     }
 
@@ -71,7 +71,7 @@ public class UserRouter {
             UUID id = UUID.fromString(request.pathVariable("id"));
             return request.bodyToMono(UserUpdateDTO.class)
                     .flatMap(user -> userService.updateUser(id, user))
-                    .flatMap(updatedUser -> ServerResponse.ok().bodyValue(updatedUser));
+                    .flatMap(updatedUser -> ServerResponse.ok(200).bodyValue(updatedUser));
         } catch (IllegalArgumentException e) {
             return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid UUID format"));
         }
@@ -96,7 +96,7 @@ public class UserRouter {
         private Mono<ServerResponse> register(ServerRequest request, UserService userService){
             return request.bodyToMono(UserAuthenticationDTO.class)
                         .flatMap(dto-> userService.register(dto))
-                        .flatMap(mono -> ServerResponse.ok().build());
+                        .flatMap(mono -> ServerResponse.ok(200).build());
 
 
         }

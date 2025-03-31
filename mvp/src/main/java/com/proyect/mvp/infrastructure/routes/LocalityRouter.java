@@ -31,19 +31,19 @@ public class LocalityRouter {
     private Mono<ServerResponse> createLocality(ServerRequest request, LocalityService localityService) {
         return request.bodyToMono(LocalityCreateDTO.class)
                 .flatMap(locality -> localityService.saveNewLocality(locality))
-                .flatMap(savedLocality -> ServerResponse.ok().bodyValue(savedLocality))
+                .flatMap(savedLocality -> ServerResponse.ok(200).bodyValue(savedLocality))
                 .onErrorResume(ResponseStatusException.class, e ->
                         ServerResponse.status(e.getStatusCode()).bodyValue(e.getMessage()));
     }
 
     private Mono<ServerResponse> getAllLocalities(LocalityService localityService) {
-        return ServerResponse.ok().body(localityService.getAllLocalities(), LocalityEntity.class);
+        return ServerResponse.ok(200).body(localityService.getAllLocalities(), LocalityEntity.class);
     }
 
     private Mono<ServerResponse> getLocalityById(ServerRequest request, LocalityService localityService) {
         UUID id = UUID.fromString(request.pathVariable("id"));
         return localityService.getLocalityById(id)
-                .flatMap(locality -> ServerResponse.ok().bodyValue(locality))
+                .flatMap(locality -> ServerResponse.ok(200).bodyValue(locality))
                 .onErrorResume(ResponseStatusException.class, e ->
                         ServerResponse.status(e.getStatusCode()).bodyValue(e.getMessage()));
     }

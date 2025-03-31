@@ -38,13 +38,13 @@ public class PurchaseRouter {
     private Mono<ServerResponse> createPurchase(ServerRequest request, PurchaseService purchaseService) {
         return request.bodyToMono(PurchaseCreateDTO.class)
                 .flatMap(purchase -> purchaseService.createPurchase(purchase))
-                .flatMap(savedPurchase -> ServerResponse.ok().bodyValue(savedPurchase));
+                .flatMap(savedPurchase -> ServerResponse.ok(200).bodyValue(savedPurchase));
     }
 
     private Mono<ServerResponse> getPurchaseWithDetails(ServerRequest request, PurchaseService purchaseService) {
         UUID idPurchase = UUID.fromString(request.pathVariable("idPurchase"));
         return purchaseService.getPurchaseWithDetails(idPurchase)
-                .flatMap(purchase -> ServerResponse.ok().bodyValue(purchase))
+                .flatMap(purchase -> ServerResponse.ok(200).bodyValue(purchase))
                 .switchIfEmpty(ServerResponse.notFound().build());
     }
 
@@ -57,7 +57,7 @@ public class PurchaseRouter {
                 if (preferences.isEmpty()) {
                     return ServerResponse.notFound().build();
                 }
-                return ServerResponse.ok()
+                return ServerResponse.ok(200)
                     .contentType(MediaType.APPLICATION_JSON)
                     .bodyValue(preferences);
             });
@@ -78,7 +78,7 @@ public class PurchaseRouter {
                 System.out.println("Data ID: " + notification.getData().getId());
                 
                 return purchaseService.procesarNotificacionPago(notification.getType(), notification.getData().getId())
-                    .flatMap(confirmedPurchase -> ServerResponse.ok().build())
+                    .flatMap(confirmedPurchase -> ServerResponse.ok(200).build())
                     .onErrorResume(e -> {
                         System.err.println("Error procesando la notificación: " + e.getMessage());
                         e.printStackTrace();
@@ -100,7 +100,7 @@ public class PurchaseRouter {
 
         return request.bodyToMono(ReceivePurchaseDTO.class)
                       .flatMap(purchase-> purchaseService.receivePurchase(idPurchase, purchase))
-                      .flatMap(details-> ServerResponse.ok().bodyValue(details));
+                      .flatMap(details-> ServerResponse.ok(200).bodyValue(details));
 
     }
     

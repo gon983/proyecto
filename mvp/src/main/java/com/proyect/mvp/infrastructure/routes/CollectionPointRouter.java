@@ -32,14 +32,14 @@ public class CollectionPointRouter {
     }
 
     private Mono<ServerResponse> getAllCollectionPoints(CollectionPointService collectionPointService) {
-        return ServerResponse.ok().body(collectionPointService.getAllCollectionPoints(), CollectionPointEntity.class);
+        return ServerResponse.ok(200).body(collectionPointService.getAllCollectionPoints(), CollectionPointEntity.class);
     }
 
     private Mono<ServerResponse> getCollectionPointById(ServerRequest request, CollectionPointService collectionPointService) {
         try {
             UUID id = UUID.fromString(request.pathVariable("id"));
             return collectionPointService.getCollectionPointById(id)
-                    .flatMap(collectionPoint -> ServerResponse.ok().bodyValue(collectionPoint));
+                    .flatMap(collectionPoint -> ServerResponse.ok(200).bodyValue(collectionPoint));
         } catch (IllegalArgumentException e) {
             return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid UUID format"));
         }
@@ -48,7 +48,7 @@ public class CollectionPointRouter {
     private Mono<ServerResponse> createCollectionPoint(ServerRequest request, CollectionPointService collectionPointService) {
         return request.bodyToMono(CollectionPointCreateDTO.class)
                 .flatMap(collectionPoint -> collectionPointService.saveNewCollectionPoint(collectionPoint))
-                .flatMap(savedCollectionPoint -> ServerResponse.ok().bodyValue(savedCollectionPoint))
+                .flatMap(savedCollectionPoint -> ServerResponse.ok(200).bodyValue(savedCollectionPoint))
                 .onErrorResume(ResponseStatusException.class, e -> ServerResponse.status(e.getStatusCode()).bodyValue(e.getMessage()));
     }
 
@@ -57,7 +57,7 @@ public class CollectionPointRouter {
             UUID id = UUID.fromString(request.pathVariable("id"));
             return request.bodyToMono(CollectionPointUpdateDTO.class)
                     .flatMap(collectionPoint -> collectionPointService.updateCollectionPoint(id, collectionPoint))
-                    .flatMap(updatedCollectionPoint -> ServerResponse.ok().bodyValue(updatedCollectionPoint));
+                    .flatMap(updatedCollectionPoint -> ServerResponse.ok(200).bodyValue(updatedCollectionPoint));
         } catch (IllegalArgumentException e) {
             return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid UUID format"));
         }

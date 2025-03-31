@@ -43,7 +43,7 @@ public class VoteRouter {
                           .flatMap(idUser ->
         request.bodyToMono(VoteCreateDTO.class)
                         .flatMap(vote -> voteService.voteProduct(vote, UUID.fromString(idUser)))
-                        .flatMap(savedVote -> ServerResponse.ok().bodyValue(savedVote))
+                        .flatMap(savedVote -> ServerResponse.ok(200).bodyValue(savedVote))
                         .onErrorResume(ResponseStatusException.class, e -> ServerResponse.status(e.getStatusCode()).bodyValue(e.getMessage()))
                           );
     }
@@ -51,7 +51,7 @@ public class VoteRouter {
     private Mono<ServerResponse> selectProduct(ServerRequest request, VoteService voteService){
         UUID idCollectionPoint =UUID.fromString(request.pathVariable("idCollectionPoint"));
         return voteService.countVotesAndSelectProduct(idCollectionPoint)
-                          .then(ServerResponse.ok().build());
+                          .then(ServerResponse.ok(200).build());
     }
 
 
@@ -60,7 +60,7 @@ public class VoteRouter {
                           .flatMap(idUser ->
         request.bodyToMono(VoteCreateDTO.class)
                       .flatMap(vote-> voteService.calificateProduct(vote,UUID.fromString(idUser)))
-                      .flatMap(savedVote -> ServerResponse.ok().bodyValue(savedVote))
+                      .flatMap(savedVote -> ServerResponse.ok(200).bodyValue(savedVote))
                     .onErrorResume(ResponseStatusException.class, e -> ServerResponse.status(e.getStatusCode()).bodyValue(e.getMessage()))
                           );
     }
