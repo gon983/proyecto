@@ -21,7 +21,7 @@ public class LocalityService {
         this.localityRepository = localityRepository;
     }
 
-    public Flux<LocalityEntity> getAllLocalities() {
+    public Flux<LocalityEntity> getAllLocalitiesFromCity() {
         return localityRepository.findAll();
     }
 

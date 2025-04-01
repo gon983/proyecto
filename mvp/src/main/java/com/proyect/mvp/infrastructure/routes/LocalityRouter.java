@@ -24,7 +24,7 @@ public class LocalityRouter {
     @Bean
     public RouterFunction<ServerResponse> localityRoutes(LocalityService localityService) {
         return route(POST("/api/admin/localities"), request -> createLocality(request, localityService))
-                .andRoute(GET("/api/user/localities"), request -> getAllLocalities(localityService))
+                .andRoute(GET("/api/user/{idCity}/localities"), request -> getAllLocalitiesFromCity(request, localityService))
                 .andRoute(GET("/api/user/localities/{id}"), request -> getLocalityById(request, localityService));
     }
 
@@ -36,8 +36,9 @@ public class LocalityRouter {
                         ServerResponse.status(e.getStatusCode()).bodyValue(e.getMessage()));
     }
 
-    private Mono<ServerResponse> getAllLocalities(LocalityService localityService) {
-        return ServerResponse.ok().body(localityService.getAllLocalities(), LocalityEntity.class);
+    private Mono<ServerResponse> getAllLocalitiesFromCity(ServerRequest request, LocalityService localityService) {
+        UUID idCity = UUID.fromString(request.pathVariable("idCity"));
+        return ServerResponse.ok().body(localityService.getAllLocalitiesFromCity(), LocalityEntity.class);
     }
 
     private Mono<ServerResponse> getLocalityById(ServerRequest request, LocalityService localityService) {

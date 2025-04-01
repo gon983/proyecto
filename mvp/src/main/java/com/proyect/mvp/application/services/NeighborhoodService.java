@@ -27,8 +27,8 @@ public class NeighborhoodService {
        
     }
 
-    public Flux<NeighborhoodEntity> getAllNeighborhoods() {
-        return neighborhoodRepository.findAll();
+    public Flux<NeighborhoodEntity> getAllNeighborhoodsFromLocality(UUID idLocality) {
+        return neighborhoodRepository.findByFkLocality(idLocality);
     }
 
     public Mono<NeighborhoodEntity> getNeighborhoodById(UUID id) {

@@ -23,9 +23,9 @@ public class NeighborhoodRouter {
 
     @Bean
     public RouterFunction<ServerResponse> neighborhoodRoutes(NeighborhoodService neighborhoodService) {
-        return route(POST("/api/user/neighborhoods"), request -> createNeighborhood(request, neighborhoodService))
-                .andRoute(GET("/api/admin/neighborhoods"), request -> getAllNeighborhoods(neighborhoodService))
-                .andRoute(GET("/api/admin/neighborhoods/{id}"), request -> getNeighborhoodById(request, neighborhoodService));
+        return route(POST("/api/admin/neighborhoods"), request -> createNeighborhood(request, neighborhoodService))
+                .andRoute(GET("/api/user/{idLocality}/neighborhoods"), request -> getAllNeighborhoodsFromLocality(request, neighborhoodService))
+                .andRoute(GET("/api/user/neighborhoods/{id}"), request -> getNeighborhoodById(request, neighborhoodService));
     }
 
     private Mono<ServerResponse> createNeighborhood(ServerRequest request, NeighborhoodService neighborhoodService) {
@@ -36,8 +36,9 @@ public class NeighborhoodRouter {
                         ServerResponse.status(e.getStatusCode()).bodyValue(e.getMessage()));
     }
 
-    private Mono<ServerResponse> getAllNeighborhoods(NeighborhoodService neighborhoodService) {
-        return ServerResponse.ok().body(neighborhoodService.getAllNeighborhoods(), NeighborhoodEntity.class);
+    private Mono<ServerResponse> getAllNeighborhoodsFromLocality(ServerRequest request, NeighborhoodService neighborhoodService) {
+        UUID idLocality = UUID.fromString(request.pathVariable("idLocality"));
+        return ServerResponse.ok().bodyValue(neighborhoodService.getAllNeighborhoodsFromLocality());
     }
 
     private Mono<ServerResponse> getNeighborhoodById(ServerRequest request, NeighborhoodService neighborhoodService) {

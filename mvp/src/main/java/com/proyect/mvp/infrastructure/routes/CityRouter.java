@@ -24,7 +24,7 @@ public class CityRouter {
     @Bean
     public RouterFunction<ServerResponse> cityRoutes(CityService cityService) {
         return route(POST("/api/admin/cities"), request -> createCity(request, cityService))
-                .andRoute(GET("/api/user/cities"), request -> getAllCities(cityService))
+                .andRoute(GET("/api/user/{idCountry}/cities"), request -> getCitiesFromCountry(request, cityService))
                 .andRoute(GET("/api/user/cities/{id}"), request -> getCityById(request, cityService));
                 
     }
@@ -37,8 +37,9 @@ public class CityRouter {
                         ServerResponse.status(e.getStatusCode()).bodyValue(e.getMessage()));
     }
 
-    private Mono<ServerResponse> getAllCities(CityService cityService) {
-        return ServerResponse.ok().body(cityService.getAllCities(), CityEntity.class);
+    private Mono<ServerResponse> getCitiesFromCountry(ServerRequest request, CityService cityService) {
+        UUID idCountry = UUID.fromString(request.pathVariable("idCountry"));
+        return ServerResponse.ok().bodyValue(cityService.getAllCitiesFromCountry(idCountry));
     }
 
     private Mono<ServerResponse> getCityById(ServerRequest request, CityService cityService) {

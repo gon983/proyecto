@@ -22,8 +22,8 @@ public class CityService {
         this.cityRepository = cityRepository;
     }
 
-    public Flux<CityEntity> getAllCities() {
-        return cityRepository.findAll();
+    public Flux<CityEntity> getAllCitiesFromCountry(UUID idCountry) {
+        return cityRepository.findByCountryId(idCountry);
     }
 
     public Mono<CityEntity> getCityById(UUID id) {
