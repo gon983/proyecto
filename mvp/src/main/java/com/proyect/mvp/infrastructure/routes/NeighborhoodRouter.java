@@ -38,7 +38,7 @@ public class NeighborhoodRouter {
 
     private Mono<ServerResponse> getAllNeighborhoodsFromLocality(ServerRequest request, NeighborhoodService neighborhoodService) {
         UUID idLocality = UUID.fromString(request.pathVariable("idLocality"));
-        return ServerResponse.ok().bodyValue(neighborhoodService.getAllNeighborhoodsFromLocality(idLocality));
+        return ServerResponse.ok().body(neighborhoodService.getAllNeighborhoodsFromLocality(idLocality), NeighborhoodEntity.class);
     }
 
     private Mono<ServerResponse> getNeighborhoodById(ServerRequest request, NeighborhoodService neighborhoodService) {

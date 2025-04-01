@@ -38,7 +38,7 @@ public class LocalityRouter {
 
     private Mono<ServerResponse> getAllLocalitiesFromCity(ServerRequest request, LocalityService localityService) {
         UUID idCity = UUID.fromString(request.pathVariable("idCity"));
-        return ServerResponse.ok().body(localityService.getAllLocalitiesFromCity(), LocalityEntity.class);
+        return ServerResponse.ok().body(localityService.getAllLocalitiesFromCity(idCity), LocalityEntity.class);
     }
 
     private Mono<ServerResponse> getLocalityById(ServerRequest request, LocalityService localityService) {

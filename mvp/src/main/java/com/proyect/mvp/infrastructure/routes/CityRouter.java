@@ -39,7 +39,7 @@ public class CityRouter {
 
     private Mono<ServerResponse> getCitiesFromCountry(ServerRequest request, CityService cityService) {
         UUID idCountry = UUID.fromString(request.pathVariable("idCountry"));
-        return ServerResponse.ok().bodyValue(cityService.getAllCitiesFromCountry(idCountry));
+        return ServerResponse.ok().body(cityService.getAllCitiesFromCountry(idCountry), CityEntity.class);
     }
 
     private Mono<ServerResponse> getCityById(ServerRequest request, CityService cityService) {
