@@ -15,11 +15,11 @@ import com.proyect.mvp.application.dtos.requests.ProductsPayedDTO;
 import com.proyect.mvp.application.dtos.response.CollectionPointSalesDTO;
 import com.proyect.mvp.application.dtos.response.JustPayedSalesDto;
 import com.proyect.mvp.application.dtos.response.SaleSummaryDTO;
-import com.proyect.mvp.domain.model.entities.DefaultProductxCollectionPointxWeekEntity;
+
 import com.proyect.mvp.domain.model.entities.PurchaseDetailEntity;
 import com.proyect.mvp.domain.model.entities.PurchaseDetailStateEntity;
 
-import com.proyect.mvp.domain.repository.ONGRepository;
+
 import com.proyect.mvp.domain.repository.PurchaseDetailRepository;
 
 import reactor.core.publisher.Flux;
@@ -28,16 +28,16 @@ import reactor.core.publisher.Mono;
 @Service
 public class PurchaseDetailService {
 
-    private final ONGRepository ONGRepository;
+
     private final PurchaseDetailRepository purchaseDetailRepository;
     private final PurchaseDetailStateService purchaseDetailStateService;
     private final ProductService productService;
 
-    public PurchaseDetailService(PurchaseDetailRepository purchaseDetailRepository, PurchaseDetailStateService purchaseDetailStateService, ProductService productService, ONGRepository ONGRepository) {
+    public PurchaseDetailService(PurchaseDetailRepository purchaseDetailRepository, PurchaseDetailStateService purchaseDetailStateService, ProductService productService) {
         this.purchaseDetailRepository = purchaseDetailRepository;
         this.purchaseDetailStateService = purchaseDetailStateService;
         this.productService = productService;
-        this.ONGRepository = ONGRepository;
+    
     }
 
     public Mono<PurchaseDetailEntity> createPurchaseDetail(UUID fkBuyer, UUID fkCollectionPoint, UUID fkPurchase, PurchaseDetailCreateDTO purchaseDetailDto){
@@ -90,40 +90,13 @@ public class PurchaseDetailService {
         return purchaseDetailRepository.save(detail);
     }
 
-    public Mono<List<DefaultProductxCollectionPointxWeekEntity>> filterDpCpByPurchase(UUID idPurchase, List<DefaultProductxCollectionPointxWeekEntity> dpcpList) {
-    return this.getDetailsFromPurchase(idPurchase)
-            .collectList()
-            .map(listdetails -> {
-                // Extraer todos los IDs de productos de los detalles para comparación más rápida
-                Set<UUID> productIds = listdetails.stream()
-                    .map(PurchaseDetailEntity::getFkProduct)
-                    .collect(Collectors.toSet());
-                
-                // Filtrar la lista original basado en si el producto está en el conjunto
-                return dpcpList.stream()
-                    .filter(dpcp -> productIds.contains(dpcp.getFkProduct()))
-                    .collect(Collectors.toList());
-            });
  
-}
+ 
 
-    public Mono<List<CollectionPointSalesDTO>> obtenerVentasProductorPorCollectionPoint(UUID idProductor) {
-    return productService.getCollectionsPointsThatCouldSellTheProduct(idProductor)
+
+   
         
-                // Para cada punto, obtenemos las ventas y creamos el DTO
-                .flatMap(collectionPoint -> {
-                    return getSalesSummary(collectionPoint.getIdCollectionPoint(), idProductor)
-                        .map(salesList -> {
-                            return CollectionPointSalesDTO.builder()
-                                    .collectionPoint(collectionPoint)
-                                    .sales(salesList)
-                                    .build();
-                        });
-                })
-                // Combinamos todos los resultados en una lista
-                .collectList();
-        
-}
+
 
 public Mono<CollectionPointSalesDTO> obtenerVentasProductorDeCollectionPoint(UUID idProductor, UUID idCollectionPoint) {
     return getSalesSummary(idCollectionPoint, idProductor)

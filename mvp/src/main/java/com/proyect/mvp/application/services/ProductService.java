@@ -3,7 +3,6 @@ package com.proyect.mvp.application.services;
 
 import com.proyect.mvp.application.dtos.create.ProductCreateDTO;
 import com.proyect.mvp.application.dtos.update.ProductUpdateDTO;
-import com.proyect.mvp.domain.model.entities.CollectionPointEntity;
 import com.proyect.mvp.domain.model.entities.NeighborhoodEntity;
 import com.proyect.mvp.domain.model.entities.ProductEntity;
 import com.proyect.mvp.domain.repository.ProductRepository;
@@ -23,13 +22,13 @@ public class ProductService {
    
     private final UserService userService;
     private final NeighborhoodService neighborhoodService;
-    private final CollectionPointService collectionPointService;
 
-    public ProductService(ProductRepository productRepository, UserService userService, NeighborhoodService neighborhoodService, CollectionPointService collectionPointService) {
+
+    public ProductService(ProductRepository productRepository, UserService userService, NeighborhoodService neighborhoodService) {
         this.productRepository = productRepository;
         this.neighborhoodService = neighborhoodService;
         this.userService = userService;
-        this.collectionPointService = collectionPointService;
+   
     }
 
 
@@ -104,14 +103,5 @@ public class ProductService {
     }
 
 
-        public Flux<CollectionPointEntity> getCollectionsPointsThatCouldSellTheProduct(UUID idProducer){
-            return  getProductsByProducer(idProducer)
-                            .collectList() 
-                            .flatMapMany(productList ->{ 
-                                return getLocalitiesWhereProducerSell(productList)
-                                                .flatMap(idLocality -> getNeighboordsThatCouldBuyTheProduct(idLocality))
-                                                .flatMap(neighborhood -> Flux.from(collectionPointService.getCollectionPointByFkNeighborhood(neighborhood.getIdNeighborhood())));});
-                            
-                            
-        }
+    
 }

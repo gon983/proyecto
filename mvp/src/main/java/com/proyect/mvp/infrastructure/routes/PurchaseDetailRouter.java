@@ -24,7 +24,6 @@ public class PurchaseDetailRouter {
     @Bean
     public RouterFunction<ServerResponse> purchaseDetailRoutes(PurchaseDetailService purchaseDetailService){
         return route(POST("/api/user/purchases/details/{purchaseId}/{idCollectionPoint}/{idUser}"), request-> createPurchaseDetail(request, purchaseDetailService))
-        .andRoute(GET("/api/user/salesProductor/{idProductor}"), request -> obtenerVentasProductorSinAbonar(request, purchaseDetailService))
         .andRoute(GET("/api/user/salesProductor/{idProductor}/{idCollectionPoint}"), request -> obtenerVentasCollectionPointDeProductorSinAbonar(request, purchaseDetailService))
         .andRoute(POST("/api/admin/registerPaymentSales/{idProductor}/{idCollectionPoint}"), request -> registrarPagoVentasCollectionPointDeProductor(request, purchaseDetailService))
         .andRoute(GET("/api/user/neighborhoodPackage/{idCollectionPoint}"), request -> obtenerTodasLasVentasConfirmadasOPagadasDeUnCpSumarizadasPorStandarProduct(request, purchaseDetailService));
@@ -41,12 +40,8 @@ public class PurchaseDetailRouter {
                         .flatMap(savedPurchaseDetail -> ServerResponse.ok().bodyValue(savedPurchaseDetail));
     }
 
-    private Mono<ServerResponse> obtenerVentasProductorSinAbonar(ServerRequest request, PurchaseDetailService saleService ){
-        UUID idProductor = UUID.fromString(request.pathVariable("idProductor"));
-        return saleService.obtenerVentasProductorPorCollectionPoint(idProductor)
-                            .flatMap(sales -> ServerResponse.ok().bodyValue(sales));
-        
-    }
+   
+    
     
     private Mono<ServerResponse> obtenerVentasCollectionPointDeProductorSinAbonar(ServerRequest request, PurchaseDetailService saleService ){
         UUID idProductor = UUID.fromString(request.pathVariable("idProductor"));
