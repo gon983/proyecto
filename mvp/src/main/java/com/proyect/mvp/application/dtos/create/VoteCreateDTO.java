@@ -9,7 +9,7 @@ import lombok.Getter;
 public class VoteCreateDTO {
     private UUID fkProduct;
     private String comment;
-    private UUID fkDefaultProductCollectionPointWeek;
+  
     private int calification;
     
 }

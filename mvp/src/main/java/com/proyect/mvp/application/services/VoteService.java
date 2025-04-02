@@ -39,7 +39,6 @@ public class VoteService {
                                     .fkProduct(voteDto.getFkProduct())
                                     .comment(voteDto.getComment())
                                     .fkUser(fkUser)
-                                    .fkDefaultProductCollectionPointWeek(voteDto.getFkDefaultProductCollectionPointWeek())
                                     .date(OffsetDateTime.now())
                                     .calification(voteDto.getCalification())
                                     .build();
