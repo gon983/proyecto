@@ -25,10 +25,10 @@ public class ProductRouter {
     
     @Bean
     public RouterFunction<ServerResponse> productRoutes(ProductService productService, UserContextService userContext) {
-        return route(GET("/api/user/products"), request -> getProductsByProducer(request, productService, userContext))
-                .andRoute(POST("/api/productor/products"), request -> createProduct(request, productService))
+        return route(GET("/api/user/products/productor"), request -> getProductsByProducer(request, productService, userContext))
+                .andRoute(POST("/api/admin/products"), request -> createProduct(request, productService))
                 .andRoute(PUT("/api/productor/products/{idProduct}"), request -> updateProduct(request, productService))
-                .andRoute(GET("/api/user/products"), request -> getAllProducts(request, productService))
+                .andRoute(GET("/api/public/products"), request -> getAllProductsFilterByName(request, productService))
                 .andRoute(GET("/api/user/optionsForStandarProduct/{idStandarProduct}"), request -> getOptionsForStandarProduct(request, productService, userContext));
     }
 
@@ -50,9 +50,12 @@ public class ProductRouter {
                 .flatMap(product -> ServerResponse.ok().bodyValue(product));
     }
 
-    private Mono<ServerResponse> getAllProducts(ServerRequest request, ProductService productService) {
-        return ServerResponse.ok().body(productService.getAllProducts(), ProductEntity.class);
-    }
+    private Mono<ServerResponse> getAllProductsFilterByName(ServerRequest request, ProductService productService) {
+        return request.queryParam("name")
+        .map(name -> ServerResponse.ok().body(productService.getAllProductsFilterByName(name), ProductEntity.class))
+        .orElseGet(() -> ServerResponse.ok().body(productService.getAllProducts(), ProductEntity.class));
+}
+    
 
     private Mono<ServerResponse> getOptionsForStandarProduct(ServerRequest request, ProductService productService, UserContextService userContext){
         UUID idStandarProduct = UUID.fromString(request.pathVariable("idStandarProduct"));

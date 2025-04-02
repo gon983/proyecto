@@ -33,9 +33,13 @@ public class ProductService {
 
 
 
+    public Flux<ProductEntity> getAllProductsFilterByName(String name) {
+        return productRepository.findAllFilterByName(name);
+    }
     public Flux<ProductEntity> getAllProducts() {
         return productRepository.findAll();
     }
+
 
     public Flux<ProductEntity> getProductsByProducer(UUID fkProductor) {
         return productRepository.findByFkProductor(fkProductor);

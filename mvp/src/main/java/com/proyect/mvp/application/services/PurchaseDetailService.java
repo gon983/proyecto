@@ -138,21 +138,12 @@ public class PurchaseDetailService {
     
     
     
-}
+// }
 
 
 
 
-public Mono<CollectionPointSalesDTO> obtenerTodasLasVentasConfirmadasOPagadasDeUnCpSumarizadasPorProduct(UUID idCollectionPoint){
-    return getSalesSummary(idCollectionPoint)
-                          .map(sales -> {
-                            CollectionPointSalesDTO dto = CollectionPointSalesDTO.builder() 
-                                                                                 .sales(sales)
-                                                                                 .build();
-                            return dto;
-                          });
 
-}
 
 
     

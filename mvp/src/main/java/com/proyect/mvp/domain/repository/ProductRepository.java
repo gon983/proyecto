@@ -23,4 +23,7 @@ public interface ProductRepository extends R2dbcRepository<ProductEntity, UUID> 
     Mono<ProductEntity> findById(UUID id); // Para el método update alternativo
 
     Flux<ProductEntity> findByFkStandarProductAndFkLocality(UUID fkStandarProduct, UUID fkLocality);
+
+    @Query("SELECT * FROM products WHERE LOWER(name) LIKE LOWER(:name)")
+    Flux<ProductEntity> findAllFilterByName(String name);
 }
