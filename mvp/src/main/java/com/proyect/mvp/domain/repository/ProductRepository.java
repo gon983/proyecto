@@ -25,5 +25,5 @@ public interface ProductRepository extends R2dbcRepository<ProductEntity, UUID> 
     Flux<ProductEntity> findByFkStandarProductAndFkLocality(UUID fkStandarProduct, UUID fkLocality);
 
     @Query("SELECT * FROM products WHERE LOWER(name) LIKE LOWER(:name)")
-    Flux<ProductEntity> findAllFilterByName(String name);
+    Flux<ProductEntity> findAllFilterByName(@Param("name") String name);
 }
