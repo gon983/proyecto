@@ -64,10 +64,9 @@ public class ProductService {
                 .alertStock(productDTO.getAlertStock())
                 .photo(productDTO.getPhoto())
                 .unitMeasurement(productDTO.getUnitMeasurement())
-                .fkProductor(productDTO.getFkProductor())
+                
                 .unity_price(productDTO.getUnity_price())
-                .fkLocality(productDTO.getFkLocality())
-                .fkStandarProduct(productDTO.getFkStandarProduct())
+                
                 .build();
         
         return productRepository.save(product);
@@ -85,7 +84,7 @@ public class ProductService {
                             .alertStock(productDTO.getAlertStock())
                             .photo(productDTO.getPhoto())
                             .unitMeasurement(productDTO.getUnitMeasurement())
-                            .fkProductor(existingProduct.getFkProductor())
+                            
                             .build();
                     return productRepository.save(newProduct);
                 });
@@ -96,15 +95,8 @@ public class ProductService {
                            .flatMapMany(locality -> productRepository.findByFkStandarProductAndFkLocality(fkStandarProduct, locality));
     } 
 
-    public Flux<NeighborhoodEntity> getNeighboordsThatCouldBuyTheProduct(UUID idLocality){
-        return neighborhoodService.getNeighborhoodsOfLocality(idLocality);
-    }
-
-    public Flux<UUID> getLocalitiesWhereProducerSell(List<ProductEntity> productList){
-        return Flux.fromStream(productList.stream()
-                          .map(product -> product.getFkLocality())
-                          .distinct());
-    }
+   
+    
 
 
     

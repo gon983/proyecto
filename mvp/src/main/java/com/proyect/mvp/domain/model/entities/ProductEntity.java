@@ -42,15 +42,11 @@ public class ProductEntity {
     @Column("unit_measurement")
     private String unitMeasurement;
 
-    @Column("fk_productor") // Use @Column for FK
-    private UUID fkProductor; // Use UUID
+   
     
     
     private Double unity_price;
-    @Column("fk_locality")
-    private UUID fkLocality;
-    @Column("fk_standar_product")
-    private UUID fkStandarProduct;
+  
 
     
 
