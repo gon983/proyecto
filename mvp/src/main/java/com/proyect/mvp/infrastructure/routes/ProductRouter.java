@@ -28,7 +28,7 @@ public class ProductRouter {
         return route(GET("/api/user/products/productor"), request -> getProductsByProducer(request, productService, userContext))
                 .andRoute(POST("/api/admin/products"), request -> createProduct(request, productService))
                 .andRoute(PUT("/api/productor/products/{idProduct}"), request -> updateProduct(request, productService))
-                .andRoute(GET("/api/public/products"), request -> getAllProductsFilterByName(request, productService))
+                .andRoute(GET("/public/products"), request -> getAllProductsFilterByName(request, productService))
                 .andRoute(GET("/api/user/optionsForStandarProduct/{idStandarProduct}"), request -> getOptionsForStandarProduct(request, productService, userContext));
     }
 
