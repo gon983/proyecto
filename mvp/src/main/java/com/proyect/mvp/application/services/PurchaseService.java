@@ -455,5 +455,29 @@ public class PurchaseService {
                 })
                 .collectList();
     }  
+
+
+    public Mono<PurchaseEntity> getUserActiveCart(UUID userId) {
+        return purchaseStateService.findByName("pending")
+            .flatMap(pendingState -> 
+                purchaseRepository.findByFkUserAndFkCurrentState(userId, pendingState.getIdPurchaseState())
+                    .switchIfEmpty(
+                        // Si no existe un carrito pendiente, crear uno nuevo
+                        Mono.defer(() -> {
+                            PurchaseCreateDTO newCartDto = new PurchaseCreateDTO();
+                            newCartDto.setFkUser(userId);
+                            return createPurchase(newCartDto);
+                        })
+                    )
+            )
+            .flatMap(purchase -> 
+                purchaseDetailService.getDetailsFromPurchaseWithProducts(purchase.getIdPurchase())
+                    .collectList()
+                    .map(details -> {
+                        purchase.addDetails(details);
+                        return purchase;
+                    })
+            );
+    }
     
 }

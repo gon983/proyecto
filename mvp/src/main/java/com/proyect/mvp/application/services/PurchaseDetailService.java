@@ -15,7 +15,7 @@ import com.proyect.mvp.application.dtos.requests.ProductsPayedDTO;
 
 import com.proyect.mvp.application.dtos.response.JustPayedSalesDto;
 import com.proyect.mvp.application.dtos.response.SaleSummaryDTO;
-
+import com.proyect.mvp.application.dtos.update.PurchaseDetailUpdateDTO;
 import com.proyect.mvp.domain.model.entities.PurchaseDetailEntity;
 import com.proyect.mvp.domain.model.entities.PurchaseDetailStateEntity;
 
@@ -54,7 +54,7 @@ public class PurchaseDetailService {
                                                                 .unitPrice(purchaseDetailDto.getUnitPrice())
                                                                 .fkState(purchaseState.getIdPurchaseDetailState())
                                                                 .fkBuyer(fkBuyer)
-                                                                .fkProductor(purchaseDetailDto.getFkProductor())
+                                                                
                                 
                                                                 .build();
         return purchaseDetailRepository.save(purchaseDetail)
@@ -87,6 +87,21 @@ public class PurchaseDetailService {
 
     public Mono<PurchaseDetailEntity> save(PurchaseDetailEntity detail) {
         return purchaseDetailRepository.save(detail);
+    }
+    
+    public Mono<PurchaseDetailEntity> updatePurchaseDetail(UUID detailId, PurchaseDetailUpdateDTO updateDto) {
+        return purchaseDetailRepository.findByIdPurchaseDetail(detailId)
+            .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "Detalle no encontrado")))
+            .flatMap(detail -> {
+                detail.setQuantity(updateDto.getQuantity());
+                // Recalcular precios si es necesario
+                return purchaseDetailRepository.save(detail);
+            })
+            .flatMap(detail -> productService.getProductById(detail.getFkProduct())
+                    .map(product -> {
+                        detail.addProduct(product);
+                        return detail;
+                    }));
     }
 
  

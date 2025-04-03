@@ -13,6 +13,7 @@ import static org.springframework.web.reactive.function.server.RequestPredicates
 
 import com.proyect.mvp.application.dtos.create.PurchaseDetailCreateDTO;
 import com.proyect.mvp.application.dtos.requests.ProductsPayedDTO;
+import com.proyect.mvp.application.dtos.update.PurchaseDetailUpdateDTO;
 import com.proyect.mvp.application.services.PurchaseDetailService;
 
 
@@ -23,7 +24,8 @@ public class PurchaseDetailRouter {
 
     @Bean
     public RouterFunction<ServerResponse> purchaseDetailRoutes(PurchaseDetailService purchaseDetailService){
-        return route(POST("/api/user/purchases/details/{purchaseId}"), request-> createPurchaseDetail(request, purchaseDetailService));
+        return route(POST("/api/user/purchases/details/{purchaseId}"), request-> createPurchaseDetail(request, purchaseDetailService))
+        .andRoute(PUT("/api/user/purchases/details/{detailId}"), request -> updatePurchaseDetail(request, purchaseDetailService));
 
 
     }
@@ -36,6 +38,12 @@ public class PurchaseDetailRouter {
                         .flatMap(savedPurchaseDetail -> ServerResponse.ok().bodyValue(savedPurchaseDetail));
     }
 
+    private Mono<ServerResponse> updatePurchaseDetail(ServerRequest request, PurchaseDetailService purchaseDetailService) {
+        UUID detailId = UUID.fromString(request.pathVariable("detailId"));
+        return request.bodyToMono(PurchaseDetailUpdateDTO.class)
+                    .flatMap(updateDto -> purchaseDetailService.updatePurchaseDetail(detailId, updateDto))
+                    .flatMap(updatedDetail -> ServerResponse.ok().bodyValue(updatedDetail));
+    }
    
     
 

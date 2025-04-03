@@ -46,10 +46,7 @@ public class PurchaseDetailEntity {
     private LocalDateTime updatedAt;
     @Column("fk_buyer")
     private UUID fkBuyer;
-    @Column("fk_productor")
-    private UUID fkProductor;
-    @Column("fk_collection_point")
-    private UUID fkCollectionPoint;
+    
 
     
     public void addProduct(ProductEntity productEntity){
@@ -67,6 +64,10 @@ public class PurchaseDetailEntity {
     public void setFkPurchase(UUID idPurchase){
         this.fkPurchase = idPurchase;
     }
+
+    public void setQuantity(double quantity){
+        this.quantity = quantity;
+    };
 
     @Override
     public String toString(){

@@ -32,7 +32,9 @@ public class PurchaseRouter {
                 .andRoute(POST("/api/user/confirmPurchase/{idPurchase}"), request -> confirmPurchase(request, purchaseService))
                 .andRoute(POST("/confirmPayment"), request ->  confirmPurchaseMiddleware.validate(request)
                                                                         .flatMap(valid -> valid ? confirmPayment(request, purchaseService) : ServerResponse.status(401).build()))
-                .andRoute(POST("/api/user/receivePurchase/{idPurchase}"), request -> receivePurchase(request, purchaseService));
+                .andRoute(POST("/api/user/receivePurchase/{idPurchase}"), request -> receivePurchase(request, purchaseService))
+                // Añadir esta ruta en el método purchaseRoutes
+                .andRoute(GET("/api/user/cart"), request -> getActiveCart(request, purchaseService));
     }
 
     private Mono<ServerResponse> createPurchase(ServerRequest request, PurchaseService purchaseService) {
@@ -102,6 +104,14 @@ public class PurchaseRouter {
                       .flatMap(purchase-> purchaseService.receivePurchase(idPurchase, purchase))
                       .flatMap(details-> ServerResponse.ok().bodyValue(details));
 
+    }
+
+    private Mono<ServerResponse> getActiveCart(ServerRequest request, PurchaseService purchaseService) {
+        // Extraer el ID del usuario del token o parámetro
+        UUID userId = UUID.fromString(request.queryParam("userId").orElseThrow());
+        return purchaseService.getUserActiveCart(userId)
+                .flatMap(cart -> ServerResponse.ok().bodyValue(cart))
+                .switchIfEmpty(ServerResponse.notFound().build());
     }
     
 }
