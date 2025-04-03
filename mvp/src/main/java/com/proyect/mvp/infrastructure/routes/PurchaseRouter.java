@@ -15,7 +15,9 @@ import com.proyect.mvp.application.dtos.create.PurchaseCreateDTO;
 import com.proyect.mvp.application.dtos.other.MercadoPagoNotificationDTO;
 import com.proyect.mvp.application.dtos.requests.ReceivePurchaseDTO;
 import com.proyect.mvp.application.services.PurchaseService;
+import com.proyect.mvp.domain.model.entities.PurchaseEntity;
 import com.proyect.mvp.infrastructure.config.middlewares.ConfirmPurchaseMiddleware;
+import com.proyect.mvp.infrastructure.security.UserContextService;
 
 import reactor.core.publisher.Mono;
 
@@ -26,22 +28,17 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 public class PurchaseRouter {
 
     @Bean
-    public RouterFunction<ServerResponse> purchaseRoutes(PurchaseService purchaseService, ConfirmPurchaseMiddleware confirmPurchaseMiddleware) {
-        return route(POST("/api/user/purchases"), request -> createPurchase(request, purchaseService))
-                .andRoute(GET("/api/user/purchases/{idPurchase}"), request -> getPurchaseWithDetails(request, purchaseService))
+    public RouterFunction<ServerResponse> purchaseRoutes(PurchaseService purchaseService, ConfirmPurchaseMiddleware confirmPurchaseMiddleware, UserContextService userContext) {
+        return route(GET("/api/user/purchases/{idPurchase}"), request -> getPurchaseWithDetails(request, purchaseService))
                 .andRoute(POST("/api/user/confirmPurchase/{idPurchase}"), request -> confirmPurchase(request, purchaseService))
                 .andRoute(POST("/confirmPayment"), request ->  confirmPurchaseMiddleware.validate(request)
                                                                         .flatMap(valid -> valid ? confirmPayment(request, purchaseService) : ServerResponse.status(401).build()))
                 .andRoute(POST("/api/user/receivePurchase/{idPurchase}"), request -> receivePurchase(request, purchaseService))
                 // Añadir esta ruta en el método purchaseRoutes
-                .andRoute(GET("/api/user/cart"), request -> getActiveCart(request, purchaseService));
+                .andRoute(GET("/api/user/cart"), request -> getActiveCart(request, purchaseService, userContext));
     }
 
-    private Mono<ServerResponse> createPurchase(ServerRequest request, PurchaseService purchaseService) {
-        return request.bodyToMono(PurchaseCreateDTO.class)
-                .flatMap(purchase -> purchaseService.createPurchase(purchase))
-                .flatMap(savedPurchase -> ServerResponse.ok().bodyValue(savedPurchase));
-    }
+    
 
     private Mono<ServerResponse> getPurchaseWithDetails(ServerRequest request, PurchaseService purchaseService) {
         UUID idPurchase = UUID.fromString(request.pathVariable("idPurchase"));
@@ -106,12 +103,14 @@ public class PurchaseRouter {
 
     }
 
-    private Mono<ServerResponse> getActiveCart(ServerRequest request, PurchaseService purchaseService) {
+    private Mono<ServerResponse> getActiveCart(ServerRequest request, PurchaseService purchaseService, UserContextService userContext) {
         // Extraer el ID del usuario del token o parámetro
-        UUID userId = UUID.fromString(request.queryParam("userId").orElseThrow());
-        return purchaseService.getUserActiveCart(userId)
-                .flatMap(cart -> ServerResponse.ok().bodyValue(cart))
-                .switchIfEmpty(ServerResponse.notFound().build());
+        
+        return userContext.getCurrentIdUser()
+                .flatMap(idUser -> {
+                    return purchaseService.getUserActiveCart(UUID.fromString(idUser))
+                                            .flatMap(cart -> ServerResponse.ok().body(cart, PurchaseEntity.class))
+                                            .switchIfEmpty(ServerResponse.notFound().build());});
     }
     
 }
