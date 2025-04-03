@@ -18,17 +18,9 @@ public interface PurchaseDetailRepository extends R2dbcRepository<PurchaseDetail
 
     Mono<PurchaseDetailEntity> findByIdPurchaseDetail(UUID id);
 
-    @Query("SELECT * from purchase_detail where fk_collection_point = :collectionPoint and fk_productor = :fk_productor and fk_state = :fk_current_state") 
-    Flux<PurchaseDetailEntity> getSalesConfirmedForCollectionPointAndProducer(@Param("collectionPoint") UUID collectionPoint, @Param("fk_productor") UUID fkProducer, @Param("fk_current_state") UUID fk_current_state);
 
-    @Query("SELECT * from purchase_detail where fk_collection_point = :collectionPoint and fk_productor = :fk_productor and fk_state = :fk_current_state and fk_product = :fk_product") 
-    Flux<PurchaseDetailEntity> getSalesConfirmedForProductAndCollectionPointAndProducer(@Param("collectionPoint") UUID collectionPoint, 
-                                                                                @Param("fk_productor") UUID fkProducer, 
-                                                                                @Param("fk_current_state") UUID fk_current_state,
-                                                                                @Param("fk_product") UUID fkProduct);
+    
 
-    @Query("SELECT * from purchase_detail where fk_collection_point = :collectionPoint and  (fk_state = :fk_stateA OR fk_state = :fk_stateB)") 
-    Flux<PurchaseDetailEntity> getSalesConfirmedOrPayedForCollectionPoint(@Param("collectionPoint") UUID collectionPoint, @Param("fk_stateA") UUID fkStateA, @Param("fk_stateB") UUID fkStateB);
     
 
 }

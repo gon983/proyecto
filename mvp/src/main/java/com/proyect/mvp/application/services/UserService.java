@@ -100,9 +100,7 @@ public class UserService {
                             .flatMap(productor-> Mono.just(productor.getRefreshProductorToken()));
     }
 
-    public Mono<Void> updateProducerMpTokens(UUID productorId,String newAccessToken,String newRefreshToken){
-        return userRepository.updateProducerMpTokens(productorId, newAccessToken, newRefreshToken);
-    }
+    
 
     public Mono<Void> register(UserAuthenticationDTO credentialsUser){
         return userRepository.updatePassword(credentialsUser.getEmail(), encoder.encode(credentialsUser.getPassword()));
