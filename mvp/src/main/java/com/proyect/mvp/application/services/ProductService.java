@@ -41,10 +41,7 @@ public class ProductService {
     }
 
 
-    public Flux<ProductEntity> getProductsByProducer(UUID fkProductor) {
-        return productRepository.findByFkProductor(fkProductor);
-    }
-
+ 
     
 
     public Mono<ProductEntity> getProductById(UUID id){
@@ -90,10 +87,7 @@ public class ProductService {
                 });
     }
 
-    public Flux<ProductEntity> getOptionsForStandarProduct(UUID fkStandarProduct, UUID idUser){
-        return userService.getLocality(idUser)
-                           .flatMapMany(locality -> productRepository.findByFkStandarProductAndFkLocality(fkStandarProduct, locality));
-    } 
+   
 
    
     

@@ -31,11 +31,7 @@ public class PurchaseEntity {
     @Column("amount")
     private double amount;
 
-    @Column("fk_neighborhood_package")
-    private UUID fkNeighborhoodPackage;
 
-    @Column("fk_payment_method")
-    private UUID fkPaymentMethod;
 
     @Column("created_at")
     private LocalDateTime createdAt;
@@ -43,8 +39,6 @@ public class PurchaseEntity {
     @Column("updated_at")
     private LocalDateTime updatedAt;
 
-    @Column("level")
-    private String level;
 
     @Transient
     private List<PurchaseDetailEntity> details;
@@ -91,25 +85,6 @@ public class PurchaseEntity {
         this.mpPaymentDate = paymentDate;
     }
 
-    @Override
-    public String toString() {
-        return "PurchaseEntity{" +
-                "idPurchase=" + idPurchase +
-                ", fkUser=" + fkUser +
-                ", amount=" + amount +
-                ", fkNeighborhoodPackage=" + fkNeighborhoodPackage +
-                ", fkPaymentMethod=" + fkPaymentMethod +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                ", level='" + level + '\'' +
-                ", fkCurrentState=" + fkCurrentState +
-                ", mpPreferenceId='" + mpPreferenceId + '\'' +
-                ", mpPaymentId='" + mpPaymentId + '\'' +
-                ", mpPaymentDate=" + mpPaymentDate +
-                ", externalReference='" + externalReference + '\'' +
-                ", details=" + (details != null ? details.toString() : "null") +
-                '}';
-    }
 
     
 

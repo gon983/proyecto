@@ -15,14 +15,13 @@ import java.util.UUID;
 @Repository
 public interface ProductRepository extends R2dbcRepository<ProductEntity, UUID> {
 
-    Flux<ProductEntity> findByFkProductor(UUID fkProductor);
+
 
     @Query("UPDATE product SET stock = $2 WHERE id_product = $1")
     Mono<Void> updateStock(UUID idProduct, double newStock); 
 
     Mono<ProductEntity> findById(UUID id); // Para el método update alternativo
 
-    Flux<ProductEntity> findByFkStandarProductAndFkLocality(UUID fkStandarProduct, UUID fkLocality);
 
     @Query("SELECT * FROM product WHERE LOWER(name) LIKE LOWER('%' || :name || '%')")
     Flux<ProductEntity> findAllFilterByName(@Param("name") String name);

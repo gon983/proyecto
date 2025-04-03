@@ -98,7 +98,6 @@ public class PurchaseService {
             .flatMap(purchaseState -> { 
                 PurchaseEntity purchase = PurchaseEntity.builder()
                     .fkUser(purchaseDto.getFkUser())
-                    .level(purchaseDto.getLevel())
                     .createdAt(LocalDateTime.now())
                     .fkCurrentState(purchaseState.getIdPurchaseState()) // Asignar estado encontrado
                     .build();

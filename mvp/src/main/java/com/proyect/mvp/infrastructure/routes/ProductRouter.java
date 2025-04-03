@@ -25,18 +25,11 @@ public class ProductRouter {
     
     @Bean
     public RouterFunction<ServerResponse> productRoutes(ProductService productService, UserContextService userContext) {
-        return route(GET("/api/user/products/productor"), request -> getProductsByProducer(request, productService, userContext))
-                .andRoute(POST("/api/admin/products"), request -> createProduct(request, productService))
+        return route(POST("/api/admin/products"), request -> createProduct(request, productService))
                 
-                .andRoute(GET("/public/products"), request -> getAllProductsFilterByName(request, productService))
-                .andRoute(GET("/api/user/optionsForStandarProduct/{idStandarProduct}"), request -> getOptionsForStandarProduct(request, productService, userContext));
+                .andRoute(GET("/public/products"), request -> getAllProductsFilterByName(request, productService));
     }
 
-    private Mono<ServerResponse> getProductsByProducer(ServerRequest request, ProductService productService, UserContextService userContext) {
-        return userContext.getCurrentIdUser()
-                    .flatMap(idProducer -> ServerResponse.ok().body(productService.getProductsByProducer(UUID.fromString(idProducer)), ProductEntity.class));
-         
-    }
 
     private Mono<ServerResponse> createProduct(ServerRequest request, ProductService productService) {
         return request.bodyToMono(ProductCreateDTO.class)
@@ -53,14 +46,7 @@ public class ProductRouter {
 }
     
 
-    private Mono<ServerResponse> getOptionsForStandarProduct(ServerRequest request, ProductService productService, UserContextService userContext){
-        UUID idStandarProduct = UUID.fromString(request.pathVariable("idStandarProduct"));
-        return userContext.getCurrentIdUser()
-                          .flatMap(idUser ->
-        productService.getOptionsForStandarProduct(idStandarProduct, UUID.fromString(idUser))
-                            .collectList()
-                            .flatMap(productsList -> ServerResponse.ok().body(Mono.just(productsList), List.class))
-    );                                               
+                                               
 
-    }
+    
 }
