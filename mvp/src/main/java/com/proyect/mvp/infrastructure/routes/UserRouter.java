@@ -79,6 +79,7 @@ public class UserRouter {
 
         private Mono<ServerResponse> login(ServerRequest request, CustomReactiveAuthenticationManager authenticationManager, JsonAuthenticationSuccessHandler successHandler, JsonAuthenticationFailureHandler failureHandler){
         return request.bodyToMono(LoginRequest.class)
+            .doOnNext(dto -> dto.imprimir())
             .switchIfEmpty(Mono.error(new BadCredentialsException("Credentials cannot be empty")))
             .flatMap(loginRequest -> {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(

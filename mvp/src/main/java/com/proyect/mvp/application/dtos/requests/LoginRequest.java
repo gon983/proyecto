@@ -9,4 +9,10 @@ public class LoginRequest {
     String username;
     String password;
     
+
+    public void imprimir(){
+        System.out.println(username);
+        System.out.println(password);
+        
+    }
 }
