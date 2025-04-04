@@ -17,7 +17,7 @@ import reactor.core.publisher.Mono;
 public class CorsConfig {
 
     private static final String[] ALLOWED_ORIGINS = {
-            "http://localhost:8080"
+            "http://localhost:8080", "http://localhost:3000"
     };
 
     @Bean
