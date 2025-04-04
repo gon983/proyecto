@@ -16,6 +16,10 @@ public class EnvConfigLoader {
         return dotenv.get("ACCESS_TOKEN");
     }
 
+    public static String getSecretKey(){
+        return dotenv.get("SECRET_KEY");
+    }
+
     public static void main(String[] args) {
         System.out.println("Notification URL: " + getNotificationUrl());
         System.out.println("Access Token: " + getAccessToken());

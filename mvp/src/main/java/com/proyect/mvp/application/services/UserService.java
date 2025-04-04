@@ -8,6 +8,7 @@ import com.proyect.mvp.infrastructure.security.UserAuthenticationDTO;
 
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -102,8 +103,15 @@ public class UserService {
 
     
 
-    public Mono<Void> register(UserAuthenticationDTO credentialsUser){
-        return userRepository.updatePassword(credentialsUser.getEmail(), encoder.encode(credentialsUser.getPassword()));
+    public Mono<UserEntity> register(UserAuthenticationDTO dto){
+        UserEntity user = UserEntity.builder()
+                            .username(dto.getUsername())
+                            .email(dto.getEmail())
+                            .role("ROLE_USER")        
+                            .password(dto.getPassword())
+                            .createdAt(LocalDateTime.now())
+                            .build();
+        return userRepository.save(user);
     }
 
 
