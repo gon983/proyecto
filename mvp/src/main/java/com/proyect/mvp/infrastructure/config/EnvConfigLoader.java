@@ -16,8 +16,8 @@ public class EnvConfigLoader {
         return dotenv.get("ACCESS_TOKEN");
     }
 
-    public static String getSecretKey(){
-        return dotenv.get("SECRET_KEY");
+    public static String getSuccessUrl(){
+        return dotenv.get("SUCCESS_REDIRECTION_URL");
     }
 
     public static void main(String[] args) {

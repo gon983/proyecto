@@ -80,7 +80,7 @@ public class PurchaseService {
 
     static String NOTIFICATION_URL = EnvConfigLoader.getNotificationUrl();
     static String ACCESS_TOKEN = EnvConfigLoader.getAccessToken();
-    
+    static String SUCCESS_URL = EnvConfigLoader.getSuccessUrl();
 
     public PurchaseService(PurchaseRepository purchaseRepository, PurchaseStateService purchaseStateService, PurchaseDetailService purchaseDetailService,
      UserService userService,  StockMovementService stockMovementService, PurchaseDetailStateService purchaseDetailStateService) {
@@ -159,7 +159,7 @@ public class PurchaseService {
         System.out.println("Cantidad de detalles recibidos: " + (details != null ? details.size() : "null"));
         
         return userService.getUserById(userId)
-                .doOnNext(user -> System.out.println("Usuario encontrado: " + user.getFirstName() + " " + user.getLastName() + " (ID: " + user.getIdUser() + ")"))
+                .doOnNext(user -> System.out.println("Usuario encontrado: " + user.getUsername()))
                 .doOnError(error -> System.err.println("Error al obtener usuario: " + error.getMessage()))
                 .flatMap(user -> {
                     try {
@@ -209,12 +209,7 @@ public class PurchaseService {
                         PreferencePayerRequest payer = null;
                         try {
                             payer = PreferencePayerRequest.builder()
-                                    .name(user.getFirstName())
-                                    .surname(user.getLastName())
                                     .email(user.getEmail())
-                                    .phone(PhoneRequest.builder().areaCode("54").number(user.getPhone()).build())
-                                    .identification(IdentificationRequest.builder().type(user.getDocumentType()).number(user.getDocumentNumber()).build())
-                                    .address(AddressRequest.builder().streetName("Street").zipCode("06233200").build())
                                     .build();
                             System.out.println("Información del pagador configurada: " + user.getEmail());
                         } catch (Exception e) {
@@ -224,9 +219,7 @@ public class PurchaseService {
                     
                         System.out.println("Configurando URLs de retorno");
                         PreferenceBackUrlsRequest backUrls = PreferenceBackUrlsRequest.builder()
-                                .success("https://www.success.com")
-                                .failure("http://www.failure.com")
-                                .pending("http://www.pending.com")
+                                .success(SUCCESS_URL)
                                 .build();
                     
                         System.out.println("Configurando métodos de pago");
