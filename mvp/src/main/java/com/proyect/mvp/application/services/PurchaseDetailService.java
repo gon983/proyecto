@@ -113,19 +113,8 @@ public class PurchaseDetailService {
 
     }
     
-    public Mono<PurchaseDetailEntity> updatePurchaseDetail(UUID detailId, PurchaseDetailUpdateDTO updateDto) {
-        return purchaseDetailRepository.findByIdPurchaseDetail(detailId)
-            .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "Detalle no encontrado")))
-            .flatMap(detail -> {
-                detail.setQuantity(updateDto.getQuantity());
-                // Recalcular precios si es necesario
-                return purchaseDetailRepository.save(detail);
-            })
-            .flatMap(detail -> productService.getProductById(detail.getFkProduct())
-                    .map(product -> {
-                        detail.addProduct(product);
-                        return detail;
-                    }));
+    public Mono<Void> updatePurchaseDetail(UUID detailId, PurchaseDetailUpdateDTO updateDto) {
+        return purchaseDetailRepository.updateQuantity(detailId, updateDto.getQuantity());
     }
 
  

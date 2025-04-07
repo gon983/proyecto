@@ -6,6 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PurchaseDetailUpdateDTO {
-    private Integer quantity;
+    private double quantity;
     
 }
