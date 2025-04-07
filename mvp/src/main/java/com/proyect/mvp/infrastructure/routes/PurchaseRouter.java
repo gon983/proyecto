@@ -127,15 +127,9 @@ public class PurchaseRouter {
     private Mono<ServerResponse> createEmptyCart(ServerRequest request, PurchaseService purchaseService, UserContextService userContext) {
         return userContext.getCurrentIdUser()
             .flatMap(idUser -> purchaseService.createEmptyCart(UUID.fromString(idUser))
-                .flatMap(newCart -> ServerResponse.ok()
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .bodyValue(newCart)))
-            .onErrorResume(e -> {
-                log.error("Error creating empty cart: {}", e.getMessage());
-                return ServerResponse.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .bodyValue("Error interno del servidor: " + e.getMessage());
-            });
-
+            .flatMap(newCart -> ServerResponse.ok().bodyValue(newCart)));
+        }
+            
     private Mono<ServerResponse> deletePurchaseWhenBuying(ServerRequest request, PurchaseService purchaseService) {
         UUID idPurchase = UUID.fromString(request.pathVariable("IdPurchase"));
         

@@ -485,9 +485,8 @@ public class PurchaseService {
                     .switchIfEmpty(
                         // Si no existe un carrito pendiente, crear uno nuevo
                         Mono.defer(() -> {
-                            PurchaseCreateDTO newCartDto = new PurchaseCreateDTO();
-                            newCartDto.setFkUser(userId);
-                            return createPurchase(newCartDto);
+                            
+                            return createEmptyCart(userId);
                         })
                     )
             )
