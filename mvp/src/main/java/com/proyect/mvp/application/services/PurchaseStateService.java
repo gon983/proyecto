@@ -56,4 +56,11 @@ public class PurchaseStateService {
         return purchaseStateRepository.findOneByName(name)
                 .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)));
     }
+
+    public Mono<Boolean> isPurchaseInPending(UUID idPurchaseState){
+        return purchaseStateRepository.findOneByName("pending")
+                                            .flatMap(state -> Mono.just(state.getIdPurchaseState().equals(idPurchaseState)));
+        
+
+    }
 }

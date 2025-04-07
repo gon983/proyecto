@@ -21,6 +21,7 @@ import com.proyect.mvp.domain.model.entities.PurchaseDetailStateEntity;
 
 
 import com.proyect.mvp.domain.repository.PurchaseDetailRepository;
+import com.proyect.mvp.infrastructure.exception.PurchaseDetailNotInPendingStateException;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -71,6 +72,8 @@ public class PurchaseDetailService {
 
     }
 
+  
+
     public Flux<PurchaseDetailEntity> getDetailsFromPurchaseWithProducts(UUID idPurchase){
         return purchaseDetailRepository.findAllByFkPurchase(idPurchase)
                                         .flatMap(detail -> productService.getProductById(detail.getFkProduct())
@@ -87,6 +90,27 @@ public class PurchaseDetailService {
 
     public Mono<PurchaseDetailEntity> save(PurchaseDetailEntity detail) {
         return purchaseDetailRepository.save(detail);
+    }
+
+
+    public Mono<Void> deleteDetailWhenBuying(UUID idDetail){
+        return purchaseDetailRepository.findById(idDetail)
+                                        .flatMap(detail ->{ 
+
+                                            return purchaseDetailStateService.isDetailInPending(detail.getFkState())
+                                                                              .flatMap(result ->
+                                                                              {
+                                                                                if(result){
+                                                                                    return purchaseDetailRepository.deleteById(idDetail);
+
+                                                                                }else{
+                                                                                    return Mono.error(new PurchaseDetailNotInPendingStateException(idDetail));
+
+                                                                                }
+                                                                              });
+                                        });
+                                        
+
     }
     
     public Mono<PurchaseDetailEntity> updatePurchaseDetail(UUID detailId, PurchaseDetailUpdateDTO updateDto) {

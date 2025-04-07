@@ -14,9 +14,12 @@ import com.mercadopago.net.HttpStatus;
 import com.proyect.mvp.application.dtos.create.PurchaseCreateDTO;
 import com.proyect.mvp.application.dtos.other.MercadoPagoNotificationDTO;
 import com.proyect.mvp.application.dtos.requests.ReceivePurchaseDTO;
+import com.proyect.mvp.application.services.PurchaseDetailService;
 import com.proyect.mvp.application.services.PurchaseService;
 import com.proyect.mvp.domain.model.entities.PurchaseEntity;
 import com.proyect.mvp.infrastructure.config.middlewares.ConfirmPurchaseMiddleware;
+import com.proyect.mvp.infrastructure.exception.PurchaseDetailNotInPendingStateException;
+import com.proyect.mvp.infrastructure.exception.PurchaseNotInPendingStateException;
 import com.proyect.mvp.infrastructure.security.UserContextService;
 
 import reactor.core.publisher.Mono;
@@ -34,7 +37,8 @@ public class PurchaseRouter {
                 .andRoute(POST("/confirmPayment"), request ->  confirmPurchaseMiddleware.validate(request)
                                                                         .flatMap(valid -> valid ? confirmPayment(request, purchaseService) : ServerResponse.status(401).build()))
                 .andRoute(POST("/api/user/receivePurchase/{idPurchase}"), request -> receivePurchase(request, purchaseService))
-                .andRoute(GET("/api/user/cart"), request -> getActiveCart(request, purchaseService, userContext));
+                .andRoute(GET("/api/user/cart"), request -> getActiveCart(request, purchaseService, userContext))
+                .andRoute(DELETE("/api/user/purchases/details/{idPurchase}"), request -> deletePurchaseWhenBuying(request, purchaseService));
     }
 
     
@@ -109,6 +113,18 @@ public class PurchaseRouter {
                     return purchaseService.getUserActiveCart(UUID.fromString(idUser))
                                             .flatMap(cart -> ServerResponse.ok().bodyValue(cart))
                                             .switchIfEmpty(ServerResponse.notFound().build());});
+    }
+
+    private Mono<ServerResponse> deletePurchaseWhenBuying(ServerRequest request, PurchaseDetailService purchaseDetailService) {
+        UUID idPurchase = UUID.fromString(request.pathVariable("IdPurchase"));
+        
+        return purchaseDetailService.deletePurchaseWhenBuying(idPurchase)
+                .then(ServerResponse.noContent().build()) // 204 No Content on successful deletion
+                .onErrorResume(PurchaseNotInPendingStateException.class,
+                        e -> ServerResponse.badRequest().bodyValue(e.getMessage())) // 400 Bad Request with error message
+                .onErrorResume(Exception.class, // Catch any other potential exceptions
+                        e -> ServerResponse.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                .bodyValue("Error interno del servidor: " + e.getMessage())); // 500 Internal Server Error
     }
     
 }

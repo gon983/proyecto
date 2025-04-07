@@ -57,4 +57,11 @@ public class PurchaseDetailStateService {
 
 
     }
+
+    public Mono<Boolean> isDetailInPending(UUID idDetailState){
+        return purchaseDetailStateRepository.findOneByName("pending")
+                                            .flatMap(state -> Mono.just(state.getIdPurchaseDetailState().equals(idDetailState)));
+        
+
+    }
 }

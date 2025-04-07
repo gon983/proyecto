@@ -58,6 +58,8 @@ import com.proyect.mvp.domain.model.entities.PurchaseStateEntity;
 import com.proyect.mvp.domain.model.entities.StockMovementEntity;
 import com.proyect.mvp.domain.repository.PurchaseRepository;
 import com.proyect.mvp.infrastructure.config.EnvConfigLoader;
+import com.proyect.mvp.infrastructure.exception.PurchaseDetailNotInPendingStateException;
+import com.proyect.mvp.infrastructure.exception.PurchaseNotInPendingStateException;
 
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
@@ -103,6 +105,26 @@ public class PurchaseService {
                     .build();
                 return purchaseRepository.save(purchase); // Guardar compra
             });
+    }
+
+    public Mono<Void> deletePurchaseWhenBuying(UUID idPurchase){
+        return purchaseRepository.findById(idPurchase)
+                                        .flatMap(purchase ->{ 
+
+                                            return purchaseStateService.isPurchaseInPending(purchase.getFkCurrentState())
+                                                                              .flatMap(result ->
+                                                                              {
+                                                                                if(result){
+                                                                                    return purchaseRepository.deleteById(idPurchase);
+
+                                                                                }else{
+                                                                                    return Mono.error(new PurchaseNotInPendingStateException(idPurchase));
+
+                                                                                }
+                                                                              });
+                                        });
+                                        
+
     }
 
 
