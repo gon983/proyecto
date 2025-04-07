@@ -107,12 +107,14 @@ public class PurchaseService {
     }
 
     public Mono<Void> deletePurchaseWhenBuying(UUID idPurchase){
+       
         return purchaseRepository.findById(idPurchase)
                                         .flatMap(purchase ->{ 
 
                                             return purchaseStateService.isPurchaseInPending(purchase.getFkCurrentState())
                                                                               .flatMap(result ->
                                                                               {
+                                                                               
                                                                                 if(result){
                                                                                     return purchaseRepository.deleteById(idPurchase);
 

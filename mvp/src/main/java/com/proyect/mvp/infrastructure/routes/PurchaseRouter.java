@@ -38,7 +38,7 @@ public class PurchaseRouter {
                                                                         .flatMap(valid -> valid ? confirmPayment(request, purchaseService) : ServerResponse.status(401).build()))
                 .andRoute(POST("/api/user/receivePurchase/{idPurchase}"), request -> receivePurchase(request, purchaseService))
                 .andRoute(GET("/api/user/cart"), request -> getActiveCart(request, purchaseService, userContext))
-                .andRoute(DELETE("/api/user/purchases/details/{idPurchase}"), request -> deletePurchaseWhenBuying(request, purchaseService))
+                .andRoute(DELETE("/api/user/cart/{idPurchase}"), request -> deletePurchaseWhenBuying(request, purchaseService))
                 .andRoute(POST("/api/user/cart/create"), request -> createEmptyCart(request, purchaseService, userContext));
     }
 
@@ -131,7 +131,7 @@ public class PurchaseRouter {
         }
             
     private Mono<ServerResponse> deletePurchaseWhenBuying(ServerRequest request, PurchaseService purchaseService) {
-        UUID idPurchase = UUID.fromString(request.pathVariable("IdPurchase"));
+        UUID idPurchase = UUID.fromString(request.pathVariable("idPurchase"));
         
         return purchaseService.deletePurchaseWhenBuying(idPurchase)
                 .then(ServerResponse.noContent().build()) // 204 No Content on successful deletion
