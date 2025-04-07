@@ -94,12 +94,11 @@ public class PurchaseService {
         this.purchaseDetailStateService = purchaseDetailStateService;
     }
 
-    public Mono<PurchaseEntity> createPurchase(PurchaseCreateDTO purchaseDto) {
+    public Mono<PurchaseEntity> createEmptyCart(UUID idUser) {
         return purchaseStateService.findByName("pending") // Buscar estado en la DB
-            .switchIfEmpty(Mono.error(new IllegalStateException("Pending state not found"))) // Manejo de error si no existe
             .flatMap(purchaseState -> { 
                 PurchaseEntity purchase = PurchaseEntity.builder()
-                    .fkUser(purchaseDto.getFkUser())
+                    .fkUser(idUser)
                     .createdAt(LocalDateTime.now())
                     .fkCurrentState(purchaseState.getIdPurchaseState()) // Asignar estado encontrado
                     .build();

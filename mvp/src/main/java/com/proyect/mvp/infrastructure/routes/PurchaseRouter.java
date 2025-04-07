@@ -38,7 +38,8 @@ public class PurchaseRouter {
                                                                         .flatMap(valid -> valid ? confirmPayment(request, purchaseService) : ServerResponse.status(401).build()))
                 .andRoute(POST("/api/user/receivePurchase/{idPurchase}"), request -> receivePurchase(request, purchaseService))
                 .andRoute(GET("/api/user/cart"), request -> getActiveCart(request, purchaseService, userContext))
-                .andRoute(DELETE("/api/user/purchases/details/{idPurchase}"), request -> deletePurchaseWhenBuying(request, purchaseService));
+                .andRoute(DELETE("/api/user/purchases/details/{idPurchase}"), request -> deletePurchaseWhenBuying(request, purchaseService))
+                .andRoute(POST("/api/user/cart/create"), request -> createEmptyCart(request, purchaseService, userContext));
     }
 
     
@@ -107,18 +108,38 @@ public class PurchaseRouter {
     }
 
     private Mono<ServerResponse> getActiveCart(ServerRequest request, PurchaseService purchaseService, UserContextService userContext) {
-        
         return userContext.getCurrentIdUser()
-                .flatMap(idUser -> {
-                    return purchaseService.getUserActiveCart(UUID.fromString(idUser))
-                                            .flatMap(cart -> ServerResponse.ok().bodyValue(cart))
-                                            .switchIfEmpty(ServerResponse.notFound().build());});
+            .flatMap(idUser -> purchaseService.getUserActiveCart(UUID.fromString(idUser))
+                .flatMap(cart -> ServerResponse.ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(cart))
+                .switchIfEmpty(ServerResponse.notFound().build()))
+            .onErrorResume(e -> {
+                System.out.println("Error getting active cart: {}"+  e.getMessage());
+                return ServerResponse.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .bodyValue("Error interno del servidor: " + e.getMessage());
+            });
+
+    
     }
 
-    private Mono<ServerResponse> deletePurchaseWhenBuying(ServerRequest request, PurchaseDetailService purchaseDetailService) {
+
+    private Mono<ServerResponse> createEmptyCart(ServerRequest request, PurchaseService purchaseService, UserContextService userContext) {
+        return userContext.getCurrentIdUser()
+            .flatMap(idUser -> purchaseService.createEmptyCart(UUID.fromString(idUser))
+                .flatMap(newCart -> ServerResponse.ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(newCart)))
+            .onErrorResume(e -> {
+                log.error("Error creating empty cart: {}", e.getMessage());
+                return ServerResponse.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .bodyValue("Error interno del servidor: " + e.getMessage());
+            });
+
+    private Mono<ServerResponse> deletePurchaseWhenBuying(ServerRequest request, PurchaseService purchaseService) {
         UUID idPurchase = UUID.fromString(request.pathVariable("IdPurchase"));
         
-        return purchaseDetailService.deletePurchaseWhenBuying(idPurchase)
+        return purchaseService.deletePurchaseWhenBuying(idPurchase)
                 .then(ServerResponse.noContent().build()) // 204 No Content on successful deletion
                 .onErrorResume(PurchaseNotInPendingStateException.class,
                         e -> ServerResponse.badRequest().bodyValue(e.getMessage())) // 400 Bad Request with error message
