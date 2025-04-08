@@ -39,67 +39,14 @@ public class UserService {
                 .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)));
     }
 
-    public Mono<UserEntity> saveNewUser(UserCreateDTO userDto) {
-        UserEntity userEntity = UserEntity.builder()
-                .username(userDto.getUsername())
-                .email(userDto.getEmail())
-                .createdAt(LocalDateTime.now())
-                .firstName(userDto.getFirstName())
-                .lastName(userDto.getLastName())
-                .documentType(userDto.getDocumentType())
-                .documentNumber(userDto.getDocumentNumber())
-                .fkNeighborhood(userDto.getFkNeighborhood())
-                .phone(userDto.getPhone())
-                .role(userDto.getRole())
-            
-                .build();
-        return userRepository.save(userEntity)
-                .thenReturn(userEntity)
-                .onErrorMap(error -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error saving user", error));
-    }
-
-    public Mono<UserEntity> updateUser(UUID id, UserUpdateDTO userDto) {
-        return userRepository.findById(id)
-                .flatMap(existingUser -> {
-                    UserEntity userEntity = UserEntity.builder()
-                            .idUser(id)  // Mantener el mismo ID
-                            .username(userDto.getUsername())
-                            .email(userDto.getEmail())
-                            .createdAt(existingUser.getCreatedAt()) // Mantener la fecha original
-                            .firstName(userDto.getFirstName())
-                            .lastName(userDto.getLastName())
-                            .documentType(userDto.getDocumentType())
-                            .documentNumber(userDto.getDocumentNumber())
-                            .fkNeighborhood(userDto.getFkNeighborhood())
-                            .phone(userDto.getPhone())
-                            .role(userDto.getRole())
-                            .build();
-                    
-
-                    return userRepository.save(userEntity); // Retornar el nuevo usuario guardado
-                })
-                .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)));
-    }
-
-    public Mono<UUID> getLocality(UUID idUser){
-        return getUserById(idUser)
-                .flatMap(user -> neighborhoodService.getNeighborhoodById(user.getFkNeighborhood()))
-                .flatMap(neighborhood -> Mono.just(neighborhood.getFkLocality()));
-    }
+   
+  
 
     
 
    
 
-    public Mono<String> getMpProductorUserId(UUID productorId) {
-        return userRepository.findById(productorId)
-                            .flatMap(productor-> Mono.just(productor.getUserProductorMpId()));
-    }
-
-    public Mono<String> getMpRefreshToken(UUID productorId) {
-        return userRepository.findById(productorId)
-                            .flatMap(productor-> Mono.just(productor.getRefreshProductorToken()));
-    }
+   
 
     
 

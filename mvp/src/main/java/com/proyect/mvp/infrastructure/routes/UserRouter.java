@@ -39,8 +39,6 @@ public class UserRouter {
     JsonAuthenticationSuccessHandler successHandler, JsonAuthenticationFailureHandler failureHandler ) {
         return route(GET("/api/admin/users"), request -> getAllUsers(userService))
                 .andRoute(GET("/api/admin/users/{id}"), request -> getUserById(request, userService))
-                .andRoute(POST("/api/admin/users"), request -> createUser(request, userService))
-                .andRoute(PUT("/api/admin/users/{id}"), request -> updateUser(request, userService))
                 .andRoute(POST("/login"), request -> login(request, authenticationManager, successHandler, failureHandler))
                 .andRoute(POST("/public/register"), request -> register(request, userService));
     }
@@ -59,23 +57,7 @@ public class UserRouter {
         }
     }
 
-    private Mono<ServerResponse> createUser(ServerRequest request, UserService userService) {
-        return request.bodyToMono(UserCreateDTO.class)
-                .flatMap(user -> userService.saveNewUser(user))
-                .flatMap(savedUser -> ServerResponse.ok().bodyValue(savedUser))
-                .onErrorResume(ResponseStatusException.class, e -> ServerResponse.status(e.getStatusCode()).bodyValue(e.getMessage()));
-    }
-
-    private Mono<ServerResponse> updateUser(ServerRequest request, UserService userService) {
-        try {
-            UUID id = UUID.fromString(request.pathVariable("id"));
-            return request.bodyToMono(UserUpdateDTO.class)
-                    .flatMap(user -> userService.updateUser(id, user))
-                    .flatMap(updatedUser -> ServerResponse.ok().bodyValue(updatedUser));
-        } catch (IllegalArgumentException e) {
-            return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid UUID format"));
-        }
-    }
+    
 
         private Mono<ServerResponse> login(ServerRequest request, CustomReactiveAuthenticationManager authenticationManager, JsonAuthenticationSuccessHandler successHandler, JsonAuthenticationFailureHandler failureHandler){
         return request.bodyToMono(LoginRequest.class)
