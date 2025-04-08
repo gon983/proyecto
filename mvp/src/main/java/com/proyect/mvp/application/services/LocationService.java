@@ -43,8 +43,7 @@ public class LocationService {
         Location location = new Location();
         location.setUserId(dto.userId());
         location.setAddress(dto.address());
-        location.setNeighborhoodId(dto.neighborhoodId());
-        location.setLocalityId(dto.localityId());
+       
         
         // Convertir coordenadas a Point
         location.setCoordinates(spatialConverter.createPoint(
@@ -60,11 +59,9 @@ public class LocationService {
         return new LocationResponseDTO(
             location.getId().toString(),                      // UUID → String
             location.getAddress(),
-            location.getNeighborhoodId().toString(),          // UUID → String
             location.getCoordinates().getY(),                 // Latitude
-            location.getCoordinates().getX(),                 // Longitude
-            location.getCreatedAt(),
-            location.getUpdatedAt()
+            location.getCoordinates().getX()               // Longitude
+          
         );
     }
     

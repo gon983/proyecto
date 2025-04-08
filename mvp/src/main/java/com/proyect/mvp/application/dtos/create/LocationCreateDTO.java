@@ -8,8 +8,7 @@ import java.util.UUID;
 public record LocationCreateDTO(
     UUID userId,
     String address,
-    UUID neighborhoodId,
     Double latitude,
-    Double longitude,
-    UUID localityId
+    Double longitude
+  
 ) {}
