@@ -22,18 +22,10 @@ public class Location {
     @Column("address")
     private String address;
 
-    @Column("neighborhood_id")
-    private UUID neighborhoodId;
 
     @Column("coordinates")
     private Point coordinates;
 
-    @Column("locality_id")
-    private UUID localityId;
 
-    @Column("created_at")
-    private LocalDateTime createdAt;
 
-    @Column("updated_at")
-    private LocalDateTime updatedAt;
 }

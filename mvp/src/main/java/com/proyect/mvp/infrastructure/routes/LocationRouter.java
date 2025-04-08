@@ -26,16 +26,16 @@ public class LocationRouter {
 
     @Bean
     public RouterFunction<ServerResponse> locationRoutes(LocationService locationService, UserContextService userContext) {
-        return route(GET("/api/user/{userId}/locations"), request -> getLocationsByUser(request, locationService))
-                .andRoute(DELETE("/api/user/{userId}/locations/{locationId}"), request -> deleteLocation(request, locationService))
+        return route(GET("/api/user/locations"), request -> getLocationsByUser(request, locationService, userContext))
+                .andRoute(DELETE("/api/user/locations/{locationId}"), request -> deleteLocation(request, locationService))
                 .andRoute(POST("/api/locations"), request -> createLocation(request, locationService));
     }
 
-    private Mono<ServerResponse> getLocationsByUser(ServerRequest request, LocationService locationService) {
-        UUID userId = UUID.fromString(request.pathVariable("userId"));
-        return locationService.getLocationsByUser(userId)
+    private Mono<ServerResponse> getLocationsByUser(ServerRequest request, LocationService locationService, UserContextService userContext) {
+        return userContext.getCurrentIdUser().flatMap(userId -> {
+        return locationService.getLocationsByUser(UUID.fromString(userId))
                 .collectList()
-                .flatMap(locations -> ServerResponse.ok().bodyValue(locations));
+                .flatMap(locations -> ServerResponse.ok().bodyValue(locations));});
     }
 
     private Mono<ServerResponse> deleteLocation(ServerRequest request, LocationService locationService) {
