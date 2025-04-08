@@ -13,8 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.proyect.mvp.application.dtos.create.PurchaseDetailCreateDTO;
 import com.proyect.mvp.application.dtos.requests.ProductsPayedDTO;
 
-import com.proyect.mvp.application.dtos.response.JustPayedSalesDto;
-import com.proyect.mvp.application.dtos.response.SaleSummaryDTO;
+
 import com.proyect.mvp.application.dtos.update.PurchaseDetailUpdateDTO;
 import com.proyect.mvp.domain.model.entities.PurchaseDetailEntity;
 import com.proyect.mvp.domain.model.entities.PurchaseDetailStateEntity;
