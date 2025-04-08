@@ -17,6 +17,8 @@ import reactor.core.publisher.Mono;
 import static org.springframework.web.reactive.function.server.RequestPredicates.*;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
+import java.util.UUID;
+
 
 
 @Configuration
@@ -30,14 +32,14 @@ public class LocationRouter {
     }
 
     private Mono<ServerResponse> getLocationsByUser(ServerRequest request, LocationService locationService) {
-        String userId = request.pathVariable("userId");
+        UUID userId = UUID.fromString(request.pathVariable("userId"));
         return locationService.getLocationsByUser(userId)
                 .collectList()
                 .flatMap(locations -> ServerResponse.ok().bodyValue(locations));
     }
 
     private Mono<ServerResponse> deleteLocation(ServerRequest request, LocationService locationService) {
-        String locationId = request.pathVariable("locationId");
+        UUID locationId = UUID.fromString(request.pathVariable("locationId"));
         return locationService.deleteLocation(locationId)
                 .then(ServerResponse.noContent().build());
     }
