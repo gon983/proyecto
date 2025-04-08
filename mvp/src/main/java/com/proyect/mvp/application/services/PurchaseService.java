@@ -50,6 +50,7 @@ import java.util.List;
 import java.util.UUID;
 import com.mercadopago.resources.preference.Preference;
 import com.proyect.mvp.application.dtos.create.PurchaseCreateDTO;
+import com.proyect.mvp.application.dtos.requests.LocationIdDTO;
 import com.proyect.mvp.application.dtos.requests.ReceivePurchaseDTO;
 import com.proyect.mvp.domain.model.entities.PurchaseDetailEntity;
 import com.proyect.mvp.domain.model.entities.PurchaseDetailStateEntity;
@@ -104,6 +105,10 @@ public class PurchaseService {
                     .build();
                 return purchaseRepository.save(purchase); // Guardar compra
             });
+    }
+
+    public Mono<Void> putLocation(UUID idPurchase, LocationIdDTO dto){
+        return purchaseRepository.updateLocation(idPurchase, dto.getLocationId());
     }
 
     public Mono<Void> deletePurchaseWhenBuying(UUID idPurchase){

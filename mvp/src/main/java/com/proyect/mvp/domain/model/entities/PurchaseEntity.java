@@ -57,6 +57,9 @@ public class PurchaseEntity {
 
     @Column("external_reference")
     private String externalReference;
+
+    @Column("id_location")
+    private UUID idLocation;
    
 
     public void addDetails(List<PurchaseDetailEntity> details){

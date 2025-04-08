@@ -24,4 +24,7 @@ public interface PurchaseRepository extends R2dbcRepository<PurchaseEntity,UUID>
     @Query("SELECT * from purchase where fk_user = :fkUser AND fk_current_state = :fkCurrentState")
     Mono<PurchaseEntity> findByFkUserAndFkCurrentState(@Param("fkUser") UUID fkUser,@Param("fkCurrentState") UUID fkCurrentState);
 
+    @Query("UPDATE purchase SET id_location = :idLocation WHERE id_purchase = :idPurchase  ")
+    Mono<Void> updateLocation(@Param("idPurchase") UUID idPurchase,@Param("idLocation") UUID idLocation);
+
 }

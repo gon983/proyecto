@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mercadopago.net.HttpStatus;
 import com.proyect.mvp.application.dtos.create.PurchaseCreateDTO;
 import com.proyect.mvp.application.dtos.other.MercadoPagoNotificationDTO;
+import com.proyect.mvp.application.dtos.requests.LocationIdDTO;
 import com.proyect.mvp.application.dtos.requests.ReceivePurchaseDTO;
 import com.proyect.mvp.application.services.PurchaseDetailService;
 import com.proyect.mvp.application.services.PurchaseService;
@@ -39,7 +40,8 @@ public class PurchaseRouter {
                 .andRoute(POST("/api/user/receivePurchase/{idPurchase}"), request -> receivePurchase(request, purchaseService))
                 .andRoute(GET("/api/user/cart"), request -> getActiveCart(request, purchaseService, userContext))
                 .andRoute(DELETE("/api/user/cart/{idPurchase}"), request -> deletePurchaseWhenBuying(request, purchaseService))
-                .andRoute(POST("/api/user/cart/create"), request -> createEmptyCart(request, purchaseService, userContext));
+                .andRoute(POST("/api/user/cart/create"), request -> createEmptyCart(request, purchaseService, userContext))
+                .andRoute(PUT("/api/user/purchases/{idPurchase}/location"), request -> putLocation(request, purchaseService));
     }
 
     
@@ -121,6 +123,12 @@ public class PurchaseRouter {
             });
 
     
+    }
+
+    private Mono<ServerResponse> putLocation(ServerRequest request, PurchaseService purchaseService){
+        UUID idPurchase = UUID.fromString(request.pathVariable("idPurchase"));
+        return request.bodyToMono(LocationIdDTO.class)
+                      .flatMap(dto -> purchaseService.putLocation(idPurchase, dto).then(ServerResponse.ok().build()));
     }
 
 
