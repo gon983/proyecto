@@ -39,38 +39,6 @@ public class UserEntity {
 
     @Column("created_at")
     private LocalDateTime createdAt;
-
-    @Column("first_name")
-    private String firstName;
-
-    @Column("last_name")
-    private String lastName;
-
-    @Column("document_type")
-    private String documentType;
-
-    @Column("document_number")
-    private String documentNumber;
-
-    @Column("fk_neighborhood")
-    private UUID fkNeighborhood;
-
-    @Column("phone")
-    private String phone;
-
-    @Nullable
-    @Column("photo")
-    private String photo;
-
-    
-
-    @Column("level")
-    private int level;
-
-    // Campos opcionales
-    @Nullable
-    @Column("fk_collection_point_suscribed")
-    private UUID fkCollectionPointSuscribed;
     
     
     @Column("role")
@@ -81,28 +49,7 @@ public class UserEntity {
     
     
     
-    @Nullable
-    @Column("minimal_sale")
-    private Double minimalSale;
-
-    @Column("mp_public_key_encrypted")
-    private String mpPublicKeyEncrypted;
-
-    @Column("mp_access_token_encrypted")
-    private String mpAccessTokenEncrypted;
-
-    @Transient
-    private String mpPublicKey;
-
-    @Transient
-    private String mpAccessToken;
-    @Column("access_token_productor")
-    private String accessTokenProductor;
-    @Column("user_productor_mp_id")
-    private String userProductorMpId;
-    @Column("refresh_productor_token")
-    private String refreshProductorToken;
-
+   
 
     
 
