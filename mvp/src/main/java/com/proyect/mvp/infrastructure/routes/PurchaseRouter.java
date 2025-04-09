@@ -23,6 +23,7 @@ import com.proyect.mvp.infrastructure.exception.PurchaseDetailNotInPendingStateE
 import com.proyect.mvp.infrastructure.exception.PurchaseNotInPendingStateException;
 import com.proyect.mvp.infrastructure.security.UserContextService;
 
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import static org.springframework.web.reactive.function.server.RequestPredicates.*;
@@ -40,7 +41,7 @@ public class PurchaseRouter {
                 .andRoute(POST("/api/user/receivePurchase/{idPurchase}"), request -> receivePurchase(request, purchaseService))
                 .andRoute(GET("/api/user/cart"), request -> getActiveCart(request, purchaseService, userContext))
                 .andRoute(DELETE("/api/user/cart/{idPurchase}"), request -> deletePurchaseWhenBuying(request, purchaseService))
-                .andRoute(GET("/api/user/purchases/consult"), request -> getPurchasesUserWithDetailsAndLocation(request,purchaseService, userContext))
+                .andRoute(GET("/api/user/purchases/consult"), request -> getPurchaseUserWithDetailsAndLocation(request,purchaseService, userContext))
                 .andRoute(POST("/api/user/cart/create"), request -> createEmptyCart(request, purchaseService, userContext))
                 .andRoute(PUT("/api/user/purchases/{idPurchase}/location"), request -> putLocation(request, purchaseService));
     }
@@ -112,8 +113,9 @@ public class PurchaseRouter {
 
     private Mono<ServerResponse> getPurchaseUserWithDetailsAndLocation(ServerRequest request, PurchaseService purchaseService, UserContextService userContext) {
         return userContext.getCurrentIdUser()
-                         .flatMap(idUser -> purchaseService.getPurchasesUserWithDetailsAndLocation(idUser))
+                         .flatMap(idUser -> purchaseService.getPurchaseUserWithDetailsAndLocation(UUID.fromString(idUser)))
                          .flatMap(dto -> ServerResponse.ok().bodyValue(dto));
+                        }
 
     private Mono<ServerResponse> getActiveCart(ServerRequest request, PurchaseService purchaseService, UserContextService userContext) {
         return userContext.getCurrentIdUser()

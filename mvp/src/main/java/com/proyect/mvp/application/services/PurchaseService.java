@@ -112,7 +112,7 @@ public class PurchaseService {
             });
     }
 
-    public Flux<PurchaseFollowDTO> getPurchaseUserWithDetailsAndLocation(UUID idUser) {
+    public Mono<List<PurchaseFollowDTO>> getPurchaseUserWithDetailsAndLocation(UUID idUser) {
         // Primero obtenemos las últimas 5 compras que no estén en estado pendiente
         return obtenerUltimasCincoComprasUser(idUser)
                 .flatMap(purchase -> {
@@ -136,7 +136,8 @@ public class PurchaseService {
                                         .estimatedDeliveryTime(estimatedTime)
                                         .build();
                             });
-                });
+                })
+                .collectList();
     }
 
     public Flux<PurchaseToFollowDTO> obtenerUltimasCincoComprasUser(UUID idUser){
