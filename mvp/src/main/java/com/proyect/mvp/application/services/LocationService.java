@@ -33,6 +33,7 @@ public class LocationService {
     
     public Flux<LocationResponseDTO> getLocationsByUser(UUID userId) {
         return locationRepository.findByUserId(userId)
+                .filter(location -> location.isActive())
                 .map(this::convertToDTO);
     }
 
@@ -44,7 +45,7 @@ public class LocationService {
 
     
     public Mono<Void> deleteLocation(UUID locationId) {
-        return locationRepository.deleteById(locationId);
+        return locationRepository.deleteLogical(locationId);
     }
 
     
