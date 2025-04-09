@@ -28,6 +28,7 @@ public class LocationRouter {
     public RouterFunction<ServerResponse> locationRoutes(LocationService locationService, UserContextService userContext) {
         return route(GET("/api/user/locations"), request -> getLocationsByUser(request, locationService, userContext))
                 .andRoute(DELETE("/api/user/locations/{locationId}"), request -> deleteLocation(request, locationService))
+                .andRoute(GET("/api/user/location/{idLocation}"), request -> getLocation(request, locationService))
                 .andRoute(POST("/api/locations"), request -> createLocation(request, locationService));
     }
 
@@ -42,6 +43,12 @@ public class LocationRouter {
         UUID locationId = UUID.fromString(request.pathVariable("locationId"));
         return locationService.deleteLocation(locationId)
                 .then(ServerResponse.noContent().build());
+    }
+
+    private Mono<ServerResponse> getLocation(ServerRequest request, LocationService locationService){
+        UUID idLocation = UUID.fromString(request.pathVariable("idLocation"));
+        return locationService.getLocationById(idLocation)
+                              .flatMap(location -> ServerResponse.ok().bodyValue(location));
     }
 
     private Mono<ServerResponse> createLocation(ServerRequest request, LocationService locationService) {

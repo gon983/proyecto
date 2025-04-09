@@ -36,6 +36,12 @@ public class LocationService {
                 .map(this::convertToDTO);
     }
 
+    public Mono<LocationResponseDTO> getLocationById(UUID idLocation){
+        return locationRepository.findById(idLocation)
+                                .map(this::convertToDTO);
+
+    }
+
     
     public Mono<Void> deleteLocation(UUID locationId) {
         return locationRepository.deleteById(locationId);
