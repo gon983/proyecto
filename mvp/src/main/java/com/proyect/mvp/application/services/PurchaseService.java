@@ -50,8 +50,12 @@ import java.util.List;
 import java.util.UUID;
 import com.mercadopago.resources.preference.Preference;
 import com.proyect.mvp.application.dtos.create.PurchaseCreateDTO;
+import com.proyect.mvp.application.dtos.database.PurchaseToFollowDTO;
 import com.proyect.mvp.application.dtos.requests.LocationIdDTO;
 import com.proyect.mvp.application.dtos.requests.ReceivePurchaseDTO;
+import com.proyect.mvp.application.dtos.response.LocationResponseDTO;
+import com.proyect.mvp.application.dtos.response.PurchaseDetailDTO;
+import com.proyect.mvp.application.dtos.response.PurchaseFollowDTO;
 import com.proyect.mvp.domain.model.entities.PurchaseDetailEntity;
 import com.proyect.mvp.domain.model.entities.PurchaseDetailStateEntity;
 import com.proyect.mvp.domain.model.entities.PurchaseEntity;
@@ -76,6 +80,7 @@ public class PurchaseService {
     private final PurchaseStateService purchaseStateService;
     private final PurchaseDetailService purchaseDetailService;
     private final UserService userService;
+    private final LocationService locationService;
    
     private final StockMovementService stockMovementService;
 
@@ -84,12 +89,12 @@ public class PurchaseService {
     static String SUCCESS_URL = EnvConfigLoader.getSuccessUrl();
 
     public PurchaseService(PurchaseRepository purchaseRepository, PurchaseStateService purchaseStateService, PurchaseDetailService purchaseDetailService,
-     UserService userService,  StockMovementService stockMovementService, PurchaseDetailStateService purchaseDetailStateService) {
+     UserService userService,  StockMovementService stockMovementService, PurchaseDetailStateService purchaseDetailStateService, LocationService locationService) {
         this.purchaseRepository = purchaseRepository;
         this.purchaseStateService = purchaseStateService;
         this.purchaseDetailService = purchaseDetailService;
         this.userService = userService;
-      
+        this.locationService = locationService;
         this.stockMovementService = stockMovementService;
  
         this.purchaseDetailStateService = purchaseDetailStateService;
@@ -105,6 +110,40 @@ public class PurchaseService {
                     .build();
                 return purchaseRepository.save(purchase); // Guardar compra
             });
+    }
+
+    public Flux<PurchaseFollowDTO> getPurchaseUserWithDetailsAndLocation(UUID idUser) {
+        // Primero obtenemos las últimas 5 compras que no estén en estado pendiente
+        return obtenerUltimasCincoComprasUser(idUser)
+                .flatMap(purchase -> {
+                    // Obtenemos los detalles de la compra
+                    Mono<List<PurchaseDetailDTO>> detailsMono = purchaseDetailService.getDetailsDTO(purchase.getIdPurchase());
+                    
+                    // Obtenemos la información de la ubicación
+                    Mono<LocationResponseDTO> locationMono = locationService.getLocationById(purchase.getIdLocation());
+                    
+                    // Combinamos ambos resultados para construir el DTO final
+                    return Mono.zip(detailsMono, locationMono)
+                            .map(tuple -> {
+                                List<PurchaseDetailDTO> details = tuple.getT1();
+                                LocationResponseDTO location = tuple.getT2();
+                                String estimatedTime = "24 horas";
+                                
+                                return PurchaseFollowDTO.builder()
+                                        .purchaseId(purchase.getIdPurchase())
+                                        .details(details)
+                                        .location(location)
+                                        .estimatedDeliveryTime(estimatedTime)
+                                        .build();
+                            });
+                });
+    }
+
+    public Flux<PurchaseToFollowDTO> obtenerUltimasCincoComprasUser(UUID idUser){
+        return purchaseStateService.findByName("pending")
+                                    .flatMapMany(state-> {
+                                        return purchaseRepository.findLastFiveUserNotPending(idUser, state.getIdPurchaseState());
+                                    });
     }
 
     public Mono<Void> putLocation(UUID idPurchase, LocationIdDTO dto){

@@ -40,6 +40,7 @@ public class PurchaseRouter {
                 .andRoute(POST("/api/user/receivePurchase/{idPurchase}"), request -> receivePurchase(request, purchaseService))
                 .andRoute(GET("/api/user/cart"), request -> getActiveCart(request, purchaseService, userContext))
                 .andRoute(DELETE("/api/user/cart/{idPurchase}"), request -> deletePurchaseWhenBuying(request, purchaseService))
+                .andRoute(GET("/api/user/purchases/consult"), request -> getPurchasesUserWithDetailsAndLocation(request,purchaseService, userContext))
                 .andRoute(POST("/api/user/cart/create"), request -> createEmptyCart(request, purchaseService, userContext))
                 .andRoute(PUT("/api/user/purchases/{idPurchase}/location"), request -> putLocation(request, purchaseService));
     }
@@ -109,6 +110,11 @@ public class PurchaseRouter {
 
     }
 
+    private Mono<ServerResponse> getPurchaseUserWithDetailsAndLocation(ServerRequest request, PurchaseService purchaseService, UserContextService userContext) {
+        return userContext.getCurrentIdUser()
+                         .flatMap(idUser -> purchaseService.getPurchasesUserWithDetailsAndLocation(idUser))
+                         .flatMap(dto -> ServerResponse.ok().bodyValue(dto));
+
     private Mono<ServerResponse> getActiveCart(ServerRequest request, PurchaseService purchaseService, UserContextService userContext) {
         return userContext.getCurrentIdUser()
             .flatMap(idUser -> purchaseService.getUserActiveCart(UUID.fromString(idUser))
@@ -130,6 +136,8 @@ public class PurchaseRouter {
         return request.bodyToMono(LocationIdDTO.class)
                       .flatMap(dto -> purchaseService.putLocation(idPurchase, dto).then(ServerResponse.ok().build()));
     }
+
+    
 
 
     private Mono<ServerResponse> createEmptyCart(ServerRequest request, PurchaseService purchaseService, UserContextService userContext) {

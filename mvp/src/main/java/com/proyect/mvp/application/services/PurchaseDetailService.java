@@ -12,8 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.proyect.mvp.application.dtos.create.PurchaseDetailCreateDTO;
 import com.proyect.mvp.application.dtos.requests.ProductsPayedDTO;
-
-
+import com.proyect.mvp.application.dtos.response.PurchaseDetailDTO;
 import com.proyect.mvp.application.dtos.update.PurchaseDetailUpdateDTO;
 import com.proyect.mvp.domain.model.entities.PurchaseDetailEntity;
 import com.proyect.mvp.domain.model.entities.PurchaseDetailStateEntity;
@@ -71,6 +70,8 @@ public class PurchaseDetailService {
 
     }
 
+
+
   
 
     public Flux<PurchaseDetailEntity> getDetailsFromPurchaseWithProducts(UUID idPurchase){
@@ -78,6 +79,21 @@ public class PurchaseDetailService {
                                         .flatMap(detail -> productService.getProductById(detail.getFkProduct())
                                                             .map(product -> {detail.addProduct(product);
                                                                             return detail;}));   
+    }
+
+    public Mono<List<PurchaseDetailDTO>> getDetailsDTO(UUID idPurchase) {
+        return purchaseDetailRepository.findAllByFkPurchase(idPurchase)
+                .flatMap(detail -> productService.getProductById(detail.getFkProduct())
+                        .map(product -> PurchaseDetailDTO.builder()
+                                .detailId(UUID.fromString(detail.getIdPurchaseDetail()))
+                                .productName(product.getName())
+                                .quantity(detail.getQuantity())
+                                .unitPrice(detail.getUnitPrice())
+                                .productImageUrl(product.getPhoto())
+                                .build()
+                        )
+                )
+                .collectList(); // Convierte el Flux<PurchaseDetailDTO> a Mono<List<PurchaseDetailDTO>>
     }
 
     public Mono<PurchaseDetailEntity> getById(UUID idDetail){
