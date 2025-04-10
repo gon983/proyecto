@@ -67,7 +67,7 @@ public class RecommendedPackService {
                          Flux.fromIterable(packDTO.getProducts())
                              .flatMap(packProduct ->productXPackRepository.save(
                                                                                 ProductXRecommendedPackEntity.builder()
-                                                                                    .fkRecommendedPack(packProduct.getProductId())
+                                                                                    .fkRecommendedPack(savedPack.getIdRecommendedPack())
                                                                                     .fkProduct(packProduct.getProductId())
                                                                                     .quantity(packProduct.getQuantity())
                                                                                     .build()))
