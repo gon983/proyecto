@@ -39,6 +39,8 @@ public class RecommendedPackEntity {
     public void setProducts(List<ProductEntity> products) {
         this.products = products;
     }
+
+    
 } 
     
 

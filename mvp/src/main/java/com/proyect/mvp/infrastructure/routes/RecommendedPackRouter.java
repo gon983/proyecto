@@ -31,7 +31,7 @@ public class RecommendedPackRouter {
     }
 
     private Mono<ServerResponse> getAllPacks(RecommendedPackService packService) {
-        return packService.getAllPacks().collectList().flatMap(pack-> ServerResponse.ok().bodyValue(pack));
+        return packService.getAllPacksWithProducts().collectList().flatMap(pack-> ServerResponse.ok().bodyValue(pack));
     }
 
     private Mono<ServerResponse> getPackById(ServerRequest request, RecommendedPackService packService) {

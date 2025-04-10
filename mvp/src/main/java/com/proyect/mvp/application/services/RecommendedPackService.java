@@ -45,27 +45,44 @@ public class RecommendedPackService {
             );
     }
 
-    public Mono<RecommendedPackEntity> createPack(RecommendedPackCreateDTO packDTO) {
-        UUID generatedId = UUID.randomUUID();
-    
-        RecommendedPackEntity packEntity = RecommendedPackEntity.builder()
-            .idRecommendedPack(generatedId)
-            .name(packDTO.getName())
-            .description(packDTO.getDescription())
-            .imageUrl(packDTO.getImageUrl())
-            .build();
-    
-        return packRepository.save(packEntity)
-            .flatMap(savedPack ->
-                Flux.fromIterable(packDTO.getProducts())
-                    .flatMap(packProduct -> productXPackRepository.save(
-                        ProductXRecommendedPackEntity.builder()
-                            .fkRecommendedPack(generatedId) // usar el mismo ID
-                            .fkProduct(packProduct.getProductId())
-                            .quantity(packProduct.getQuantity())
-                            .build()))
-                    .then(Mono.just(savedPack))
+    public Flux<RecommendedPackEntity> getAllPacksWithProducts() {
+        return packRepository.findAll()
+            .flatMap(pack ->
+                productXPackRepository.findAllByPackId(pack.getIdRecommendedPack())
+                    .flatMap(productXPack ->
+                        productService.getProductById(productXPack.getFkProduct())
+                    )
+                    .collectList()
+                    .map(products -> {
+                        pack.setProducts(products);
+                        return pack;
+                    })
             );
+    }
+    
+
+    public Mono<RecommendedPackEntity> createPack(RecommendedPackCreateDTO packDTO) {
+        return packRepository.save(toEntity(UUID.randomUUID(), packDTO.getName(), packDTO.getDescription(), packDTO.getImageUrl()))
+            .flatMap(savedPack ->
+                         Flux.fromIterable(packDTO.getProducts())
+                             .flatMap(packProduct ->productXPackRepository.save(
+                                                                                ProductXRecommendedPackEntity.builder()
+                                                                                    .fkRecommendedPack(packProduct.getProductId())
+                                                                                    .fkProduct(packProduct.getProductId())
+                                                                                    .quantity(packProduct.getQuantity())
+                                                                                    .build()))
+                            .collectList() // ← Esperamos a que se guarden todas
+                             .thenReturn(savedPack) // ← Devolvemos el pack guardado
+    );
+
+    }
+    public RecommendedPackEntity toEntity(UUID idRecommendedPack, String name, String description, String imageUrl) {
+        return RecommendedPackEntity.builder()
+                .idRecommendedPack(idRecommendedPack)
+                .name(name)
+                .description(description)
+                .imageUrl(imageUrl)
+                .build();
     }
     
     
