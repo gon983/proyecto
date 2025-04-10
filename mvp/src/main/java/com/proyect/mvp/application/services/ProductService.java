@@ -57,8 +57,6 @@ public class ProductService {
     public Mono<ProductEntity> createProduct(ProductCreateDTO productDTO) {
         ProductEntity product = ProductEntity.builder()
                 .name(productDTO.getName())
-                .stock(productDTO.getStock())
-                .alertStock(productDTO.getAlertStock())
                 .photo(productDTO.getPhoto())
                 .unitMeasurement(productDTO.getUnitMeasurement())
                 
@@ -77,8 +75,6 @@ public class ProductService {
                     ProductEntity newProduct = ProductEntity.builder()
                             .idProduct(existingProduct.getIdProduct())
                             .name(productDTO.getName())
-                            .stock(productDTO.getStock())
-                            .alertStock(productDTO.getAlertStock())
                             .photo(productDTO.getPhoto())
                             .unitMeasurement(productDTO.getUnitMeasurement())
                             

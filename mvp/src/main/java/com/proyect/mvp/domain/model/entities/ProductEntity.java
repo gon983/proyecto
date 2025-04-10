@@ -27,11 +27,7 @@ public class ProductEntity {
     @Column("name")
     private String name;
 
-    @Column("stock")
-    private double stock;
-
-    @Column("alert_stock")
-    private double alertStock;
+    
 
     @Column("photo")
     private String photo;
@@ -52,11 +48,5 @@ public class ProductEntity {
     }
 
 
-    public void setStock(double newStock){
-        this.stock = newStock;
-        if(newStock< this.alertStock){
-            // QUE HAGA ALGO
-        }
-    }
-
+   
 }
