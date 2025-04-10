@@ -2,6 +2,8 @@ package com.proyect.mvp.application.services;
 
 
 
+import com.proyect.mvp.application.dtos.create.RecommendedPackCreateDTO;
+import com.proyect.mvp.domain.model.entities.ProductXRecommendedPackEntity;
 import com.proyect.mvp.domain.model.entities.RecommendedPackEntity;
 import com.proyect.mvp.domain.repository.RecommendedPackRepository;
 import com.proyect.mvp.domain.repository.ProductXRecommendedPackRepository;
@@ -42,5 +44,24 @@ public class RecommendedPackService {
                     })
             );
     }
+
+    public Mono<RecommendedPackEntity> createPack(RecommendedPackCreateDTO packDTO) {
+    return Mono.usingWhen(
+        packRepository.save(RecommendedPackEntity.builder()
+                .name(packDTO.getName())
+                .description(packDTO.getDescription())
+                .imageUrl(packDTO.getImageUrl())
+                .build()),
+        savedPack -> Flux.fromIterable(packDTO.getProducts())
+                .flatMap(packProduct -> productXPackRepository.save(
+                        ProductXRecommendedPackEntity.builder()
+                                .fkRecommendedPack(savedPack.getIdRecommendedPack())
+                                .fkProduct(packProduct.getProductId())
+                                .quantity(packProduct.getQuantity())
+                                .build()))
+                .then(Mono.just(savedPack)),
+        savedPack -> Mono.empty()
+    );
+}
     
 }
