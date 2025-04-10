@@ -46,22 +46,28 @@ public class RecommendedPackService {
     }
 
     public Mono<RecommendedPackEntity> createPack(RecommendedPackCreateDTO packDTO) {
-    return Mono.usingWhen(
-        packRepository.save(RecommendedPackEntity.builder()
-                .name(packDTO.getName())
-                .description(packDTO.getDescription())
-                .imageUrl(packDTO.getImageUrl())
-                .build()),
-        savedPack -> Flux.fromIterable(packDTO.getProducts())
-                .flatMap(packProduct -> productXPackRepository.save(
+        UUID generatedId = UUID.randomUUID();
+    
+        RecommendedPackEntity packEntity = RecommendedPackEntity.builder()
+            .idRecommendedPack(generatedId)
+            .name(packDTO.getName())
+            .description(packDTO.getDescription())
+            .imageUrl(packDTO.getImageUrl())
+            .build();
+    
+        return packRepository.save(packEntity)
+            .flatMap(savedPack ->
+                Flux.fromIterable(packDTO.getProducts())
+                    .flatMap(packProduct -> productXPackRepository.save(
                         ProductXRecommendedPackEntity.builder()
-                                .fkRecommendedPack(savedPack.getIdRecommendedPack())
-                                .fkProduct(packProduct.getProductId())
-                                .quantity(packProduct.getQuantity())
-                                .build()))
-                .then(Mono.just(savedPack)),
-        savedPack -> Mono.empty()
-    );
-}
+                            .fkRecommendedPack(generatedId) // usar el mismo ID
+                            .fkProduct(packProduct.getProductId())
+                            .quantity(packProduct.getQuantity())
+                            .build()))
+                    .then(Mono.just(savedPack))
+            );
+    }
+    
+    
     
 }

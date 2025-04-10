@@ -27,9 +27,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Table("recommended_pack")
 public class RecommendedPackEntity {
+    @Column("id_recommended_pack")
     private UUID idRecommendedPack;
     private String name;
     private String description;
+    @Column("image_url")
     private String imageUrl;
     @Transient
     private List<ProductEntity> products;

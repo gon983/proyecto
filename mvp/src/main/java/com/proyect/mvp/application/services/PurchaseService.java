@@ -82,20 +82,20 @@ public class PurchaseService {
     private final UserService userService;
     private final LocationService locationService;
    
-    private final StockMovementService stockMovementService;
+ 
 
     static String NOTIFICATION_URL = EnvConfigLoader.getNotificationUrl();
     static String ACCESS_TOKEN = EnvConfigLoader.getAccessToken();
     static String SUCCESS_URL = EnvConfigLoader.getSuccessUrl();
 
     public PurchaseService(PurchaseRepository purchaseRepository, PurchaseStateService purchaseStateService, PurchaseDetailService purchaseDetailService,
-     UserService userService,  StockMovementService stockMovementService, PurchaseDetailStateService purchaseDetailStateService, LocationService locationService) {
+     UserService userService,  PurchaseDetailStateService purchaseDetailStateService, LocationService locationService) {
         this.purchaseRepository = purchaseRepository;
         this.purchaseStateService = purchaseStateService;
         this.purchaseDetailService = purchaseDetailService;
         this.userService = userService;
         this.locationService = locationService;
-        this.stockMovementService = stockMovementService;
+       
  
         this.purchaseDetailStateService = purchaseDetailStateService;
     }
@@ -490,9 +490,7 @@ public class PurchaseService {
                                         Flux.fromIterable(details)
                                             .flatMap(detail -> {
                                                 detail.setFkCurrentState(state.getIdPurchaseDetailState());
-                                                return purchaseDetailService.save(detail)
-                                                                            .flatMap(savedDetail -> 
-                                                                            stockMovementService.registrarMovimientoPorCompra(detail.getFkBuyer(), detail.getIdPurchaseDetail()));
+                                                return purchaseDetailService.save(detail);
                                             })
                                      )
                                      .then(); // Convierte Flux<Void> a Mono<Void>
