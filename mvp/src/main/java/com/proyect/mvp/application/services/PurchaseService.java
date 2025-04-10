@@ -132,6 +132,7 @@ public class PurchaseService {
                                 return PurchaseFollowDTO.builder()
                                         .purchaseId(purchase.getIdPurchase())
                                         .details(details)
+                                        .status("confirmed")
                                         .location(location)
                                         .estimatedDeliveryTime(estimatedTime)
                                         .build();
