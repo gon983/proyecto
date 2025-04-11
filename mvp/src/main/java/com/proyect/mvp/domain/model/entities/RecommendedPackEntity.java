@@ -11,6 +11,10 @@ import lombok.Setter;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
+
+import com.proyect.mvp.application.dtos.create.PackProductDTO;
+import com.proyect.mvp.application.dtos.response.PackProductResponseDTO;
+
 import org.springframework.data.relational.core.mapping.Column;
 import org.locationtech.jts.geom.Point;
 
@@ -34,9 +38,9 @@ public class RecommendedPackEntity {
     @Column("image_url")
     private String imageUrl;
     @Transient
-    private List<ProductEntity> products;
+    private List<PackProductResponseDTO> products;
     
-    public void setProducts(List<ProductEntity> products) {
+    public void setProducts(List<PackProductResponseDTO> products) {
         this.products = products;
     }
 

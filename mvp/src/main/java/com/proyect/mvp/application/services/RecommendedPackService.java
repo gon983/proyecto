@@ -4,6 +4,7 @@ package com.proyect.mvp.application.services;
 
 import com.proyect.mvp.application.dtos.create.PackProductDTO;
 import com.proyect.mvp.application.dtos.create.RecommendedPackCreateDTO;
+import com.proyect.mvp.application.dtos.response.PackProductResponseDTO;
 import com.proyect.mvp.domain.model.entities.ProductXRecommendedPackEntity;
 import com.proyect.mvp.domain.model.entities.RecommendedPackEntity;
 import com.proyect.mvp.domain.repository.RecommendedPackRepository;
@@ -54,7 +55,14 @@ public class RecommendedPackService {
                 productXPackRepository.findAllByPackId(pack.getIdRecommendedPack())
                     .flatMap(productXPack ->
                         productService.getProductById(productXPack.getFkProduct())
-                    )
+                                      .map(product -> 
+                                            PackProductResponseDTO.builder()
+                                                                    .quantity(productXPack.getQuantity())
+                                                                    .productId(product.getIdProduct())
+                                                                    .name(product.getName())
+                                                                    .price(product.getUnity_price())
+                                                                    .build()))
+
                     .collectList()
                     .map(products -> {
                         pack.setProducts(products);
