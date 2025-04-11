@@ -47,9 +47,7 @@ public class RecommendedPackRouter {
     private Mono<ServerResponse> createPack(ServerRequest request, RecommendedPackService packService) {
         return request.bodyToMono(RecommendedPackCreateDTO.class)
                 .flatMap(packService::createPack)
-                .flatMap(createdPack -> ServerResponse.ok()
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .bodyValue(createdPack))
+                .flatMap(createdPack -> ServerResponse.ok().build())
                 .onErrorResume(ResponseStatusException.class,
                         e -> ServerResponse.status(e.getStatusCode()).bodyValue(e.getMessage()));
     }

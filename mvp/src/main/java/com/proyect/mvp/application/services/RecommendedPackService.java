@@ -2,6 +2,7 @@ package com.proyect.mvp.application.services;
 
 
 
+import com.proyect.mvp.application.dtos.create.PackProductDTO;
 import com.proyect.mvp.application.dtos.create.RecommendedPackCreateDTO;
 import com.proyect.mvp.domain.model.entities.ProductXRecommendedPackEntity;
 import com.proyect.mvp.domain.model.entities.RecommendedPackEntity;
@@ -10,6 +11,8 @@ import com.proyect.mvp.domain.repository.ProductXRecommendedPackRepository;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -61,21 +64,34 @@ public class RecommendedPackService {
     }
     
 
-    public Mono<RecommendedPackEntity> createPack(RecommendedPackCreateDTO packDTO) {
-        return packRepository.save(toEntity(UUID.randomUUID(), packDTO.getName(), packDTO.getDescription(), packDTO.getImageUrl()))
-            .flatMap(savedPack ->
-                         Flux.fromIterable(packDTO.getProducts())
-                             .flatMap(packProduct ->productXPackRepository.save(
-                                                                                ProductXRecommendedPackEntity.builder()
-                                                                                    .fkRecommendedPack(savedPack.getIdRecommendedPack())
-                                                                                    .fkProduct(packProduct.getProductId())
-                                                                                    .quantity(packProduct.getQuantity())
-                                                                                    .build()))
-                            .collectList() // ← Esperamos a que se guarden todas
-                             .thenReturn(savedPack) // ← Devolvemos el pack guardado
-    );
+    public Mono<Void> createPack(RecommendedPackCreateDTO packDTO) {
+        UUID idPack = UUID.randomUUID();
+        return packRepository.save(toEntity(idPack, packDTO.getName(), packDTO.getDescription(), packDTO.getImageUrl()))
+            .flatMapMany(savedPack -> savePacksProducts(idPack, packDTO.getProducts()))
+            .then();
+                                                         
+    }
+
+    
+
+    public Flux<ProductXRecommendedPackEntity> savePacksProducts(UUID idPack, List<PackProductDTO> products ){
+        return Flux.fromIterable(products)
+        .flatMap(
+            product -> {
+                ProductXRecommendedPackEntity productPack = ProductXRecommendedPackEntity.builder()
+                                                                                        .fkRecommendedPack(idPack)
+                                                                                        .fkProduct(product.getProductId())
+                                                                                        .quantity(product.getQuantity())
+                                                                                        .build();
+                return productXPackRepository.save(productPack);
+            }
+        );
 
     }
+
+
+
+
     public RecommendedPackEntity toEntity(UUID idRecommendedPack, String name, String description, String imageUrl) {
         return RecommendedPackEntity.builder()
                 .idRecommendedPack(idRecommendedPack)
