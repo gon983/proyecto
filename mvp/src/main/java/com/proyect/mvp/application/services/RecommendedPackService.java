@@ -40,7 +40,14 @@ public class RecommendedPackService {
                 productXPackRepository.findAllByPackId(packId)
                     .flatMap(productXPack ->
                         productService.getProductById(productXPack.getFkProduct())
-                    )
+                        .map(product -> 
+                        PackProductResponseDTO.builder()
+                                                .quantity(productXPack.getQuantity())
+                                                .productId(product.getIdProduct())
+                                                .name(product.getName())
+                                                .price(product.getUnity_price())
+                                                .build()))
+                    
                     .collectList()
                     .map(products -> {
                         pack.setProducts(products);
