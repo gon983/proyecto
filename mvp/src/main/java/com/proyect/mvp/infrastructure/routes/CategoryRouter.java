@@ -22,7 +22,7 @@ public class CategoryRouter {
     @Bean
     public RouterFunction<ServerResponse> categoryRoutes( CategoryService categoryService ) {
         return route(GET("/public/categories"), request -> getAllCategories(request, categoryService))
-                .andRoute(GET("/api/user/categories/{id}"), request -> getCategoryById(request, categoryService))
+                .andRoute(GET("/public/categories/{id}"), request -> getCategoryById(request, categoryService))
                 .andRoute(POST("/api/admin/categories"), request -> createCategory(request, categoryService));
     }
 
