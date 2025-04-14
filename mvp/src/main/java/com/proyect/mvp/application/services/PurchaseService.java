@@ -60,7 +60,7 @@ import com.proyect.mvp.domain.model.entities.PurchaseDetailEntity;
 import com.proyect.mvp.domain.model.entities.PurchaseDetailStateEntity;
 import com.proyect.mvp.domain.model.entities.PurchaseEntity;
 import com.proyect.mvp.domain.model.entities.PurchaseStateEntity;
-import com.proyect.mvp.domain.model.entities.StockMovementEntity;
+
 import com.proyect.mvp.domain.repository.PurchaseRepository;
 import com.proyect.mvp.infrastructure.config.EnvConfigLoader;
 import com.proyect.mvp.infrastructure.exception.PurchaseDetailNotInPendingStateException;

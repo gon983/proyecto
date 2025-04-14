@@ -19,15 +19,16 @@ import java.util.stream.Collectors;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final CategoryService categoryService;
    
-    private final UserService userService;
-    private final NeighborhoodService neighborhoodService;
+
+  
 
 
-    public ProductService(ProductRepository productRepository, UserService userService, NeighborhoodService neighborhoodService) {
+    public ProductService(ProductRepository productRepository, UserService userService, CategoryService categoryService) {
         this.productRepository = productRepository;
-        this.neighborhoodService = neighborhoodService;
-        this.userService = userService;
+        this.categoryService = categoryService;
+       
    
     }
 
@@ -81,6 +82,10 @@ public class ProductService {
                             .build();
                     return productRepository.save(newProduct);
                 });
+    }
+
+    public Flux<ProductEntity> getAllProductsFilterByCategory(UUID id_category){
+        return productRepository.findAllFilterByCategory(id_category);
     }
 
    

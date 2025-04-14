@@ -35,6 +35,9 @@ public class ProductEntity {
     @Column("unit_measurement")
     private String unitMeasurement;
 
+    @Column("fk_category")
+    private UUID fkCategory;
+
    
     
     

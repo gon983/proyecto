@@ -25,4 +25,7 @@ public interface ProductRepository extends R2dbcRepository<ProductEntity, UUID> 
 
     @Query("SELECT * FROM product WHERE LOWER(name) LIKE LOWER('%' || :name || '%')")
     Flux<ProductEntity> findAllFilterByName(@Param("name") String name);
+
+    @Query("SELECT * FROM product WHERE fk_category = :id_category")
+    Flux<ProductEntity> findAllFilterByCategory(@Param("id_category") UUID id_category);
 }
