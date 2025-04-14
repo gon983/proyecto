@@ -23,6 +23,9 @@ public class CategoryEntity {
 
     @Column("name")
     private String name;
+
+    @Column("photo")
+    private String photo;
     
 
     

@@ -26,7 +26,7 @@ public class ProductRouter {
     @Bean
     public RouterFunction<ServerResponse> productRoutes(ProductService productService, UserContextService userContext) {
         return route(POST("/api/admin/products"), request -> createProduct(request, productService))
-                
+                .andRoute(GET("/public/productsByCategory/{idCategory}"), request -> getAllProductsFilterByCategory(request, productService))
                 .andRoute(GET("/public/products"), request -> getAllProductsFilterByName(request, productService));
     }
 
