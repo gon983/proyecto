@@ -15,7 +15,7 @@ public class ProductUpdateDTO {
     private String photo;
     private String unitMeasurement;
    
-    private double unity_price;
+    
    
     private UUID fkCategory;
 }

@@ -26,12 +26,12 @@ public class ProductRouter {
     
     @Bean
     public RouterFunction<ServerResponse> productRoutes(ProductService productService, UserContextService userContext) {
-        return route(POST("/api/admin/products"), request -> createProduct(request, productService))
-                .andRoute(GET("/public/productsByCategory/{idCategory}"), request -> getAllProductsFilterByCategory(request, productService))
-                .andRoute(GET("/public/products"), request -> getAllProductsFilterByName(request, productService))
-                .andRoute(PUT("/api/admin/producto-editar)"), request -> putProduct(request, productService))
-                .andRoute(PUT("/api/admin/producto-contabilidad"), request -> actualizarContaduriaProducto(request, productService));
-    }
+    return route(POST("/api/admin/producto-crear"), request -> createProduct(request, productService))
+            .andRoute(PUT("/api/admin/producto-editar"), request -> putProduct(request, productService))
+            .andRoute(PUT("/api/admin/producto-contabilidad"), request -> actualizarContaduriaProducto(request, productService))
+            .andRoute(GET("/public/productsByCategory/{idCategory}"), request -> getAllProductsFilterByCategory(request, productService))
+            .andRoute(GET("/public/products"), request -> getAllProductsFilterByName(request, productService));
+}
 
 
     private Mono<ServerResponse> createProduct(ServerRequest request, ProductService productService) {

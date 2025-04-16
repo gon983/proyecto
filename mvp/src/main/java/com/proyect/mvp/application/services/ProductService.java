@@ -74,30 +74,25 @@ public class ProductService {
 
     
 
-    public Mono<ProductEntity> putProduct(ProductUpdateDTO productDTO) {
-        return productRepository.findById(productDTO.getIdProduct())
+    public Mono<ProductEntity> putProduct(ProductUpdateDTO dto) {
+        return productRepository.findById(dto.getIdProduct())
                 .flatMap(existingProduct -> {
-                    ProductEntity newProduct = ProductEntity.builder()
-                            .idProduct(existingProduct.getIdProduct())
-                            .name(productDTO.getName())
-                            .photo(productDTO.getPhoto())
-                            .unitMeasurement(productDTO.getUnitMeasurement())
-                            .fkCategory(productDTO.getFkCategory())
-                            
-                            .build();
-                    return productRepository.save(newProduct);
+                    existingProduct.setName(dto.getName());
+                    existingProduct.setPhoto(dto.getPhoto());
+                    existingProduct.setUnitMeasurement(dto.getUnitMeasurement());
+                    existingProduct.setFkCategory(dto.getFkCategory());
+                    return productRepository.save(existingProduct);
                 });
     }
 
     public Mono<ProductEntity> actualizarContaduriaProducto(ProductContaduryUpdateDTO dto) {
         return productRepository.findById(dto.getIdProduct())
                 .flatMap(existingProduct -> {
-                    ProductEntity newProduct = ProductEntity.builder()
-                            .idProduct(existingProduct.getIdProduct())
-                            .unity_price(dto.getUnity_price())
-                            .unityCost(dto.getUnityCost())
-                            .build();
-                    return productRepository.save(newProduct);
+                    
+                            existingProduct.setUnity_price(dto.getUnity_price());
+                            existingProduct.setUnityCost(dto.getUnityCost());
+                            
+                    return productRepository.save(existingProduct);
                 });
     }
 
