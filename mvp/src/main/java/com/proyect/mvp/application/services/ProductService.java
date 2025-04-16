@@ -2,6 +2,7 @@ package com.proyect.mvp.application.services;
 
 
 import com.proyect.mvp.application.dtos.create.ProductCreateDTO;
+import com.proyect.mvp.application.dtos.update.ProductContaduryUpdateDTO;
 import com.proyect.mvp.application.dtos.update.ProductUpdateDTO;
 import com.proyect.mvp.domain.model.entities.NeighborhoodEntity;
 import com.proyect.mvp.domain.model.entities.ProductEntity;
@@ -61,7 +62,7 @@ public class ProductService {
                 .photo(productDTO.getPhoto())
                 .unitMeasurement(productDTO.getUnitMeasurement())
                 
-                .unity_price(productDTO.getUnity_price())
+               
                 .fkCategory(productDTO.getFkCategory())
                 
                 .build();
@@ -83,6 +84,20 @@ public class ProductService {
                             .unitMeasurement(productDTO.getUnitMeasurement())
                             .fkCategory(productDTO.getFkCategory())
                             
+                            .build();
+                    return productRepository.save(newProduct);
+                });
+    }
+
+    public Mono<ProductEntity> actualizarContaduriaProducto(ProductContaduryUpdateDTO dto) {
+        return productRepository.findById(dto.getIdProduct())
+                .flatMap(existingProduct -> {
+                    ProductEntity newProduct = ProductEntity.builder()
+                            .idProduct(existingProduct.getIdProduct())
+                            .unity_price(dto.getUnity_price())
+                            .cantidadVendidaSemana(dto.getCantidadVendidaSemana())
+                            .dineroGeneradoSemana(dto.getDineroGeneradoSemana())
+                            .unityCost(dto.getUnityCost())
                             .build();
                     return productRepository.save(newProduct);
                 });

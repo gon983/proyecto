@@ -42,6 +42,13 @@ public class ProductEntity {
     
     
     private Double unity_price;
+    @Column("unity_cost")
+    private Double unityCost;
+    @Column("cantidad_vendida_semana")
+    private Double cantidadVendidaSemana;
+    @Column("dinero_generado_semana")
+    private Double dineroGeneradoSemana;
+    
   
 
     

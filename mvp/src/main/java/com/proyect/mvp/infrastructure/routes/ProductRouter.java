@@ -12,6 +12,7 @@ import static org.springframework.web.reactive.function.server.RequestPredicates
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
 import com.proyect.mvp.application.dtos.create.ProductCreateDTO;
+import com.proyect.mvp.application.dtos.update.ProductContaduryUpdateDTO;
 import com.proyect.mvp.application.dtos.update.ProductUpdateDTO;
 import com.proyect.mvp.application.services.ProductService;
 
@@ -28,7 +29,8 @@ public class ProductRouter {
         return route(POST("/api/admin/products"), request -> createProduct(request, productService))
                 .andRoute(GET("/public/productsByCategory/{idCategory}"), request -> getAllProductsFilterByCategory(request, productService))
                 .andRoute(GET("/public/products"), request -> getAllProductsFilterByName(request, productService))
-                .andRoute(PUT("/api/admin/products)"), request -> putProduct(request, productService));
+                .andRoute(PUT("/api/admin/producto-editar)"), request -> putProduct(request, productService))
+                .andRoute(PUT("/api/admin/producto-contabilidad"), request -> actualizarContaduriaProducto(request, productService));
     }
 
 
@@ -41,6 +43,11 @@ public class ProductRouter {
     private Mono<ServerResponse> putProduct(ServerRequest request, ProductService productService){
         return request.bodyToMono(ProductUpdateDTO.class)
                       .flatMap(productService::putProduct)
+                      .flatMap(product -> ServerResponse.ok().bodyValue(product));
+    }
+    private Mono<ServerResponse> actualizarContaduriaProducto(ServerRequest request, ProductService productService){
+        return request.bodyToMono(ProductContaduryUpdateDTO.class)
+                      .flatMap(productService::actualizarContaduriaProducto)
                       .flatMap(product -> ServerResponse.ok().bodyValue(product));
     }
 
