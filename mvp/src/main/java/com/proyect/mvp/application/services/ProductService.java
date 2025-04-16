@@ -95,8 +95,6 @@ public class ProductService {
                     ProductEntity newProduct = ProductEntity.builder()
                             .idProduct(existingProduct.getIdProduct())
                             .unity_price(dto.getUnity_price())
-                            .cantidadVendidaSemana(dto.getCantidadVendidaSemana())
-                            .dineroGeneradoSemana(dto.getDineroGeneradoSemana())
                             .unityCost(dto.getUnityCost())
                             .build();
                     return productRepository.save(newProduct);
