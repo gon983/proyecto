@@ -39,6 +39,7 @@ public class ProductRouter {
                 .flatMap(productService::createProduct)
                 .flatMap(product -> ServerResponse.ok().bodyValue(product));
     }
+    //
 
     private Mono<ServerResponse> putProduct(ServerRequest request, ProductService productService){
         return request.bodyToMono(ProductUpdateDTO.class)
