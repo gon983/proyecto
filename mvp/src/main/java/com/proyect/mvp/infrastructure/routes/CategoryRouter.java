@@ -11,6 +11,7 @@ import static org.springframework.web.reactive.function.server.RequestPredicates
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
 import com.proyect.mvp.application.dtos.create.CategoryCreateDTO;
+import com.proyect.mvp.application.dtos.update.CategoryUpdateDTO;
 import com.proyect.mvp.application.services.CategoryService;
 import com.proyect.mvp.domain.model.entities.CategoryEntity;
 
@@ -23,12 +24,18 @@ public class CategoryRouter {
     public RouterFunction<ServerResponse> categoryRoutes( CategoryService categoryService ) {
         return route(GET("/public/categories"), request -> getAllCategories(request, categoryService))
                 .andRoute(GET("/public/categories/{id}"), request -> getCategoryById(request, categoryService))
-                .andRoute(POST("/api/admin/categories"), request -> createCategory(request, categoryService));
+                .andRoute(POST("/api/admin/crearCategoria"), request -> createCategory(request, categoryService))
+                .andRoute(PUT("/api/admin/modificarCategoria"), request -> putCategory(request, categoryService));
     }
 
     private Mono<ServerResponse> createCategory(ServerRequest request, CategoryService categoryService) {
         return request.bodyToMono(CategoryCreateDTO.class)
                 .flatMap(category -> categoryService.saveNewCategory(category))
+                .flatMap(savedCategory -> ServerResponse.ok().bodyValue(savedCategory));
+    }
+    private Mono<ServerResponse> putCategory(ServerRequest request, CategoryService categoryService) {
+        return request.bodyToMono(CategoryUpdateDTO.class)
+                .flatMap(category -> categoryService.putCategory(category))
                 .flatMap(savedCategory -> ServerResponse.ok().bodyValue(savedCategory));
     }
 

@@ -62,15 +62,18 @@ public class ProductService {
                 .unitMeasurement(productDTO.getUnitMeasurement())
                 
                 .unity_price(productDTO.getUnity_price())
+                .fkCategory(productDTO.getFkCategory())
                 
                 .build();
         
         return productRepository.save(product);
     }
 
+  
+
     
 
-    public Mono<ProductEntity> updateProduct(ProductUpdateDTO productDTO) {
+    public Mono<ProductEntity> putProduct(ProductUpdateDTO productDTO) {
         return productRepository.findById(productDTO.getIdProduct())
                 .flatMap(existingProduct -> {
                     ProductEntity newProduct = ProductEntity.builder()
@@ -78,6 +81,7 @@ public class ProductService {
                             .name(productDTO.getName())
                             .photo(productDTO.getPhoto())
                             .unitMeasurement(productDTO.getUnitMeasurement())
+                            .fkCategory(productDTO.getFkCategory())
                             
                             .build();
                     return productRepository.save(newProduct);

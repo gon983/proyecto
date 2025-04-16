@@ -27,7 +27,8 @@ public class ProductRouter {
     public RouterFunction<ServerResponse> productRoutes(ProductService productService, UserContextService userContext) {
         return route(POST("/api/admin/products"), request -> createProduct(request, productService))
                 .andRoute(GET("/public/productsByCategory/{idCategory}"), request -> getAllProductsFilterByCategory(request, productService))
-                .andRoute(GET("/public/products"), request -> getAllProductsFilterByName(request, productService));
+                .andRoute(GET("/public/products"), request -> getAllProductsFilterByName(request, productService))
+                .andRoute(PUT("/api/admin/products)"), request -> putProduct(request, productService));
     }
 
 
@@ -35,6 +36,12 @@ public class ProductRouter {
         return request.bodyToMono(ProductCreateDTO.class)
                 .flatMap(productService::createProduct)
                 .flatMap(product -> ServerResponse.ok().bodyValue(product));
+    }
+
+    private Mono<ServerResponse> putProduct(ServerRequest request, ProductService productService){
+        return request.bodyToMono(ProductUpdateDTO.class)
+                      .flatMap(productService::putProduct)
+                      .flatMap(product -> ServerResponse.ok().bodyValue(product));
     }
 
     

@@ -9,11 +9,10 @@ import lombok.Getter;
 public class ProductCreateDTO {
     private String name;
     private double stock;
-    private double alertStock;
     private String photo;
     private String unitMeasurement;
-    private UUID fkProductor;
+   
     private double unity_price;
-    private UUID fkLocality;
-    private UUID fkStandarProduct;
+   
+    private UUID fkCategory;
 }

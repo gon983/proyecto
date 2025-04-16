@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.proyect.mvp.application.dtos.create.CategoryCreateDTO;
+import com.proyect.mvp.application.dtos.update.CategoryUpdateDTO;
 import com.proyect.mvp.domain.model.entities.CategoryEntity;
 import com.proyect.mvp.domain.repository.CategoryRepository;
 
@@ -24,6 +25,19 @@ public class CategoryService {
     public Flux<CategoryEntity> getAllCategories(){
         return categoryRepository.findAll();
         
+    }
+
+    public Mono<CategoryEntity> putCategory(CategoryUpdateDTO dto){
+        return categoryRepository.findById(dto.getIdCategory())
+                                 .flatMap(existingCategory ->
+                                 {
+                                    CategoryEntity entity = CategoryEntity.builder()
+                                                                          .idCategory(existingCategory.getIdCategory())
+                                                                          .name(dto.getName())
+                                                                          .photo(dto.getPhoto())
+                                                                          .build();
+                                    return categoryRepository.save(entity);
+                                 });
     }
 
     public Mono<CategoryEntity> getCategoryById(UUID id){

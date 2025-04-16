@@ -7,4 +7,5 @@ public class CategoryCreateDTO {
     
     private String name;
     
+    
 }
