@@ -1,4 +1,4 @@
-se podria crear un campo para producto q se llame algo asi como precio actual respecto a su precio promedio y ordenar siempre las busquedas desde ahi (cuando tengamos precios dinamicos)
+los precios de logistica se van a relacionar con una clase q se va a llamar recorrido. y en cada recorrido se van a calcular los costos
 
 
 
