@@ -199,7 +199,7 @@ public class PurchaseService {
     }
     
     private Mono<List<PurchaseDetailEntity>> getPurchaseDetails(UUID purchaseId) {
-        return purchaseDetailService.getDetailsFromPurchase(purchaseId).collectList();
+        return purchaseDetailService.getDetailsFromPurchaseWithProducts(purchaseId).collectList();
     }
 
     private Mono<UserEntity> getUserForPurchase(UUID idUser) {
