@@ -43,6 +43,11 @@ public class LocationService {
 
     }
 
+    public Mono<Location> getLocationEntityById(UUID idLocation){
+        return locationRepository.findById(idLocation);
+
+    }
+
     
     public Mono<Void> deleteLocation(UUID locationId) {
         return locationRepository.deleteLogical(locationId);

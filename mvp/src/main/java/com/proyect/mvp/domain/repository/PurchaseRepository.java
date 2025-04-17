@@ -33,4 +33,7 @@ public interface PurchaseRepository extends R2dbcRepository<PurchaseEntity,UUID>
     @Query("SELECT * FROM purchase WHERE fk_user = :idUser AND fk_current_state <> :idState ORDER BY mp_payment_date LIMIT 5")
     Flux<PurchaseToFollowDTO> findLastFiveUserNotPending(@Param("idUser") UUID idUser, @Param("idState") UUID idState);
 
+    @Query("SELECT * FROM purchase WHERE fk_current_state = :fk_current_state")
+    Flux<PurchaseEntity> findByFkCurrentState(@Param("fk_current_state") UUID fkCurrentState);
+
 }

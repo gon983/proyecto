@@ -28,6 +28,9 @@ public class PurchaseEntity {
     @Column("fk_user")
     private UUID fkUser;
 
+    @Transient
+    private UserEntity user;
+
     @Column("amount")
     private double amount;
 
@@ -60,6 +63,8 @@ public class PurchaseEntity {
 
     @Column("id_location")
     private UUID idLocation;
+    @Transient
+    private Location location;
    
 
     public void addDetails(List<PurchaseDetailEntity> details){
@@ -86,6 +91,13 @@ public class PurchaseEntity {
 
     public void setPaymentDate(OffsetDateTime paymentDate){
         this.mpPaymentDate = paymentDate;
+    }
+
+    public void setUser(UserEntity user){
+        this.user = user;
+    }
+    public void setLocation(Location location){
+        this.location = location;
     }
 
 

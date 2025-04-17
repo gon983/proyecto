@@ -56,11 +56,12 @@ import com.proyect.mvp.application.dtos.requests.ReceivePurchaseDTO;
 import com.proyect.mvp.application.dtos.response.LocationResponseDTO;
 import com.proyect.mvp.application.dtos.response.PurchaseDetailDTO;
 import com.proyect.mvp.application.dtos.response.PurchaseFollowDTO;
+import com.proyect.mvp.domain.model.entities.Location;
 import com.proyect.mvp.domain.model.entities.PurchaseDetailEntity;
 import com.proyect.mvp.domain.model.entities.PurchaseDetailStateEntity;
 import com.proyect.mvp.domain.model.entities.PurchaseEntity;
 import com.proyect.mvp.domain.model.entities.PurchaseStateEntity;
-
+import com.proyect.mvp.domain.model.entities.UserEntity;
 import com.proyect.mvp.domain.repository.PurchaseRepository;
 import com.proyect.mvp.infrastructure.config.EnvConfigLoader;
 import com.proyect.mvp.infrastructure.exception.PurchaseDetailNotInPendingStateException;
@@ -173,6 +174,43 @@ public class PurchaseService {
                                         
 
     }
+
+
+    public Flux<PurchaseEntity> getAllConfirmedPurchasesWithDetails() {
+        return purchaseStateService.findByName("confirmed")
+            .flatMapMany(state -> 
+                purchaseRepository.findByFkCurrentState(state.getIdPurchaseState())
+                    .flatMap(this::enrichPurchase)
+            );
+    }
+    
+    private Mono<PurchaseEntity> enrichPurchase(PurchaseEntity purchase) {
+        return Mono.zip(
+                getPurchaseDetails(purchase.getIdPurchase()),
+                getUserForPurchase(purchase.getFkUser()),
+                getLocationForPurchase(purchase.getIdLocation())
+            )
+            .map(tuple -> {
+                purchase.addDetails(tuple.getT1());
+                purchase.setUser(tuple.getT2());
+                purchase.setLocation(tuple.getT3());
+                return purchase;
+            });
+    }
+    
+    private Mono<List<PurchaseDetailEntity>> getPurchaseDetails(UUID purchaseId) {
+        return purchaseDetailService.getDetailsFromPurchase(purchaseId).collectList();
+    }
+
+    private Mono<UserEntity> getUserForPurchase(UUID idUser) {
+        return userService.getUserById(idUser);
+
+    }
+
+    private Mono<Location> getLocationForPurchase(UUID idLocation){
+        return locationService.getLocationEntityById(idLocation);
+    }
+    
 
 
 
