@@ -22,8 +22,13 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Table("product_x_recommended_pack")
 public class ProductXRecommendedPackEntity {
+    @Id
+    @Column("id_product_x_recommended_pack")
     private UUID idProductXRecommendedPack;
+    @Column("fk_recommended_pack")
     private UUID fkRecommendedPack;
+    @Column("fk_product")
     private UUID fkProduct;
+    @Column("quantity")
     private Double quantity;
 } 

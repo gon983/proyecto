@@ -82,11 +82,9 @@ public class RecommendedPackService {
     }
     
 
-    public Mono<Void> createPack(RecommendedPackCreateDTO packDTO) {
+    public Mono<RecommendedPackEntity> createPack(RecommendedPackCreateDTO packDTO) {
         UUID idPack = UUID.randomUUID();
-        return packRepository.save(toEntity(idPack, packDTO.getName(), packDTO.getDescription(), packDTO.getImageUrl()))
-            .flatMapMany(savedPack -> savePacksProducts(idPack, packDTO.getProducts()))
-            .then();
+        return packRepository.save(toEntity(idPack, packDTO.getName(), packDTO.getDescription(), packDTO.getImageUrl()));
                                                          
     }
 

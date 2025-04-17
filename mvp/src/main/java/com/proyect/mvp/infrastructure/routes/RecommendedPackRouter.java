@@ -53,7 +53,7 @@ public class RecommendedPackRouter {
     private Mono<ServerResponse> createPack(ServerRequest request, RecommendedPackService packService) {
         return request.bodyToMono(RecommendedPackCreateDTO.class)
                 .flatMap(packService::createPack)
-                .flatMap(createdPack -> ServerResponse.ok().build())
+                .flatMap(createdPack -> ServerResponse.ok().bodyValue(createdPack))
                 .onErrorResume(ResponseStatusException.class,
                         e -> ServerResponse.status(e.getStatusCode()).bodyValue(e.getMessage()));
     }
@@ -61,7 +61,7 @@ public class RecommendedPackRouter {
     private Mono<ServerResponse> editarPack(ServerRequest request, RecommendedPackService packService) {
         return request.bodyToMono(PackProductEditDTO.class)
                 .flatMap(packService::editarPack)
-                .flatMap(createdPack -> ServerResponse.ok().build())
+                .flatMap(editedPack -> ServerResponse.ok().bodyValue(editedPack))
                 .onErrorResume(ResponseStatusException.class,
                         e -> ServerResponse.status(e.getStatusCode()).bodyValue(e.getMessage()));
     }

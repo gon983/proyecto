@@ -32,6 +32,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Table("recommended_pack")
 public class RecommendedPackEntity {
+    @Id
     @Column("id_recommended_pack")
     private UUID idRecommendedPack;
     private String name;

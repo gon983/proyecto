@@ -17,6 +17,6 @@ public interface ProductXRecommendedPackRepository extends R2dbcRepository<Produ
     @Query("SELECT * FROM product_x_recommended_pack WHERE fk_recommended_pack = :packId")
     Flux<ProductXRecommendedPackEntity> findAllByPackId(UUID packId);
 
-    @Query("DELETE * FROM product_x_recommended_pack WHERE fk_recommended_pack = :idPack AND fk_product = :idProduct ")
+    @Query("DELETE FROM product_x_recommended_pack WHERE fk_recommended_pack = :idPack AND fk_product = :idProduct ")
     Mono<Void> quitarProductoDelPack(@Param("idPack") UUID idPack, @Param("idProduct") UUID idProduct);
 }
