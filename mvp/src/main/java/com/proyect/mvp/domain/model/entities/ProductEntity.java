@@ -60,6 +60,10 @@ public class ProductEntity {
         this.unity_price = unitPrice;
     }
 
+    public Double calculatePrice(Double quantity){
+        return unity_price * quantity;
+    }
+
 
    
 }

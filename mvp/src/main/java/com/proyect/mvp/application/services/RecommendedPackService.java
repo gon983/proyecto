@@ -5,6 +5,9 @@ package com.proyect.mvp.application.services;
 import com.proyect.mvp.application.dtos.create.PackProductDTO;
 import com.proyect.mvp.application.dtos.create.RecommendedPackCreateDTO;
 import com.proyect.mvp.application.dtos.response.PackProductResponseDTO;
+import com.proyect.mvp.application.dtos.update.PackProductAddDTO;
+import com.proyect.mvp.application.dtos.update.PackProductDeleteDTO;
+import com.proyect.mvp.application.dtos.update.PackProductEditDTO;
 import com.proyect.mvp.domain.model.entities.ProductXRecommendedPackEntity;
 import com.proyect.mvp.domain.model.entities.RecommendedPackEntity;
 import com.proyect.mvp.domain.repository.RecommendedPackRepository;
@@ -45,7 +48,7 @@ public class RecommendedPackService {
                                                 .quantity(productXPack.getQuantity())
                                                 .productId(product.getIdProduct())
                                                 .name(product.getName())
-                                                .price(product.getUnity_price())
+                                                .price(product.calculatePrice(productXPack.getQuantity()))
                                                 .build()))
                     
                     .collectList()
@@ -67,7 +70,7 @@ public class RecommendedPackService {
                                                                     .quantity(productXPack.getQuantity())
                                                                     .productId(product.getIdProduct())
                                                                     .name(product.getName())
-                                                                    .price(product.getUnity_price())
+                                                                    .price(product.calculatePrice(productXPack.getQuantity()))
                                                                     .build()))
 
                     .collectList()
@@ -115,6 +118,37 @@ public class RecommendedPackService {
                 .imageUrl(imageUrl)
                 .build();
     }
+
+
+    public  Mono<RecommendedPackEntity> editarPack(PackProductEditDTO dto){
+        return packRepository.findById(dto.getIdRecommendedPack()).flatMap(
+            existingPack ->
+            {
+                existingPack.setName(dto.getName());
+                existingPack.setDescription(dto.getDescription());
+                existingPack.setImageUrl(dto.getImageUrl());
+                return packRepository.save(existingPack);
+            }
+        );
+
+    }
+
+    public Mono<ProductXRecommendedPackEntity> agregarProductosAlPack(PackProductAddDTO dto){
+        ProductXRecommendedPackEntity packProduct = ProductXRecommendedPackEntity.builder()
+                                                                                 .idProductXRecommendedPack(UUID.randomUUID())
+                                                                                 .fkRecommendedPack(dto.getIdPack())
+                                                                                 .fkProduct(dto.getProductId())
+                                                                                 .quantity(dto.getQuantity())
+                                                                                 .build();
+        return productXPackRepository.save(packProduct);
+
+    }
+
+    public Mono<Void> quitarProductoDelPack(PackProductDeleteDTO dto){
+        return productXPackRepository.quitarProductoDelPack(dto.getIdPack(), dto.getIdProduct());
+    }
+
+
     
     
     
