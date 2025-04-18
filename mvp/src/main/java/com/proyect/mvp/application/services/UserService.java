@@ -21,13 +21,13 @@ import java.util.UUID;
 @Service
 public class UserService {
     private final UserRepository userRepository;
-    private final NeighborhoodService neighborhoodService;
+    
     private final PasswordEncoder encoder;
 
-    public UserService(UserRepository userRepository, NeighborhoodService neighborhoodService, PasswordEncoder encoder) {
+    public UserService(UserRepository userRepository,  PasswordEncoder encoder) {
         this.userRepository = userRepository;
         this.encoder = encoder;
-        this.neighborhoodService = neighborhoodService;
+
     }
 
     public Flux<UserEntity> getAllUsers() {
