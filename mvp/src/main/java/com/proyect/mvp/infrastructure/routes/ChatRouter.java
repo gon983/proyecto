@@ -32,7 +32,7 @@ public class ChatRouter {
                 .andRoute(POST("/api/chat/company-message"), request -> createCompanyMessage(request, chatMessageService))
                 .andRoute(PUT("/api/chat/read/{messageId}"), request -> markAsRead(request, chatMessageService))
                 .andRoute(POST("/api/chat/register-token"), request -> registerDeviceToken(request, deviceTokenService))
-                .andRoute(DELETE("/api/chat/unregister-token/{userId}/{deviceType}"), request -> unregisterDeviceToken(request, deviceTokenService, userContext));
+                .andRoute(DELETE("/api/chat/unregister-token/{deviceType}"), request -> unregisterDeviceToken(request, deviceTokenService, userContext));
     }
 
     private Mono<ServerResponse> getUserMessages(ServerRequest request, ChatMessageService chatMessageService, UserContextService userContext) {
