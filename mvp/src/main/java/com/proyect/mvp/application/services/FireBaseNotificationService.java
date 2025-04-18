@@ -1,6 +1,8 @@
 package com.proyect.mvp.application.services;
 
 
+
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,11 +14,11 @@ import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification;
 
 @Service
-public class FirebaseNotificationService {
+public class FireBaseNotificationService {
     
     private final FirebaseMessaging firebaseMessaging;
     
-    public FirebaseNotificationService(FirebaseMessaging firebaseMessaging) {
+    public FireBaseNotificationService(FirebaseMessaging firebaseMessaging) {
         this.firebaseMessaging = firebaseMessaging;
     }
     

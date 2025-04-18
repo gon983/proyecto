@@ -49,6 +49,9 @@ dependencies {
 
 
 	implementation("org.springframework.boot:spring-boot-starter-security")
+
+
+	implementation("com.google.firebase:firebase-admin:9.2.0")
 	
     
     // JWT Support (opcional pero recomendado)

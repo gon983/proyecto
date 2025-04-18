@@ -11,26 +11,27 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.proyect.mvp.application.dtos.create.ChatMessageCreateDTO;
 import com.proyect.mvp.domain.model.entities.ChatMessageEntity;
-import com.proyect.mvp.domain.model.entities.DeviceTokenEntity;
+
 import com.proyect.mvp.domain.repository.ChatMessageRepository;
 import com.proyect.mvp.domain.repository.DeviceTokenRepository;
 import com.proyect.mvp.domain.repository.UserRepository;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 @Service
 public class ChatMessageService {
     private final ChatMessageRepository chatMessageRepository;
     private final UserRepository userRepository;
     private final DeviceTokenRepository deviceTokenRepository;
-    private final FirebaseNotificationService firebaseNotificationService;
+    private final FireBaseNotificationService firebaseNotificationService;
 
     public ChatMessageService(
             ChatMessageRepository chatMessageRepository,
             UserRepository userRepository,
             DeviceTokenRepository deviceTokenRepository,
-            FirebaseNotificationService firebaseNotificationService) {
+            FireBaseNotificationService firebaseNotificationService) {
         this.chatMessageRepository = chatMessageRepository;
         this.userRepository = userRepository;
         this.deviceTokenRepository = deviceTokenRepository;
@@ -61,32 +62,39 @@ public class ChatMessageService {
     }
 
     public Mono<ChatMessageEntity> saveCompanyMessage(ChatMessageCreateDTO messageDTO) {
-        return userRepository.findById(messageDTO.getUserId())
-                .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado")))
-                .flatMap(user -> {
-                    ChatMessageEntity message = ChatMessageEntity.builder()
-                            .idMessage(UUID.randomUUID())
-                            .userId(messageDTO.getUserId())
-                            .isFromCompany(true)
-                            .content(messageDTO.getContent())
-                            .sentAt(LocalDateTime.now())
-                            .read(false)
-                            .build();
-                    
-                    return chatMessageRepository.save(message)
-                            .flatMap(savedMessage -> {
-                                // Enviar notificación push al usuario
-                                return deviceTokenRepository.findByUserId(messageDTO.getUserId())
-                                        .flatMap(token -> {
+    return userRepository.findById(messageDTO.getUserId())
+            .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado")))
+            .flatMap(user -> {
+                ChatMessageEntity message = ChatMessageEntity.builder()
+                        .idMessage(UUID.randomUUID())
+                        .userId(messageDTO.getUserId())
+                        .isFromCompany(true)
+                        .content(messageDTO.getContent())
+                        .sentAt(LocalDateTime.now())
+                        .read(false)
+                        .build();
+                
+                return chatMessageRepository.save(message)
+                        .flatMap(savedMessage -> 
+                            deviceTokenRepository.findByUserId(messageDTO.getUserId())
+                                    .flatMap(token -> 
+                                        // Wrap blocking call in Mono and handle errors
+                                        Mono.fromRunnable(() -> 
                                             firebaseNotificationService.sendChatNotification(
-                                                    token.getDeviceToken(), 
-                                                    "Nuevo mensaje de la empresa");
-                                            return Mono.just(savedMessage);
+                                                token.getDeviceToken(), 
+                                                "Nuevo mensaje de la empresa"
+                                            )
+                                        )
+                                        .subscribeOn(Schedulers.boundedElastic())
+                                        .onErrorResume(e -> {
+                                            // Log error and continue
+                                            return Mono.empty();
                                         })
-                                        .defaultIfEmpty(savedMessage);
-                            });
-                });
-    }
+                                    )
+                                    .then(Mono.just(savedMessage))
+                        );
+            });
+}
 
     public Mono<ChatMessageEntity> markMessageAsRead(UUID messageId) {
         return chatMessageRepository.findById(messageId)
@@ -104,6 +112,4 @@ public class ChatMessageService {
                     return chatMessageRepository.save(updatedMessage);
                 });
     }
-} {
-    
-}
+} 
