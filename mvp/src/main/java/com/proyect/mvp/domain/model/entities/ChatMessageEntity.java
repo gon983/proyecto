@@ -39,7 +39,7 @@ public class ChatMessageEntity {
     
     @Column("sent_at")
     @JsonProperty("sent_at")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "UTC")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", timezone = "UTC")
     private LocalDateTime sentAt;
     
     @Column("read")
