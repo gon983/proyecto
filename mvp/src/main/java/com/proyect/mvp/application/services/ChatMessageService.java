@@ -3,6 +3,7 @@ package com.proyect.mvp.application.services;
 
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
@@ -52,7 +53,7 @@ public class ChatMessageService {
                             .userId(userId)
                             .isFromCompany(false)
                             .content(messageDTO.getContent())
-                            .sentAt(LocalDateTime.now())
+                            .sentAt(ZonedDateTime.now())
                             .read(false)
                             .build();
                     
@@ -69,7 +70,7 @@ public class ChatMessageService {
                         .userId(messageDTO.getUserId())
                         .isFromCompany(true)
                         .content(messageDTO.getContent())
-                        .sentAt(LocalDateTime.now())
+                        .sentAt(ZonedDateTime.now())
                         .read(false)
                         .build();
                 

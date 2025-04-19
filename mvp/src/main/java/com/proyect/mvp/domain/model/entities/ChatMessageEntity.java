@@ -1,6 +1,7 @@
 package com.proyect.mvp.domain.model.entities;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -40,7 +41,7 @@ public class ChatMessageEntity {
     @Column("sent_at")
     @JsonProperty("sent_at")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", timezone = "UTC")
-    private LocalDateTime sentAt;
+    private ZonedDateTime sentAt;
     
     @Column("read")
     @JsonProperty("read")
