@@ -13,3 +13,4 @@ import reactor.core.publisher.Flux;
 public interface ChatMessageRepository extends R2dbcRepository<ChatMessageEntity, UUID> {
     Flux<ChatMessageEntity> findByUserIdOrderBySentAtAsc(UUID userId);
 }
+// funciona el chat 
