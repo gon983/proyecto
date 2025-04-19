@@ -28,7 +28,7 @@ public class ChatRouter {
     @Bean
     public RouterFunction<ServerResponse> chatRoutes(ChatMessageService chatMessageService, DeviceTokenService deviceTokenService, UserContextService userContext) {
         return route(GET("/api/user/chat/messages"), request -> getUserMessages(request, chatMessageService, userContext))
-                .andRoute(POST("/api/user/chat/user-message"), request -> createUserMessage(request, chatMessageService))
+                .andRoute(POST("/api/user/chat/user-message"), request -> createUserMessage(request, chatMessageService, userContext))
                 .andRoute(POST("/api/admin/chat/company-message"), request -> createCompanyMessage(request, chatMessageService))
                 .andRoute(PUT("/api/user/chat/read/{messageId}"), request -> markAsRead(request, chatMessageService))
                 .andRoute(POST("/api/user/chat/register-token"), request -> registerDeviceToken(request, deviceTokenService))
@@ -41,10 +41,11 @@ public class ChatRouter {
         ServerResponse.ok().body(chatMessageService.getUserMessages(UUID.fromString(userId)), ChatMessageEntity.class));
     }
 
-    private Mono<ServerResponse> createUserMessage(ServerRequest request, ChatMessageService chatMessageService) {
-        return request.bodyToMono(ChatMessageCreateDTO.class)
-                .flatMap(message -> chatMessageService.saveUserMessage(message))
-                .flatMap(savedMessage -> ServerResponse.ok().bodyValue(savedMessage));
+    private Mono<ServerResponse> createUserMessage(ServerRequest request, ChatMessageService chatMessageService, UserContextService userContext) {
+        return userContext.getCurrentIdUser().flatMap(userId ->  
+        request.bodyToMono(ChatMessageCreateDTO.class)
+                .flatMap(message -> chatMessageService.saveUserMessage(UUID.fromString(userId), message))
+                .flatMap(savedMessage -> ServerResponse.ok().bodyValue(savedMessage)));
     }
 
     private Mono<ServerResponse> createCompanyMessage(ServerRequest request, ChatMessageService chatMessageService) {

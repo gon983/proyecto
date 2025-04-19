@@ -41,16 +41,15 @@ public class ChatMessageService {
     public Flux<ChatMessageEntity> getUserMessages(UUID userId) {
         return userRepository.findById(userId)
                 .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado")))
-                .thenMany(chatMessageRepository.findByUserIdOrderBySentAtDesc(userId));
+                .thenMany(chatMessageRepository.findByUserIdOrderBySentAtAsc(userId));
     }
 
-    public Mono<ChatMessageEntity> saveUserMessage(ChatMessageCreateDTO messageDTO) {
-        return userRepository.findById(messageDTO.getUserId())
+    public Mono<ChatMessageEntity> saveUserMessage(UUID userId, ChatMessageCreateDTO messageDTO) {
+        return userRepository.findById(userId)
                 .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado")))
                 .flatMap(user -> {
                     ChatMessageEntity message = ChatMessageEntity.builder()
-                            .idMessage(UUID.randomUUID())
-                            .userId(messageDTO.getUserId())
+                            .userId(userId)
                             .isFromCompany(false)
                             .content(messageDTO.getContent())
                             .sentAt(LocalDateTime.now())

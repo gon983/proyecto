@@ -11,5 +11,5 @@ import reactor.core.publisher.Flux;
 
 @Repository
 public interface ChatMessageRepository extends R2dbcRepository<ChatMessageEntity, UUID> {
-    Flux<ChatMessageEntity> findByUserIdOrderBySentAtDesc(UUID userId);
+    Flux<ChatMessageEntity> findByUserIdOrderBySentAtAsc(UUID userId);
 }
