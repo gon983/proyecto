@@ -27,12 +27,12 @@ public class ChatRouter {
     
     @Bean
     public RouterFunction<ServerResponse> chatRoutes(ChatMessageService chatMessageService, DeviceTokenService deviceTokenService, UserContextService userContext) {
-        return route(GET("/api/chat/messages"), request -> getUserMessages(request, chatMessageService, userContext))
-                .andRoute(POST("/api/chat/user-message"), request -> createUserMessage(request, chatMessageService))
-                .andRoute(POST("/api/chat/company-message"), request -> createCompanyMessage(request, chatMessageService))
-                .andRoute(PUT("/api/chat/read/{messageId}"), request -> markAsRead(request, chatMessageService))
-                .andRoute(POST("/api/chat/register-token"), request -> registerDeviceToken(request, deviceTokenService))
-                .andRoute(DELETE("/api/chat/unregister-token/{deviceType}"), request -> unregisterDeviceToken(request, deviceTokenService, userContext));
+        return route(GET("/api/user/chat/messages"), request -> getUserMessages(request, chatMessageService, userContext))
+                .andRoute(POST("/api/user/chat/user-message"), request -> createUserMessage(request, chatMessageService))
+                .andRoute(POST("/api/admin/chat/company-message"), request -> createCompanyMessage(request, chatMessageService))
+                .andRoute(PUT("/api/user/chat/read/{messageId}"), request -> markAsRead(request, chatMessageService))
+                .andRoute(POST("/api/user/chat/register-token"), request -> registerDeviceToken(request, deviceTokenService))
+                .andRoute(DELETE("/api/admin/chat/unregister-token/{deviceType}"), request -> unregisterDeviceToken(request, deviceTokenService, userContext));
     }
 
     private Mono<ServerResponse> getUserMessages(ServerRequest request, ChatMessageService chatMessageService, UserContextService userContext) {
