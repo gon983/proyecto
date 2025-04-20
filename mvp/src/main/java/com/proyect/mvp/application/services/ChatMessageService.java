@@ -60,7 +60,7 @@ public class ChatMessageService {
                             .read(false)
                             .build();
                     
-                    return  userRepository.updateReadStatus(userId, false).then(chatMessageRepository.save(message)); 
+                    return  userRepository.updateReadStatus(userId, true).then(chatMessageRepository.save(message)); 
                     
                 });
                
