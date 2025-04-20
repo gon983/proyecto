@@ -32,6 +32,7 @@ public class ChatRouter {
                 .andRoute(POST("/api/user/chat/user-message"), request -> createUserMessage(request, chatMessageService, userContext))
                 .andRoute(POST("/api/admin/chat/company-message"), request -> createCompanyMessage(request, chatMessageService))
                 .andRoute(POST("/api/admin/chat/mark-read/{userId}"), request -> markUserAsRead(request, chatMessageService))
+                // .andRoute(POST("/api/user/chat/mark-read"), request -> markFromUserAsRead(request, chatMessageService))
                 .andRoute(POST("/api/user/chat/register-token"), request -> registerDeviceToken(request, deviceTokenService))
                 .andRoute(DELETE("/api/admin/chat/unregister-token/{deviceType}"), request -> unregisterDeviceToken(request, deviceTokenService, userContext));
     }

@@ -37,7 +37,7 @@ public interface UserRepository extends R2dbcRepository<UserEntity, UUID> {
     @Query("UPDATE users SET password = :password WHERE email = :email")
     Mono<Void> updatePassword(@Param("email") String email, @Param("password") String password);
 
-    @Query("UPDATE users SET unread =: vof WHERE id_user = :user_id")
+    @Query("UPDATE users SET unread = :vof WHERE id_user = :user_id")
     Mono<Void> updateReadStatus(@Param("user_id") UUID idUser, @Param("vof") Boolean vof);
 
 
