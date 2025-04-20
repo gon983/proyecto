@@ -66,7 +66,6 @@ public class ChatMessageService {
             .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado")))
             .flatMap(user -> {
                 ChatMessageEntity message = ChatMessageEntity.builder()
-                        .idMessage(UUID.randomUUID())
                         .userId(messageDTO.getUserId())
                         .isFromCompany(true)
                         .content(messageDTO.getContent())
