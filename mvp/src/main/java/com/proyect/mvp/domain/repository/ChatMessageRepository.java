@@ -16,7 +16,7 @@ import reactor.core.publisher.Mono;
 public interface ChatMessageRepository extends R2dbcRepository<ChatMessageEntity, UUID> {
     Flux<ChatMessageEntity> findByUserIdOrderBySentAtAsc(UUID userId);
 
-    @Query("UPDATE chat-messages SET read = true WHERE user_id = :idUser AND is_from_company = :false ")
-    Mono<Void> markAsRead(@Param("idUser") UUID idUser);
+    @Query("UPDATE chat_messages SET read = true WHERE user_id = :idUser AND is_from_company = :vof ")
+    Mono<Void> markAsRead(@Param("idUser") UUID idUser, @Param("vof") Boolean isFromCompany);
 }
 // funciona el chat 

@@ -100,7 +100,7 @@ public class ChatMessageService {
             });
 }
 
-    public Mono<Void> markMessageAsRead(UUID userId) {
-        return chatMessageRepository.markAsRead(userId);
+    public Mono<Void> markUserMessageAsRead(UUID userId) {
+        return chatMessageRepository.markAsRead(userId, false);
     }
 } 
