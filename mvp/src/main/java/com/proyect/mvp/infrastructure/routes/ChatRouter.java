@@ -31,7 +31,7 @@ public class ChatRouter {
                 .andRoute(GET("/api/admin/chat/get-user-messages/{idUser}"), request -> getUserMessagesByAdmin(request, chatMessageService))
                 .andRoute(POST("/api/user/chat/user-message"), request -> createUserMessage(request, chatMessageService, userContext))
                 .andRoute(POST("/api/admin/chat/company-message"), request -> createCompanyMessage(request, chatMessageService))
-                .andRoute(PUT("/api/user/chat/read/{messageId}"), request -> markAsRead(request, chatMessageService))
+                .andRoute(PUT("/api/user/chat/read/{userId}"), request -> markAsRead(request, chatMessageService))
                 .andRoute(POST("/api/user/chat/register-token"), request -> registerDeviceToken(request, deviceTokenService))
                 .andRoute(DELETE("/api/admin/chat/unregister-token/{deviceType}"), request -> unregisterDeviceToken(request, deviceTokenService, userContext));
     }
@@ -61,9 +61,9 @@ public class ChatRouter {
     }
 
     private Mono<ServerResponse> markAsRead(ServerRequest request, ChatMessageService chatMessageService) {
-        UUID messageId = UUID.fromString(request.pathVariable("messageId"));
+        UUID messageId = UUID.fromString(request.pathVariable("userId"));
         return chatMessageService.markMessageAsRead(messageId)
-                .flatMap(message -> ServerResponse.ok().bodyValue(message));
+                .flatMap(message -> ServerResponse.ok().build());
     }
 
     private Mono<ServerResponse> registerDeviceToken(ServerRequest request, DeviceTokenService deviceTokenService) {

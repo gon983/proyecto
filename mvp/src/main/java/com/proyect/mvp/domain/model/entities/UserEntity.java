@@ -46,6 +46,9 @@ public class UserEntity {
 
     @Column("password")
     private String password;
+
+    @Column("unread")
+    private Boolean unread;
     
     
     

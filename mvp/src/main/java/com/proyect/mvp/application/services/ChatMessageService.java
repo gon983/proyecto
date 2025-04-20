@@ -23,6 +23,8 @@ import reactor.core.scheduler.Schedulers;
 
 @Service
 public class ChatMessageService {
+
+   
     private final ChatMessageRepository chatMessageRepository;
     private final UserRepository userRepository;
     private final DeviceTokenRepository deviceTokenRepository;
@@ -32,11 +34,12 @@ public class ChatMessageService {
             ChatMessageRepository chatMessageRepository,
             UserRepository userRepository,
             DeviceTokenRepository deviceTokenRepository,
-            FireBaseNotificationService firebaseNotificationService) {
+            FireBaseNotificationService firebaseNotificationService, UserService userService) {
         this.chatMessageRepository = chatMessageRepository;
         this.userRepository = userRepository;
         this.deviceTokenRepository = deviceTokenRepository;
         this.firebaseNotificationService = firebaseNotificationService;
+    
     }
 
     public Flux<ChatMessageEntity> getUserMessages(UUID userId) {
@@ -57,8 +60,10 @@ public class ChatMessageService {
                             .read(false)
                             .build();
                     
-                    return chatMessageRepository.save(message);
+                    return  userRepository.updateReadStatus(userId, false).then(chatMessageRepository.save(message)); 
+                    
                 });
+               
     }
 
     public Mono<ChatMessageEntity> saveCompanyMessage(ChatMessageCreateDTO messageDTO) {
@@ -95,20 +100,7 @@ public class ChatMessageService {
             });
 }
 
-    public Mono<ChatMessageEntity> markMessageAsRead(UUID messageId) {
-        return chatMessageRepository.findById(messageId)
-                .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "Mensaje no encontrado")))
-                .flatMap(message -> {
-                    ChatMessageEntity updatedMessage = ChatMessageEntity.builder()
-                            .idMessage(message.getIdMessage())
-                            .userId(message.getUserId())
-                            .isFromCompany(message.isFromCompany())
-                            .content(message.getContent())
-                            .sentAt(message.getSentAt())
-                            .read(true)
-                            .build();
-                    
-                    return chatMessageRepository.save(updatedMessage);
-                });
+    public Mono<Void> markMessageAsRead(UUID userId) {
+        return chatMessageRepository.markAsRead(userId);
     }
 } 
