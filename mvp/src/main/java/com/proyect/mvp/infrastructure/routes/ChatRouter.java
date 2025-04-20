@@ -28,6 +28,7 @@ public class ChatRouter {
     @Bean
     public RouterFunction<ServerResponse> chatRoutes(ChatMessageService chatMessageService, DeviceTokenService deviceTokenService, UserContextService userContext) {
         return route(GET("/api/user/chat/messages"), request -> getUserMessages(request, chatMessageService, userContext))
+                .andRoute(GET("/api/admin/chat/get-user-messages/{idUser}"), request -> getUserMessagesByAdmin(request, chatMessageService))
                 .andRoute(POST("/api/user/chat/user-message"), request -> createUserMessage(request, chatMessageService, userContext))
                 .andRoute(POST("/api/admin/chat/company-message"), request -> createCompanyMessage(request, chatMessageService))
                 .andRoute(PUT("/api/user/chat/read/{messageId}"), request -> markAsRead(request, chatMessageService))
@@ -39,6 +40,11 @@ public class ChatRouter {
         
         return userContext.getCurrentIdUser().flatMap(userId ->        
         ServerResponse.ok().body(chatMessageService.getUserMessages(UUID.fromString(userId)), ChatMessageEntity.class));
+    }
+
+    private Mono<ServerResponse> getUserMessagesByAdmin(ServerRequest request, ChatMessageService chatMessageService) {
+        String userId = request.pathVariable("idUser");
+        return ServerResponse.ok().body(chatMessageService.getUserMessages(UUID.fromString(userId)), ChatMessageEntity.class);
     }
 
     private Mono<ServerResponse> createUserMessage(ServerRequest request, ChatMessageService chatMessageService, UserContextService userContext) {
