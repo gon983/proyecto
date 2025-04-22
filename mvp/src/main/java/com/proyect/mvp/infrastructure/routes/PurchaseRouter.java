@@ -46,7 +46,7 @@ public class PurchaseRouter {
                 .andRoute(PUT("/api/user/purchases/{idPurchase}/location"), request -> putLocation(request, purchaseService))
                 .andRoute(GET("/api/admin/all-confirmed-purchases"), request -> getAllConfirmedPurchases(request, purchaseService))
                 .andRoute(GET("/api/admin/cerrar-ventas-dia"), request -> cerrarVentasDia(request, purchaseService))
-                .andRoute(GET("/api/admin/ver-ventas_dia"), request -> getAllClosedPurchases(request,purchaseService));
+                .andRoute(GET("/api/admin/all-closed-purchases"), request -> getAllClosedPurchases(request,purchaseService));
     }
 
     
