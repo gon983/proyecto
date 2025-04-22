@@ -132,6 +132,16 @@ public class PurchaseDetailService {
         return purchaseDetailRepository.updateQuantity(detailId, updateDto.getQuantity());
     }
 
+    public Mono<Void> cerrarVentasDia(List<PurchaseDetailEntity> details) {
+        return purchaseDetailStateService.findByName("closed")
+            .flatMapMany(state -> {
+                return Flux.fromIterable(details).flatMap(detail -> {
+                    detail.setFkCurrentState(state.getIdPurchaseDetailState());
+                    return purchaseDetailRepository.save(detail);
+                });
+            }).then();
+    }
+
  
  
 

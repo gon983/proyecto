@@ -44,7 +44,8 @@ public class PurchaseRouter {
                 .andRoute(GET("/api/user/my-purchases"), request -> getPurchaseUserWithDetailsAndLocation(request,purchaseService, userContext))
                 .andRoute(POST("/api/user/cart/create"), request -> createEmptyCart(request, purchaseService, userContext))
                 .andRoute(PUT("/api/user/purchases/{idPurchase}/location"), request -> putLocation(request, purchaseService))
-                .andRoute(GET("/api/admin/all-confirmed-purchases"), request -> getAllConfirmedPurchases(request, purchaseService));
+                .andRoute(GET("/api/admin/all-confirmed-purchases"), request -> getAllConfirmedPurchases(request, purchaseService))
+                .andRoute(GET("/api/admin/cerrar-ventas-dia"), request -> cerrarVentasDia(request, purchaseService));
     }
 
     
@@ -54,6 +55,10 @@ public class PurchaseRouter {
         return purchaseService.getPurchaseWithDetails(idPurchase)
                 .flatMap(purchase -> ServerResponse.ok().bodyValue(purchase))
                 .switchIfEmpty(ServerResponse.notFound().build());
+    }
+
+    private Mono<ServerResponse> cerrarVentasDia(ServerRequest request, PurchaseService purchaseService){
+        return purchaseService.cerrarVentasDia().then(ServerResponse.ok().build());
     }
 
     private Mono<ServerResponse> getAllConfirmedPurchases(ServerRequest request, PurchaseService purchaseService) {

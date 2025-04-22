@@ -16,6 +16,7 @@ import com.google.gson.JsonObject;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.server.ServerResponse;
 
 import com.mercadopago.MercadoPagoConfig;
 import com.mercadopago.client.preference.PreferenceClient;
@@ -574,6 +575,19 @@ public class PurchaseService {
                         purchase.addDetails(details);
                         return purchase;
                     })
+            );
+    }
+
+    public Mono<Void> cerrarVentasDia() {
+        return purchaseStateService.findByName("closed")
+            .flatMap(purchaseState -> 
+                getAllConfirmedPurchasesWithDetails()
+                    .flatMap(purchase -> {
+                        purchase.setFkCurrentState(purchaseState.getIdPurchaseState());
+                        return purchaseRepository.save(purchase)
+                            .then(purchaseDetailService.cerrarVentasDia(purchase.getDetails()));
+                    })
+                    .then()
             );
     }
     
