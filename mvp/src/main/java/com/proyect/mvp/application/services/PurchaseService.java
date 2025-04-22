@@ -184,6 +184,14 @@ public class PurchaseService {
                     .flatMap(this::enrichPurchase)
             );
     }
+
+    public Flux<PurchaseEntity> getAllClosedPurchasesWithDetails() {
+        return purchaseStateService.findByName("closed")
+            .flatMapMany(state -> 
+                purchaseRepository.findByFkCurrentState(state.getIdPurchaseState())
+                    .flatMap(this::enrichPurchase)
+            );
+    }
     
     private Mono<PurchaseEntity> enrichPurchase(PurchaseEntity purchase) {
         return Mono.zip(
