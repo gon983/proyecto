@@ -65,6 +65,8 @@ public class PurchaseEntity {
     private UUID idLocation;
     @Transient
     private Location location;
+    @Column("fk_recorrido")
+    UUID fkRecorrido;
    
 
     public void addDetails(List<PurchaseDetailEntity> details){

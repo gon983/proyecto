@@ -30,6 +30,9 @@ public interface PurchaseRepository extends R2dbcRepository<PurchaseEntity,UUID>
     @Query("UPDATE purchase SET id_location = :idLocation WHERE id_purchase = :idPurchase  ")
     Mono<Void> updateLocation(@Param("idPurchase") UUID idPurchase,@Param("idLocation") UUID idLocation);
 
+    @Query("UPDATE purchase SET fk_recorrido = :idRecorrido WHERE id_purchase = :idPurchase  ")
+    Mono<Void> updateRecorrido(@Param("idPurchase") UUID idPurchase,@Param("idRecorrido") UUID idRecorrido);
+
     @Query("SELECT * FROM purchase WHERE fk_user = :idUser AND fk_current_state <> :idState ORDER BY mp_payment_date LIMIT 5")
     Flux<PurchaseToFollowDTO> findLastFiveUserNotPending(@Param("idUser") UUID idUser, @Param("idState") UUID idState);
 

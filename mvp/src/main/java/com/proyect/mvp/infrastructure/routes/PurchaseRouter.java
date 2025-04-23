@@ -15,6 +15,7 @@ import com.proyect.mvp.application.dtos.create.PurchaseCreateDTO;
 import com.proyect.mvp.application.dtos.other.MercadoPagoNotificationDTO;
 import com.proyect.mvp.application.dtos.requests.LocationIdDTO;
 import com.proyect.mvp.application.dtos.requests.ReceivePurchaseDTO;
+import com.proyect.mvp.application.dtos.update.AddRecorridoToPurchaseDTO;
 import com.proyect.mvp.application.services.PurchaseDetailService;
 import com.proyect.mvp.application.services.PurchaseService;
 import com.proyect.mvp.domain.model.entities.PurchaseEntity;
@@ -44,6 +45,7 @@ public class PurchaseRouter {
                 .andRoute(GET("/api/user/my-purchases"), request -> getPurchaseUserWithDetailsAndLocation(request,purchaseService, userContext))
                 .andRoute(POST("/api/user/cart/create"), request -> createEmptyCart(request, purchaseService, userContext))
                 .andRoute(PUT("/api/user/purchases/{idPurchase}/location"), request -> putLocation(request, purchaseService))
+                .andRoute(PUT("/api/user/agregar-a-recorrido/{idPurchase}"), request -> putRecorrido(request, purchaseService))
                 .andRoute(GET("/api/admin/all-confirmed-purchases"), request -> getAllConfirmedPurchases(request, purchaseService))
                 .andRoute(GET("/api/admin/cerrar-ventas-dia"), request -> cerrarVentasDia(request, purchaseService))
                 .andRoute(GET("/api/admin/all-closed-purchases"), request -> getAllClosedPurchases(request,purchaseService));
@@ -160,6 +162,12 @@ public class PurchaseRouter {
         UUID idPurchase = UUID.fromString(request.pathVariable("idPurchase"));
         return request.bodyToMono(LocationIdDTO.class)
                       .flatMap(dto -> purchaseService.putLocation(idPurchase, dto).then(ServerResponse.ok().build()));
+    }
+
+    private Mono<ServerResponse> putRecorrido(ServerRequest request, PurchaseService purchaseService){
+        UUID idPurchase = UUID.fromString(request.pathVariable("idPurchase"));
+        return request.bodyToMono(AddRecorridoToPurchaseDTO.class)
+                      .flatMap(dto -> purchaseService.putRecorrido(idPurchase, dto).then(ServerResponse.ok().build()));
     }
 
 

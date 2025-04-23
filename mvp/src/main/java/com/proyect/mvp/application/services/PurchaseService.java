@@ -57,6 +57,7 @@ import com.proyect.mvp.application.dtos.requests.ReceivePurchaseDTO;
 import com.proyect.mvp.application.dtos.response.LocationResponseDTO;
 import com.proyect.mvp.application.dtos.response.PurchaseDetailDTO;
 import com.proyect.mvp.application.dtos.response.PurchaseFollowDTO;
+import com.proyect.mvp.application.dtos.update.AddRecorridoToPurchaseDTO;
 import com.proyect.mvp.domain.model.entities.Location;
 import com.proyect.mvp.domain.model.entities.PurchaseDetailEntity;
 import com.proyect.mvp.domain.model.entities.PurchaseDetailStateEntity;
@@ -152,6 +153,10 @@ public class PurchaseService {
 
     public Mono<Void> putLocation(UUID idPurchase, LocationIdDTO dto){
         return purchaseRepository.updateLocation(idPurchase, dto.getLocationId());
+    }
+
+    public Mono<Void> putRecorrido(UUID idPurchase, AddRecorridoToPurchaseDTO dto){
+        return purchaseRepository.updateRecorrido(idPurchase, dto.getIdRecorrido());
     }
 
     public Mono<Void> deletePurchaseWhenBuying(UUID idPurchase){
