@@ -156,7 +156,8 @@ public class PurchaseService {
     }
 
     public Mono<Void> putRecorrido(UUID idPurchase, AddRecorridoToPurchaseDTO dto){
-        return purchaseRepository.updateRecorrido(idPurchase, dto.getIdRecorrido());
+        return purchaseRepository.updateRecorrido(idPurchase, dto.getIdRecorrido())
+                                 .then(purchaseStateService.findByName("con-recorrido").flatMap(state -> purchaseRepository.updateState(idPurchase, state.getIdPurchaseState()) ));
     }
 
     public Mono<Void> deletePurchaseWhenBuying(UUID idPurchase){
