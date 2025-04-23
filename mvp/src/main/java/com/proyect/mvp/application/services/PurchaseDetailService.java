@@ -142,6 +142,13 @@ public class PurchaseDetailService {
             }).then();
     }
 
+    public Mono<Void> finalizarDetalles(List<PurchaseDetailEntity> details) {
+        return purchaseDetailStateService.findByName("finalized")
+                                        .flatMapMany( state -> Flux.fromIterable(details)
+                                                                    .flatMap(detail -> purchaseDetailRepository.finalizarDetalle(UUID.fromString(detail.getIdPurchaseDetail()), state.getIdPurchaseDetailState())))
+                                        .then();
+    }
+
  
  
 

@@ -22,6 +22,9 @@ public interface PurchaseDetailRepository extends R2dbcRepository<PurchaseDetail
     @Query("UPDATE purchase_detail SET quantity = :quantity WHERE id_purchase_detail = :idDetail")
     Mono<Void> updateQuantity(@Param("idDetail") UUID idDetail, @Param("quantity") double quantity);
 
+    @Query("UPDATE purchase_detail SET fk_state = :idState WHERE id_purchase_detail = :idState")
+    Mono<Void> finalizarDetalle(@Param("idDetalle") UUID idDetail, @Param("idState") UUID idState);
+
 
     
 

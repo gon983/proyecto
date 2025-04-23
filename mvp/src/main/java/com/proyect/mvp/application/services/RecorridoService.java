@@ -20,9 +20,11 @@ import reactor.core.publisher.Mono;
 @Service
 public class RecorridoService {
     private final RecorridoRepository recorridoRepository;
+    private final PurchaseService purchaseService;
 
-    public RecorridoService(RecorridoRepository recorridoRepository) {
+    public RecorridoService(RecorridoRepository recorridoRepository, PurchaseService purchaseService) {
         this.recorridoRepository = recorridoRepository;
+        this.purchaseService = purchaseService;
     }
 
     public Flux<RecorridoEntity> getAllRecorridosActivos() {
@@ -65,7 +67,7 @@ public class RecorridoService {
                 .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "Recorrido not found")))
                 .flatMap(recorrido -> {
                     recorrido.setActive(false);
-                    return recorridoRepository.save(recorrido).then(); // .then() devuelve un Mono<Void>
+                    return recorridoRepository.save(recorrido).then(purchaseService.finalizarCompras(id)); // .then() devuelve un Mono<Void>
                 });
     }
 }

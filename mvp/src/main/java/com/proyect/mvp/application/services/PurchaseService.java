@@ -617,6 +617,23 @@ public class PurchaseService {
                 .then(purchaseRepository.updateRecorrido(idPurchase, null)));
         
     }
+
+    public Mono<Void> finalizarCompras(UUID idRecorrido) {
+        return purchaseStateService.findByName("finalized")
+            .flatMapMany(state -> 
+                purchaseRepository.getPurchasesFromRecorrido(idRecorrido)
+                    .flatMap(purchase -> {
+                        purchase.setFkCurrentState(state.getIdPurchaseState());
+                        return purchaseRepository.save(purchase)
+                            .flatMap(this::enrichPurchase)
+                            .flatMap(enriched -> 
+                                purchaseDetailService.finalizarDetalles(enriched.getDetails())
+                            );
+                    })
+            )
+            .then(); // Convertimos Flux a Mono<Void>
+    }
+    
     
     //.flatMap(state -> purchaseDetailService.getDetailsFromPurchase(idRecorrido))
     // 
