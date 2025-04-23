@@ -3,6 +3,7 @@ package com.proyect.mvp.domain.model.entities;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -17,6 +18,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Table("recorrido")
 public class RecorridoEntity {
+    @Id
     @Column("id_recorrido")
     private UUID idRecorrido;
     private String name;

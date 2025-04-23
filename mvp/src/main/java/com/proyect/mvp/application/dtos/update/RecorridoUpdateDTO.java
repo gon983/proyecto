@@ -15,6 +15,6 @@ import lombok.NoArgsConstructor;
 public class RecorridoUpdateDTO {
     private UUID idRecorrido;
     private String name;
-    private boolean active;
+   
     private double cantidadKm;
 }

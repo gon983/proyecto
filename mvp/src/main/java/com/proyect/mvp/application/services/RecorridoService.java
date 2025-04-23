@@ -35,7 +35,7 @@ public class RecorridoService {
                                       RecorridoEntity entity = RecorridoEntity.builder()
                                                                              .idRecorrido(existingRecorrido.getIdRecorrido())
                                                                              .name(dto.getName())
-                                                                             .active(dto.isActive())
+                                                                        
                                                                              .cantidadKm(dto.getCantidadKm())
                                                                              .build();
                                       return recorridoRepository.save(entity);
