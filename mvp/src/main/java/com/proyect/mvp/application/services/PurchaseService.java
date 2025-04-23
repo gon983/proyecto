@@ -604,5 +604,14 @@ public class PurchaseService {
                     .then()
             );
     }
+
+    public Flux<PurchaseEntity> getAllConRecorridoPurchasesWithDetailsFromRecorrido(UUID idRecorrido) {
+        return purchaseStateService.findByName("con-recorrido")
+                                    .flatMapMany(state -> purchaseRepository.getPurchasesFromRecorrido(idRecorrido)
+                                                                            .flatMap(this::enrichPurchase) );
+    }
+    
+    //.flatMap(state -> purchaseDetailService.getDetailsFromPurchase(idRecorrido))
+    // 
     
 }

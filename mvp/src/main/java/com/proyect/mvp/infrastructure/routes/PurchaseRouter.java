@@ -46,6 +46,7 @@ public class PurchaseRouter {
                 .andRoute(POST("/api/user/cart/create"), request -> createEmptyCart(request, purchaseService, userContext))
                 .andRoute(PUT("/api/user/purchases/{idPurchase}/location"), request -> putLocation(request, purchaseService))
                 .andRoute(PUT("/api/admin/agregar-a-recorrido/{idPurchase}"), request -> putRecorrido(request, purchaseService))
+                .andRoute(GET("/api/admin/ver-ventas-recorrido/{idRecorrido}"), request -> getVentasRecorrido(request, purchaseService))
                 .andRoute(GET("/api/admin/all-confirmed-purchases"), request -> getAllConfirmedPurchases(request, purchaseService))
                 .andRoute(GET("/api/admin/cerrar-ventas-dia"), request -> cerrarVentasDia(request, purchaseService))
                 .andRoute(GET("/api/admin/all-closed-purchases"), request -> getAllClosedPurchases(request,purchaseService));
@@ -67,6 +68,14 @@ public class PurchaseRouter {
     private Mono<ServerResponse> getAllConfirmedPurchases(ServerRequest request, PurchaseService purchaseService) {
         
         return purchaseService.getAllConfirmedPurchasesWithDetails()
+                .collectList()
+                .flatMap(list -> ServerResponse.ok().bodyValue(list))
+                .switchIfEmpty(ServerResponse.notFound().build());
+    }
+
+    private Mono<ServerResponse> getVentasRecorrido(ServerRequest request, PurchaseService purchaseService) {
+        UUID idRecorrido = UUID.fromString(request.pathVariable("idRecorrido"));
+        return purchaseService.getAllConRecorridoPurchasesWithDetailsFromRecorrido(idRecorrido)
                 .collectList()
                 .flatMap(list -> ServerResponse.ok().bodyValue(list))
                 .switchIfEmpty(ServerResponse.notFound().build());

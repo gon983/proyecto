@@ -42,4 +42,7 @@ public interface PurchaseRepository extends R2dbcRepository<PurchaseEntity,UUID>
     @Query("SELECT * FROM purchase WHERE fk_current_state = :fk_current_state")
     Flux<PurchaseEntity> findByFkCurrentState(@Param("fk_current_state") UUID fkCurrentState);
 
+    @Query("SELECT * FROM purchase WHERE fk_recorrido = :fkRecorrido")
+    Flux<PurchaseEntity> getPurchasesFromRecorrido(@Param("fkRecorrido") UUID idRecorrido);
+
 }
