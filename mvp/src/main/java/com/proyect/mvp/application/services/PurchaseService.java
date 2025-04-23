@@ -191,6 +191,14 @@ public class PurchaseService {
             );
     }
 
+    public Flux<PurchaseEntity> getAllFinalizedPurchasesWithDetails() {
+        return purchaseStateService.findByName("finalized")
+            .flatMapMany(state -> 
+                purchaseRepository.findByFkCurrentState(state.getIdPurchaseState())
+                    .flatMap(this::enrichPurchase)
+            );
+    }
+
     public Flux<PurchaseEntity> getAllClosedPurchasesWithDetails() {
         return purchaseStateService.findByName("closed")
             .flatMapMany(state -> 

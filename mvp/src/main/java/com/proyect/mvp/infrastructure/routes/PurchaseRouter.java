@@ -49,6 +49,7 @@ public class PurchaseRouter {
                 .andRoute(PUT("/api/admin/quitar-de-recorrido/{idPurchase}"), request -> unputRecorrido(request, purchaseService))
                 .andRoute(GET("/api/admin/ver-ventas-recorrido/{idRecorrido}"), request -> getVentasRecorrido(request, purchaseService))
                 .andRoute(GET("/api/admin/all-confirmed-purchases"), request -> getAllConfirmedPurchases(request, purchaseService))
+                .andRoute(GET("/api/admin/all-finalized-purchases"), request -> getAllFinalizedPurchases(request, purchaseService))
                 .andRoute(GET("/api/admin/cerrar-ventas-dia"), request -> cerrarVentasDia(request, purchaseService))
                 .andRoute(GET("/api/admin/all-closed-purchases"), request -> getAllClosedPurchases(request,purchaseService));
     }
@@ -69,6 +70,14 @@ public class PurchaseRouter {
     private Mono<ServerResponse> getAllConfirmedPurchases(ServerRequest request, PurchaseService purchaseService) {
         
         return purchaseService.getAllConfirmedPurchasesWithDetails()
+                .collectList()
+                .flatMap(list -> ServerResponse.ok().bodyValue(list))
+                .switchIfEmpty(ServerResponse.notFound().build());
+    }
+
+    private Mono<ServerResponse> getAllFinalizedPurchases(ServerRequest request, PurchaseService purchaseService) {
+        
+        return purchaseService.getAllFinalizedPurchasesWithDetails()
                 .collectList()
                 .flatMap(list -> ServerResponse.ok().bodyValue(list))
                 .switchIfEmpty(ServerResponse.notFound().build());
