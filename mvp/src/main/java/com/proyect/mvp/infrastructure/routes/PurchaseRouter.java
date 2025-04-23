@@ -46,6 +46,7 @@ public class PurchaseRouter {
                 .andRoute(POST("/api/user/cart/create"), request -> createEmptyCart(request, purchaseService, userContext))
                 .andRoute(PUT("/api/user/purchases/{idPurchase}/location"), request -> putLocation(request, purchaseService))
                 .andRoute(PUT("/api/admin/agregar-a-recorrido/{idPurchase}"), request -> putRecorrido(request, purchaseService))
+                //.andRoute(PUT("/api/admin/quitar-de-recorrido/{idPurchase}"), request -> putRecorrido(request, purchaseService))
                 .andRoute(GET("/api/admin/ver-ventas-recorrido/{idRecorrido}"), request -> getVentasRecorrido(request, purchaseService))
                 .andRoute(GET("/api/admin/all-confirmed-purchases"), request -> getAllConfirmedPurchases(request, purchaseService))
                 .andRoute(GET("/api/admin/cerrar-ventas-dia"), request -> cerrarVentasDia(request, purchaseService))
