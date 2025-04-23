@@ -610,6 +610,13 @@ public class PurchaseService {
                                     .flatMapMany(state -> purchaseRepository.getPurchasesFromRecorrido(idRecorrido)
                                                                             .flatMap(this::enrichPurchase) );
     }
+
+    public Mono<Void> unputRecorrido(UUID idPurchase, AddRecorridoToPurchaseDTO dto) {
+        return purchaseStateService.findByName("closed")
+            .flatMap(state -> purchaseRepository.updateState(idPurchase, state.getIdPurchaseState())
+                .then(purchaseRepository.updateRecorrido(idPurchase, null)));
+        
+    }
     
     //.flatMap(state -> purchaseDetailService.getDetailsFromPurchase(idRecorrido))
     // 
