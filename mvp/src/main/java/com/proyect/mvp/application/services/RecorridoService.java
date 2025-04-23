@@ -51,6 +51,8 @@ public class RecorridoService {
     public Mono<RecorridoEntity> saveNewRecorrido(RecorridoCreateDTO recorridoDTO) {
         RecorridoEntity recorrido = RecorridoEntity.builder()
                                                   .name(recorridoDTO.getName())
+                                                  .active(true)
+                                                  .cantidadKm(0)
                                                   .fecha(ZonedDateTime.now())
                                                   .build();
         return recorridoRepository.save(recorrido)
