@@ -24,7 +24,7 @@ public class RecorridoRouter {
     @Bean
     public RouterFunction<ServerResponse> recorridoRoutes(RecorridoService recorridoService) {
         return route(GET("/api/admin/recorridos"), request -> getAllRecorridosActivos(request, recorridoService))
-                .andRoute(GET("/public/recorridos/{id}"), request -> getRecorridoById(request, recorridoService))
+                .andRoute(GET("/api/admin/recorridos/{id}"), request -> getRecorridoById(request, recorridoService))
                 .andRoute(POST("/api/admin/crearRecorrido"), request -> createRecorrido(request, recorridoService))
                 .andRoute(PUT("/api/admin/modificarRecorrido"), request -> putRecorrido(request, recorridoService))
                 .andRoute(DELETE("/api/admin/finalizarRecorrido/{id}"), request -> finalizarRecorrido(request, recorridoService));
