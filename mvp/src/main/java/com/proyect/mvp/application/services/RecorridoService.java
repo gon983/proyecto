@@ -25,8 +25,8 @@ public class RecorridoService {
         this.recorridoRepository = recorridoRepository;
     }
 
-    public Flux<RecorridoEntity> getAllRecorridos() {
-        return recorridoRepository.findAll();
+    public Flux<RecorridoEntity> getAllRecorridosActivos() {
+        return recorridoRepository.findByActiveTrue();
     }
 
     public Mono<RecorridoEntity> putRecorrido(RecorridoUpdateDTO dto) {

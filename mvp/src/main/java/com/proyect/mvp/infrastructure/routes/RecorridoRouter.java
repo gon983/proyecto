@@ -23,7 +23,7 @@ public class RecorridoRouter {
     
     @Bean
     public RouterFunction<ServerResponse> recorridoRoutes(RecorridoService recorridoService) {
-        return route(GET("/public/recorridos"), request -> getAllRecorridos(request, recorridoService))
+        return route(GET("/api/admin/recorridos"), request -> getAllRecorridosActivos(request, recorridoService))
                 .andRoute(GET("/public/recorridos/{id}"), request -> getRecorridoById(request, recorridoService))
                 .andRoute(POST("/api/admin/crearRecorrido"), request -> createRecorrido(request, recorridoService))
                 .andRoute(PUT("/api/admin/modificarRecorrido"), request -> putRecorrido(request, recorridoService))
@@ -48,8 +48,8 @@ public class RecorridoRouter {
                 .flatMap(recorrido -> ServerResponse.ok().bodyValue(recorrido));
     }
     
-    private Mono<ServerResponse> getAllRecorridos(ServerRequest request, RecorridoService recorridoService) {
-        return ServerResponse.ok().body(recorridoService.getAllRecorridos(), RecorridoEntity.class);
+    private Mono<ServerResponse> getAllRecorridosActivos(ServerRequest request, RecorridoService recorridoService) {
+        return ServerResponse.ok().body(recorridoService.getAllRecorridosActivos(), RecorridoEntity.class);
     }
     
     private Mono<ServerResponse> finalizarRecorrido(ServerRequest request, RecorridoService recorridoService) {
