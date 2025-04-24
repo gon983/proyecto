@@ -24,6 +24,8 @@ import reactor.core.scheduler.Schedulers;
 @Service
 public class ChatMessageService {
 
+    
+
    
     private final ChatMessageRepository chatMessageRepository;
     private final UserRepository userRepository;
@@ -39,6 +41,7 @@ public class ChatMessageService {
         this.userRepository = userRepository;
         this.deviceTokenRepository = deviceTokenRepository;
         this.firebaseNotificationService = firebaseNotificationService;
+    
     
     }
 
@@ -101,6 +104,7 @@ public class ChatMessageService {
 }
 
     public Mono<Void> markUserMessageAsRead(UUID userId) {
-        return chatMessageRepository.markAsRead(userId, false);
+        return chatMessageRepository.markAsRead(userId, false)
+                                    .then(userRepository.updateReadStatus(userId, false));
     }
 } 
