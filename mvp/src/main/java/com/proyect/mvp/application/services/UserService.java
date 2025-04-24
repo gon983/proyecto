@@ -53,9 +53,8 @@ public class UserService {
     public Mono<UserEntity> register(UserAuthenticationDTO dto){
         UserEntity user = UserEntity.builder()
                             .username(dto.getUsername())
-                            .email(dto.getEmail())
                             .role("ROLE_USER")        
-                            .password(dto.getPassword())
+                            .password(encoder.encode(dto.getPassword()))
                             .createdAt(LocalDateTime.now())
                             .build();
         return userRepository.save(user);

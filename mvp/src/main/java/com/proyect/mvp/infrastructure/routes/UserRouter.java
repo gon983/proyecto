@@ -7,6 +7,7 @@ import com.proyect.mvp.application.dtos.requests.LoginRequest;
 import com.proyect.mvp.application.dtos.update.UserUpdateDTO;
 import com.proyect.mvp.application.services.UserService;
 import com.proyect.mvp.domain.model.entities.UserEntity;
+import com.proyect.mvp.infrastructure.exception.CoverageAreaException;
 import com.proyect.mvp.infrastructure.security.CustomReactiveAuthenticationManager;
 import com.proyect.mvp.infrastructure.security.UserAuthenticationDTO;
 
@@ -26,6 +27,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.Map;
 import java.util.UUID;
 import static org.springframework.web.reactive.function.server.RequestPredicates.*;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
@@ -77,10 +80,22 @@ public class UserRouter {
 
         private Mono<ServerResponse> register(ServerRequest request, UserService userService){
             return request.bodyToMono(UserAuthenticationDTO.class)
-                        .flatMap(dto-> userService.register(dto))
-                        .flatMap(mono -> ServerResponse.ok().build());
-
-
+                        .flatMap(dto -> userService.register(dto))
+                        .flatMap(user -> ServerResponse.ok().build())
+                        .onErrorResume(org.springframework.dao.DuplicateKeyException.class, ex -> 
+                            ServerResponse.status(HttpStatus.BAD_REQUEST)
+                                    .bodyValue(Map.of(
+                                        "message", "Ese nombre de usuario ya existe, porfavor elija otro",
+                                        "error", ex.getMessage()
+                                    ))
+                        )
+                        .onErrorResume(Exception.class, ex -> 
+                            ServerResponse.status(HttpStatus.BAD_REQUEST)
+                                    .bodyValue(Map.of(
+                                        "message", "Error en el registro",
+                                        "error", ex.getMessage()
+                                    ))
+                        );
         }
     }
 
