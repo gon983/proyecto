@@ -83,23 +83,23 @@ private boolean isWithinCoverage(double latitude, double longitude) {
     
     // Cada área de cobertura es un polígono representado por una lista de puntos
     // (Ejemplo: un rectángulo definido por 4 puntos)
+    // List<Point> cordoba = Arrays.asList(
+    //     spatialConverter.createPoint(-31.352665656299497, -64.24484842819409), // Esquina noroeste
+    //     spatialConverter.createPoint(-31.367690330374526, -64.12850971060341), // Esquina noreste
+    //     spatialConverter.createPoint(-31.459443975896832, -64.13086187027362), // Esquina sureste
+    //     spatialConverter.createPoint(-31.455198525939064, -64.26497652827287)  // Esquina suroeste
+    // );
+    
+    // coverageAreas.add(cordoba);
+
     List<Point> cordoba = Arrays.asList(
-        spatialConverter.createPoint(-31.352665656299497, -64.24484842819409), // Esquina noroeste
-        spatialConverter.createPoint(-31.367690330374526, -64.12850971060341), // Esquina noreste
-        spatialConverter.createPoint(-31.459443975896832, -64.13086187027362), // Esquina sureste
-        spatialConverter.createPoint(-31.455198525939064, -64.26497652827287)  // Esquina suroeste
+        spatialConverter.createPoint(-31.344081931960893, -64.28770017098205), // Esquina noroeste
+        spatialConverter.createPoint(-31.34773825848305, -64.10146792407215), // Esquina noreste
+        spatialConverter.createPoint(-31.50943148591176, -64.09492443988795), // Esquina sureste
+        spatialConverter.createPoint(-31.51615860760856, -64.29298440062402)  // Esquina suroeste
     );
     
     coverageAreas.add(cordoba);
-
-    List<Point> countriesZonaSur = Arrays.asList(
-        spatialConverter.createPoint(-31.466353475511344, -64.2021645146795), // Esquina noroeste
-        spatialConverter.createPoint(-31.468226802982677, -64.16139527939929), // Esquina noreste
-        spatialConverter.createPoint(-31.49993727742404, -64.20399682029671), // Esquina sureste
-        spatialConverter.createPoint(-31.508184979301813, -64.16059642391336)  // Esquina suroeste
-    );
-    
-    coverageAreas.add(countriesZonaSur);
     
     // Agrega más áreas si es necesario
     
