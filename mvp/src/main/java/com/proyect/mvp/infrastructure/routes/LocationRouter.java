@@ -4,12 +4,14 @@ package com.proyect.mvp.infrastructure.routes;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
 import com.proyect.mvp.application.dtos.create.LocationCreateDTO;
 import com.proyect.mvp.application.services.LocationService;
+import com.proyect.mvp.infrastructure.exception.CoverageAreaException;
 import com.proyect.mvp.infrastructure.security.UserContextService;
 
 import reactor.core.publisher.Mono;
@@ -17,6 +19,7 @@ import reactor.core.publisher.Mono;
 import static org.springframework.web.reactive.function.server.RequestPredicates.*;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
+import java.util.Map;
 import java.util.UUID;
 
 
@@ -52,8 +55,15 @@ public class LocationRouter {
     }
 
     private Mono<ServerResponse> createLocation(ServerRequest request, LocationService locationService) {
-        return request.bodyToMono(LocationCreateDTO.class)
-                .flatMap(locationService::createLocation)
-                .flatMap(savedLocation -> ServerResponse.ok().bodyValue(savedLocation));
-    }
+    return request.bodyToMono(LocationCreateDTO.class)
+            .flatMap(locationService::createLocation)
+            .flatMap(savedLocation -> ServerResponse.ok().bodyValue(savedLocation))
+            .onErrorResume(CoverageAreaException.class, ex -> 
+                ServerResponse.status(HttpStatus.BAD_REQUEST)
+                        .bodyValue(Map.of(
+                            "message", "Lo siento, no cubrimos esa área",
+                            "error", ex.getMessage()
+                        ))
+            );
+}
 }
