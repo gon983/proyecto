@@ -91,6 +91,17 @@ public class PurchaseEntity {
 
     }
 
+    public void calculateAndSetAmount() {
+        if (details != null) {
+            this.amount = details.stream()
+                .mapToDouble(detail -> detail.getUnitPrice() * detail.getQuantity())
+                .sum();
+        } else {
+            this.amount = 0;
+        }
+    }
+    
+
     public void setPaymentDate(OffsetDateTime paymentDate){
         this.mpPaymentDate = paymentDate;
     }

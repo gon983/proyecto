@@ -501,7 +501,7 @@ public class PurchaseService {
                     return purchaseStateService.findByName("confirmed")
                             .flatMap(state -> {
                                 System.out.println("Estado 'confirmed' encontrado: " + state.getIdPurchaseState());
-    
+                                purchase.calculateAndSetAmount();
                                 // Actualizar la compra
                                 purchase.setFkCurrentState(state.getIdPurchaseState());
                                 purchase.setMpPaymentId(payment.getId().toString());
