@@ -55,10 +55,9 @@ public class ProductRouter {
     
 
     private Mono<ServerResponse> getAllProductsFilterByName(ServerRequest request, ProductService productService) {
-        return request.queryParam("name")
-        .map(name -> ServerResponse.ok().body(productService.getAllProductsFilterByName(name), ProductEntity.class))
-        .orElseGet(() -> ServerResponse.ok().body(productService.getAllProducts(), ProductEntity.class));
-}
+        String name = request.queryParam("name").orElse("");
+        return ServerResponse.ok().body(productService.getAllProductsFilterByName(name), ProductEntity.class);
+    }
 
     private Mono<ServerResponse> getAllProductsFilterByCategory(ServerRequest request, ProductService productService){
         UUID idCategory = UUID.fromString(request.pathVariable("idCategory"));
