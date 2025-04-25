@@ -81,6 +81,7 @@ public class ProductService {
                     existingProduct.setPhoto(dto.getPhoto());
                     existingProduct.setUnitMeasurement(dto.getUnitMeasurement());
                     existingProduct.setFkCategory(dto.getFkCategory());
+                    existingProduct.setActive(dto.getActive());
                     return productRepository.save(existingProduct);
                 });
     }

@@ -14,6 +14,7 @@ public class ProductUpdateDTO {
     
     private String photo;
     private String unitMeasurement;
+    private Boolean active;
    
     
    

@@ -23,9 +23,9 @@ public interface ProductRepository extends R2dbcRepository<ProductEntity, UUID> 
     Mono<ProductEntity> findById(UUID id); // Para el método update alternativo
 
 
-    @Query("SELECT * FROM product WHERE LOWER(name) LIKE LOWER('%' || :name || '%')")
+    @Query("SELECT * FROM product WHERE active = true and LOWER(name) LIKE LOWER('%' || :name || '%')")
     Flux<ProductEntity> findAllFilterByName(@Param("name") String name);
 
-    @Query("SELECT * FROM product WHERE fk_category = :id_category")
+    @Query("SELECT * FROM product WHERE fk_category = :id_category AND active = true")
     Flux<ProductEntity> findAllFilterByCategory(@Param("id_category") UUID id_category);
 }

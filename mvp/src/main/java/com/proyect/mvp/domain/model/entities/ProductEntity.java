@@ -51,6 +51,7 @@ public class ProductEntity {
     private Double cantidadVendidaSemana;
     @Column("dinero_generado_semana")
     private Double dineroGeneradoSemana;
+    private Boolean active;
     
   
 
