@@ -8,7 +8,6 @@ import lombok.Getter;
 public class PackProductAddDTO {
     private UUID idPack;
     private UUID productId;
-    private String name;
     private Double quantity;
 
     

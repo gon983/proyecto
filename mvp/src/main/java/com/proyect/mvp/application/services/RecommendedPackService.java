@@ -133,7 +133,6 @@ public class RecommendedPackService {
 
     public Mono<ProductXRecommendedPackEntity> agregarProductosAlPack(PackProductAddDTO dto){
         ProductXRecommendedPackEntity packProduct = ProductXRecommendedPackEntity.builder()
-                                                                                 .idProductXRecommendedPack(UUID.randomUUID())
                                                                                  .fkRecommendedPack(dto.getIdPack())
                                                                                  .fkProduct(dto.getProductId())
                                                                                  .quantity(dto.getQuantity())
