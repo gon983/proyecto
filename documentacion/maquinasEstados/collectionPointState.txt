@@ -1,8 +1,0 @@
-Pending → The delivery point has been registered but has not yet been activated or assigned.
-Active → The delivery point is available to receive or deliver packages/books.
-On hold → Temporarily unavailable but may be reactivated soon.
-Under maintenance → Cannot be used due to repairs or updates.
-Saturated → Cannot receive more deliveries due to maximum capacity.
-Under review → Its status or compliance with regulations is being verified.
-Deactivated → Has been manually or automatically disabled.
-Deleted → No longer exists in the system or has been marked for deletion.
